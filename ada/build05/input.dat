@@ -1,0 +1,2 @@
+plot time 1 x  16  # time vs position
+plot time 1 xd 17  # time vs velocity

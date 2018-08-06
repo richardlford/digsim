@@ -1,0 +1,13 @@
+all: input.dat clean
+	mkdir -p build
+	rm -f  output*.dat output*.plt
+	gnatmake -I../driver -D build -g digsim
+	./digsim
+	gnuplot digsim.plt
+	../comparedat.py
+
+.PHONY: clean input.dat
+
+clean:
+	rm -rf *~ digsim build b~* *~
+

@@ -1,0 +1,33 @@
+  /home/jlclements/development/digsim/ada/build10:
+  total used in directory 472 available 106434512
+  drwxrwxr-x  2 jlclements jlclements   4096 Aug  6 11:53 .
+  drwxrwxr-x 13 jlclements jlclements   4096 Aug  4 19:42 ..
+  -rw-rw-r--  1 jlclements jlclements    834 Aug  6 11:20 actuator.adb
+  -rw-rw-r--  1 jlclements jlclements    123 Aug  6 11:20 actuator.ads
+  -rw-rw-r--  1 jlclements jlclements   4293 Aug  6 11:24 aero.adb
+  -rw-rw-r--  1 jlclements jlclements    126 Aug  6 11:21 aero.ads
+  -rw-rw-r--  1 jlclements jlclements    416 Aug  5 18:51 calculate.adb
+  -rw-rw-r--  1 jlclements jlclements  28228 Aug  6 11:47 digsimio.ads
+  -rw-rw-r--  1 jlclements jlclements   2148 Aug  5 17:46 digsim.plt
+  -rw-rw-r--  1 jlclements jlclements    127 Aug  6 11:24 discrete.adb
+  -rw-rw-r--  1 jlclements jlclements   5569 Aug  6 11:50 fcomp.adb
+  -rw-rw-r--  1 jlclements jlclements    137 Aug  6 11:23 fcomp.ads
+  -rw-rw-r--  1 jlclements jlclements   2112 Aug  6 11:47 global.ads
+  -rw-rw-r--  1 jlclements jlclements    588 Aug  6 11:25 gyro.adb
+  -rw-rw-r--  1 jlclements jlclements    102 Aug  5 21:23 gyro.ads
+  -rw-rw-r--  1 jlclements jlclements   1245 Aug  6 11:25 initialize.adb
+  -rw-rw-r--  1 jlclements jlclements    407 Aug  6 11:32 input.dat
+  -rw-rw-r--  1 jlclements jlclements   5169 Aug  6 11:51 kinematics.adb
+  -rw-rw-r--  1 jlclements jlclements    132 Aug  6 11:30 kinematics.ads
+  -rw-rw-r--  1 jlclements jlclements    223 Aug  4 17:31 Makefile
+  -rw-rw-r--  1 jlclements jlclements    653 Aug  6 11:52 mass.adb
+  -rw-rw-r--  1 jlclements jlclements    102 Aug  5 21:24 mass.ads
+  -rw-rw-r--  1 jlclements jlclements     46 Aug  6 11:52 miss.dat
+  -rw-rw-r--  1 jlclements jlclements 133338 Aug  6 11:52 output.dat
+  -rw-rw-r--  1 jlclements jlclements  53837 Aug  6 11:52 output.pdf
+  -rw-rw-r--  1 jlclements jlclements   1242 Aug  6 11:52 seeker.adb
+  -rw-rw-r--  1 jlclements jlclements    112 Aug  6 11:31 seeker.ads
+  -rw-rw-r--  1 jlclements jlclements    690 Aug  6 11:31 set_defaults.adb
+  -rw-rw-r--  1 jlclements jlclements   1043 Aug  6 11:52 target.adb
+  -rw-rw-r--  1 jlclements jlclements    113 Aug  5 21:24 target.ads
+  -rw-rw-r--  1 jlclements jlclements   1193 Aug  6 11:32 termination.adb

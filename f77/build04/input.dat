@@ -1,0 +1,10 @@
+Print X 16
+Print Xd 17
+Run
+Stop
+Print X 16
+Print Xd 17
+Print Tstop 3
+Print X_IC 14
+Run
+Stop

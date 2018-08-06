@@ -1,0 +1,7 @@
+C
+C   Event parameter definitions
+C
+        Integer LOG_PRINT_DATA,
+     &          TERMINATE_SIMULATION
+        Data LOG_PRINT_DATA       /9/,
+     &       TERMINATE_SIMULATION /8/

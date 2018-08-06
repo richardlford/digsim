@@ -1,0 +1,5 @@
+# DigSim configuration file. Commands are;
+#    Run
+#    Stop
+#    Set <name> <number> <value>
+#    Print <name> <number>
