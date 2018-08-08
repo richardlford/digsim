@@ -1,6 +1,6 @@
-# digsim build 1
+# digsim build01
 
-Requires rust standard which can be installed from https://rustup.rs/
+Requires Rust standard which can be installed from https://rustup.rs/
 
 ### Build
 ```rust
