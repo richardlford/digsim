@@ -1,0 +1,6 @@
+[package]
+name = "build02"
+version = "0.1.0"
+authors = ["roy.crippen <roy.crippen@archarithms.com>"]
+
+[dependencies]
