@@ -1,4 +1,4 @@
-# digsim build01
+# digsim build01 - Imperative and Mutable
 
 Requires Rust standard which can be installed from https://rustup.rs/
 
@@ -6,7 +6,6 @@ Requires Rust standard which can be installed from https://rustup.rs/
 ```rust
 cargo build --release
 ```
-
 ### Run Simulation
 ```rust
 cargo run --release
