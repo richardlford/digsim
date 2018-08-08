@@ -1,0 +1,17 @@
+# digsim build 1
+
+Requires rust standard which can be installed from https://rustup.rs/
+
+### Build
+```rust
+cargo build --release
+```
+
+### Run Simulation
+```rust
+cargo run --release
+```
+### Run Simulation, Test Solution and Plot to pdf
+```bash
+bash run.sh
+```
