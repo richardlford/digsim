@@ -1,5 +1,5 @@
 (ns digisim.core
-  (:require [digisim.build1 :as build1])
+  (:require [digisim.build1.core :as build1])
   (:gen-class))
 
 (defn -main

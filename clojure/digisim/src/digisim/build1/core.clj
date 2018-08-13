@@ -1,4 +1,4 @@
-(ns digisim.build1
+(ns digisim.build1.core
   (:require [clojure.string :as str]))
 
 (def params {
@@ -11,7 +11,7 @@
 })
 
 (defn sim
-  "Takes a time step and an"  
+  "Takes a time step and and a stop time"  
   [dt tstop]
   (loop [x (:x_ic params)
         xd (:xd_ic params)
