@@ -1,6 +1,6 @@
 (ns build02.core
   (:require [clojure.string :as str]
-            [build02.diffeq :refer diff-eq])  
+            [build02.diffeq :refer [diff-eq]])  
   (:gen-class))
 
 (defrecord State [time
@@ -11,30 +11,27 @@
                    gravity               ;  -- Acceleration due to gravity [m/sec**2]
                    mass                  ;  -- Mass suspended from spring [Kg]
                    spring-coefficient    ;  -- Restoring force per position [N/m]
-                   x_ic
-                   xd_ic
-                   time0
                    tstop
                    dt
                    state])
 
-(def initial-state ->State [0.0 0.0 0.0])
-(def default-params ->Common [8.88 9.88 1.0 39.47 0.0 0.0 2.5 0.01 initial-state])
+(def initial-state (->State 0.0 0.0 0.0))
+(def default-params (->Common 8.88 9.88 1.0 39.47 2.5 0.01 initial-state))
+
+(defn state->str [{:keys [time x xd]}]
+  (str/join " " [(format "%.5e" time) (format "%.5e" x) (format "%.5e" xd)]))
 
 (defn sim [params]
-  (let [{:keys [x_ic xd_ic time0 tstop]}]
-    (loop [x x_ic
-           xd xd_ic
-           time time0
+  (let [{:keys [state tstop dt]} params]
+    (loop [current-state state
            output-lines []]
-      (if (> time tstop)
+      (if (> (:time current-state) tstop)
         output-lines
-        (let [xdd (diff-eq x xd def-params)]
-          (recur (+ x (* xd dt))
-                 (+ xd (* xdd dt))
-                 (+ time dt)
-                 (conj output-lines (str/join " " [(format "%.5e" time) (format "%.5e" x) (format "%.5e" xd)]))))))))
+        (let [xdd (diff-eq (:x current-state) (:xd current-state) params)
+              {:keys [time x xd]} current-state]
+          (recur (apply ->State (mapv + [time x xd] [dt (* xd dt) (* xdd dt)]))
+                 (conj output-lines (state->str current-state))))))))
 
 (defn -main
   [& args]
-  (doall (map println (sim))))
+  (doall (map println (sim default-params))))
