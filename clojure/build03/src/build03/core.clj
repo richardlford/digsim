@@ -1,7 +1,26 @@
 (ns build03.core
   (:require [build03.diffeq :refer [diff-eq]]
-            [build03.types :refer :all])  
+            [build03.types :refer :all]
+            [clojure.string :as str]
+            [clojure.java.io :as io])  
   (:gen-class))
+
+
+(defn run-driver [config output-name]
+  (loop [state (:initial-state config)]
+        (if-not ((:terminate-fn config) state)
+         (recur (swap! state advance-state)))))
+
+(defn lines->run [coll] )
+
+(defn lines->batch [coll] 
+  (loop [lines coll
+         [run rest] (split-with)]
+    ))
+
+(defn config->lines [path]
+  (with-open [rdr (io/reader path)]
+    (line-seq rdr)))
 
 (defn sim [params]
   (let [{:keys [state tstop dt]} params]
@@ -16,4 +35,4 @@
 
 (defn -main
   [& args]
-  (doall (map println (sim default-params))))
+  ())

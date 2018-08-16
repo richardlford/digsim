@@ -29,7 +29,7 @@
     (->ParamMapping "dt"                  4  "Integration step size [sec]")
     (->ParamMapping "damping_coefficient" 10 "Damping force per velocity [N/m/s]")
     (->ParamMapping "gravity"             11 "Acceleration due to gravity [m/sec**2]")
-    (->ParamMapping "mass"                12 "Mass suspended from spring [Kg]")
+    (->ParamMapping "mass"                12 "Mass suspended from spring [kg]")
     (->ParamMapping "spring_coefficient"  13 "Restoring force per position [N/m]")
     (->ParamMapping "x_ic"                14 "Initial velocity of suspended mass [m/s]")
     (->ParamMapping "xd_ic"               15 "Initial position of suspended mass [m]")
