@@ -5,20 +5,20 @@
             [clojure.java.io :as io])  
   (:gen-class))
 
-
 (defn run-driver [config output-name]
   (loop [state (:initial-state config)]
         (if-not ((:terminate-fn config) state)
          (recur (swap! state advance-state)))))
 
-(defn lines->run [coll] )
+(def [x] insensitive-starts-with? [s substr]
+  (str/starts-with? (str/lower-case s) (str/lower-case substr)))
 
-(defn lines->batch [coll] 
-  (loop [lines coll
-         [run rest] (split-with)]
-    ))
+(defn split-on [pred coll]
+  (->> coll
+      (partition-by pred)
+      (filter (comp not pred first))))
 
-(defn config->lines [path]
+(defn config->batches [path]
   (with-open [rdr (io/reader path)]
     (line-seq rdr)))
 
