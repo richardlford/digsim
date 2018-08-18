@@ -37,8 +37,8 @@ x₀ :: Double
 x₀                  = 0.0e0
 
 -- |Initial velocity of suspended mass [m/sec]
-x'₀ :: Double
-x'₀                 = 0.0e0   -- Initial velocity of suspended mass [m/sec]
+x₀' :: Double
+x₀'                 = 0.0e0   -- Initial velocity of suspended mass [m/sec]
 
 -- |Simulation stop time [sec]
 tstop :: Double
@@ -55,7 +55,7 @@ accel x x' =
 
 -- |Execute the simulation given initial position and velocity
 simulate :: [TimeStep Double]
-simulate = loop 0.0e0 x₀ x'₀
+simulate = loop 0.0e0 x₀ x₀'
   where
     loop :: Double -- ^ Simulation time [sec]
          -> Double -- ^ Position of suspended mass [m]
