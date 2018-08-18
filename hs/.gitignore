@@ -1,5 +1,4 @@
 digsim.exe
-digsim.hi
-digsim.o
+*.hi
 output.dat
 output.pdf
