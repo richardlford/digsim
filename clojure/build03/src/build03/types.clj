@@ -8,19 +8,22 @@
     gravity               ;  -- Acceleration due to gravity [m/sec**2]
     mass                  ;  -- Mass suspended from spring [Kg]
     spring-coefficient    ;  -- Restoring force per position [N/m]
-    tstop
-    dt
-    dtprint
-    state])
+    time0                 ;  -- Initial time [sec]
+    tstop                 ;  -- Simulation stop time [sec]
+    dt                    ;  -- Integration step size [sec]
+    dtprint               ;  -- Output step size [sec]
+    state])               ;  -- Initial state [sec, m, m/s]
 
 (defrecord ParamMapping [name index description])
 
 (def initial-state (->State 0.0 0.0 0.0))
 (def default-params (->Common 8.88 9.88 1.0 39.47 2.5 0.01 0.01 initial-state))
 
-(defn state->str 
-    [{:keys [time x xd]}]
-    (str/join " " [(format "%.5e" time) (format "%.5e" x) (format "%.5e" xd)]))
+(defn print-state [state [& ks]]
+    (->> state
+        ((apply juxt ks))
+        (map (partial format "%.5e"))
+        (str/join " ")))
 
 (def parameter-mappings
    [(->ParamMapping "time"                1  "Simulation time [sec]")

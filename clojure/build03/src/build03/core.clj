@@ -5,22 +5,27 @@
             [clojure.java.io :as io])  
   (:gen-class))
 
-(defn run-driver [config output-name]
-  (loop [state (:initial-state config)]
-        (if-not ((:terminate-fn config) state)
-         (recur (swap! state advance-state)))))
+(defrecord LoopParams [common-params current-batch batches]
 
-(def [x] insensitive-starts-with? [s substr]
-  (str/starts-with? (str/lower-case s) (str/lower-case substr)))
+(defmulti process-command (fn [[command & args]] (-> command str/lower-case keyword)))
 
-(defn split-on [pred coll]
-  (->> coll
-      (partition-by pred)
-      (filter (comp not pred first))))
+(defmethod process-command :print [[_ val idx] loop-params]
+  (if (some #(and (= (:name val)) (= (:index idx))) parameter-mappings)
+    (update-in conj )
+  ))
+(defmethod process-command :set   [_ & args ] 1)
+(defmethod process-command :run   [_] 2)
+(defmethod process-command :stop  [_] 3)
+(defmethod process-command :default [[command & _] & _] (println "Invalid command:" command))
 
-(defn config->batches [path]
-  (with-open [rdr (io/reader path)]
-    (line-seq rdr)))
+(defn reset [params]
+  "Clears out values to plot and print, and sets recalc to false. In Ada version, also clears states, and sets quit and over to false."
+  (-> params
+    (assoc :plots [])
+    (assoc :print-params [])
+    (assoc :recalc false)))
+
+
 
 (defn sim [params]
   (let [{:keys [state tstop dt]} params]
