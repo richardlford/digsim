@@ -35,6 +35,6 @@
     (->ParamMapping "xd"                  17 "Velocity of suspended mass [m/sec]")
     (->ParamMapping "xdd"                 18 "Acceleration of suspended mass [m/sec**2]")])
 
-(defn is-mapped? [name idx]
-    (some (and (= (:name parameter-mappings) name)
-               (= (:index parameter-mappings) idx))))
+(defn is-mapped? [name idx]                 ; TODO: I don't think this is right
+    (some #(and (= (:name %) name)
+                (= (:index %) idx)) parameter-mappings))
