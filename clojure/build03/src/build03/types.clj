@@ -12,18 +12,13 @@
     tstop                 ;  -- Simulation stop time [sec]
     dt                    ;  -- Integration step size [sec]
     dtprint               ;  -- Output step size [sec]
+    print-params          ;  -- Vector of parameters to output
     state])               ;  -- Initial state [sec, m, m/s]
 
 (defrecord ParamMapping [name index description])
 
 (def initial-state (->State 0.0 0.0 0.0))
-(def default-params (->Common 8.88 9.88 1.0 39.47 2.5 0.01 0.01 initial-state))
-
-(defn print-state [state [& ks]]
-    (->> state
-        ((apply juxt ks))
-        (map (partial format "%.5e"))
-        (str/join " ")))
+(def default-params (->Common 8.88 9.88 1.0 39.47 2.5 0.01 0.01 [] initial-state))
 
 (def parameter-mappings
    [(->ParamMapping "time"                1  "Simulation time [sec]")
@@ -39,3 +34,7 @@
     (->ParamMapping "x"                   16 "Position of suspended mass [m]")
     (->ParamMapping "xd"                  17 "Velocity of suspended mass [m/sec]")
     (->ParamMapping "xdd"                 18 "Acceleration of suspended mass [m/sec**2]")])
+
+(defn is-mapped? [name idx]
+    (some (and (= (:name parameter-mappings) name)
+               (= (:index parameter-mappings) idx))))

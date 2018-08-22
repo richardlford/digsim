@@ -9,14 +9,28 @@
 
 (defmulti process-command (fn [[command & args]] (-> command str/lower-case keyword)))
 
-(defmethod process-command :print [[_ val idx] loop-params]
-  (if (some #(and (= (:name val)) (= (:index idx))) parameter-mappings)
-    (update-in conj )
-  ))
-(defmethod process-command :set   [_ & args ] 1)
-(defmethod process-command :run   [_] 2)
-(defmethod process-command :stop  [_] 3)
-(defmethod process-command :default [[command & _] & _] (println "Invalid command:" command))
+(defmethod process-command :print [[_ name idx] loop-params]
+  (if (is-mapped? name (read-string idx))     ; TODO: Add time to print out if it isn't in there already
+    (update-in loop-params [:common-params :print-params] conj name)
+    (do (println "No valid parameter " val " at index " idx) loop-params)))
+
+(defmethod process-command :set   [[_ name idx val] loop-params]
+  (if (is-mapped? val (read-string idx)
+    (update-in loop-params [:common-params (keyword name)] #((read-string val))))
+    (do (println "No valid parameter " val " at index " idx) loop-params)))))
+
+(defmethod process-command :run [_ loop-params] 
+  (-> loop-params
+    (update-in [:current-batch] conj (:common-params loop-params))
+    (assoc :current-batch [])))
+
+(defmethod process-command :stop  [_ loop-params] 
+  (-> loop-params
+    (update-in [:batches] conj (:current-batch loop-params))
+    (assoc :current-batch [])))
+
+(defmethod process-command :default [[command & _] loop-params] 
+  (do (println "Invalid command:" command) loop-params))
 
 (defn reset [params]
   "Clears out values to plot and print, and sets recalc to false. In Ada version, also clears states, and sets quit and over to false."
