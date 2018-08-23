@@ -1,5 +1,4 @@
-(ns build03.types
-    (:require [clojure.string :as str]))
+(ns build03.types)
 
 (defrecord State [time x xd])
 
@@ -18,7 +17,7 @@
 (defrecord ParamMapping [name index description])
 
 (def initial-state (->State 0.0 0.0 0.0))
-(def default-params (->Common 8.88 9.88 1.0 39.47 2.5 0.01 0.01 [] initial-state))
+(def default-params (->Common 8.88 9.88 1.0 39.47 0.0 2.5 0.01 0.01 [] initial-state))
 
 (def parameter-mappings
    [(->ParamMapping "time"                1  "Simulation time [sec]")

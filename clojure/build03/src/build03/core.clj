@@ -18,8 +18,8 @@
       loop-params)))
 
 (defmethod process-command :set [{[name idx val] :params} loop-params]
-  (if (is-mapped? val (read-string idx)
-    (update-in loop-params [:common-params (keyword name)] #((read-string val))))
+  (if (is-mapped? name (read-string idx))
+    (update-in loop-params [:common-params (keyword name)] #((read-string val)))
     (do
       (println "No valid parameter " val " at index " idx)
       loop-params)))
