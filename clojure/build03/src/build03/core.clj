@@ -5,23 +5,24 @@
             [clojure.java.io :as io])  
   (:gen-class))
 
-(defrecord LoopParams [common-params current-batch batches]
+(defrecord LoopParams [common-params current-batch batches])
+(defrecord Command [name params])
 
-(defmulti process-command (fn [[command & args]] (-> command str/lower-case keyword)))
+(defmulti process-command (fn [{name :name} loop-params] name))
 
-(defmethod process-command :print [[_ name idx] loop-params]
+(defmethod process-command :print [{[name idx] :params} loop-params]
   (if (is-mapped? name (read-string idx))     ; TODO: Add time to print out if it isn't in there already
     (update-in loop-params [:common-params :print-params] conj name)
     (do
       (println "No valid parameter " val " at index " idx)
       loop-params)))
 
-(defmethod process-command :set   [[_ name idx val] loop-params]
+(defmethod process-command :set [{[name idx val] :params} loop-params]
   (if (is-mapped? val (read-string idx)
     (update-in loop-params [:common-params (keyword name)] #((read-string val))))
     (do
       (println "No valid parameter " val " at index " idx)
-      loop-params)))))
+      loop-params)))
 
 (defmethod process-command :run [_ loop-params] 
   (-> loop-params
@@ -33,7 +34,7 @@
     (update :batches conj (:current-batch loop-params))
     (assoc :current-batch [])))
 
-(defmethod process-command :default [[command & _] loop-params] 
+(defmethod process-command :default [{command :name} loop-params]
   (do 
     (println "Invalid command:" command)
     loop-params))
