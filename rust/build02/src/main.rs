@@ -1,6 +1,6 @@
-mod lib;
+mod state;
 
-use lib::*;
+use state::*;
 
 fn main() {
     // initialize the simulation state iterator

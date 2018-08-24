@@ -1,31 +1,4 @@
-// struct to hold simulation constants
-#[derive(Debug, Clone)]
-pub struct SimConst {
-    pub damping_coefficient: f64,
-    pub dt: f64,
-    pub gravity: f64,
-    pub mass: f64,
-    pub spring_coefficient: f64,
-    pub t_stop: f64,
-    pub x_ic: f64,
-    pub xd_ic: f64,
-}
-
-// default conditions for simulation constants
-impl Default for SimConst {
-    fn default() -> SimConst {
-        SimConst {
-            damping_coefficient: 8.88,
-            dt: 0.01,
-            gravity: 9.88,
-            mass: 1.0,
-            spring_coefficient: 39.47,
-            t_stop: 2.5,
-            x_ic: 0.0,
-            xd_ic: 0.0,
-        }
-    }
-}
+mod data;
 
 // struct to hold simulation state
 #[derive(Debug, Clone)]
@@ -33,13 +6,13 @@ pub struct SimState {
     pub x: f64,
     pub xd: f64,
     pub time: f64,
-    pub sim_const: SimConst,
+    pub sim_const: data::SimData,
 }
 
 // default conditions for simulation state
 impl Default for SimState {
     fn default() -> SimState {
-        let c: SimConst = Default::default();
+        let c: data::SimData = Default::default();
         SimState {
             x: c.x_ic,
             xd: c.xd_ic,
@@ -55,6 +28,7 @@ pub trait Simulation {
     fn show_time_x_xd(&self) -> String;
 }
 
+// implementation of Simulation for SimState
 impl Simulation for SimState {
     // is simulation complete
     fn is_done(&self) -> bool {
@@ -67,7 +41,7 @@ impl Simulation for SimState {
     }
 }
 
-// state iterator
+// implementation of Iterator for SimState
 impl Iterator for SimState {
     type Item = SimState;
     fn next(&mut self) -> Option<SimState> {
