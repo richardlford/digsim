@@ -6,4 +6,4 @@ Various implementations of digsim including:
 * Fortran77
 * Rust
 
-See simulation lesson documentation at: https://bitbucket.di2e.net/projects/IVV/repos/digsim-jim/browse
+See digsim lesson documentation at: https://bitbucket.di2e.net/projects/IVV/repos/digsim-jim/browse
