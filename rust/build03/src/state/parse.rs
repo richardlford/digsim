@@ -1,5 +1,4 @@
-use simdata::*;
-use state::lookup_spring_property;
+use state::simdata::{lookup_command, lookup_property, Command, Property};
 
 pub fn parse_input(in_str: &str) -> Vec<Command> {
   in_str
@@ -12,7 +11,7 @@ pub fn parse_input(in_str: &str) -> Vec<Command> {
         [c, v] | [c, v, _] => {
           let command = lookup_command(c);
           match command {
-            Command::Print(SpringProperty::Invalid) => Command::Print(lookup_spring_property(v)),
+            Command::Print(Property::Invalid) => Command::Print(lookup_property(v)),
             _ => Command::Invalid,
           }
         }
@@ -27,32 +26,49 @@ pub fn parse_input_file() -> Vec<Command> {
   parse_input(include_str!("../../data/input.dat"))
 }
 
-#[test]
-fn test_lookup_spring_property() {
-  use simdata::SpringProperty::*;
+pub fn build_run_list(commands: &Vec<Command>) -> Vec<(Command, Vec<Property>)> {
+  // use self::Command::*;
+  use self::Property::*;
 
-  assert!(lookup_spring_property("dt") == Dt);
-  assert!(lookup_spring_property("aaa") == Invalid);
-  assert!(lookup_spring_property("TSTOP  ") == TStop);
-  assert!(lookup_spring_property("springCoefficient") == SpringCoefficient);
-  assert!(lookup_spring_property("  gravityAAA  ") == Invalid);
+  let mut runs: Vec<(Command, Vec<Property>)> = vec![];
+  let mut props: Vec<Property> = vec![Time];
+  for command in commands {
+    match command {
+      Command::Print(prop) => props.push(*prop),
+      Command::Run => {
+        runs.push((*command, props.clone()));
+        props = vec![Time]
+      }
+      _ => break,
+    }
+  }
+  runs
+}
+
+#[test]
+fn test_lookup_property() {
+  use self::Property::*;
+
+  assert!(lookup_property("tIMe") == Time);
+  assert!(lookup_property("aaa") == Invalid);
+  assert!(lookup_property("   xd  ") == Xd);
+  assert!(lookup_property("xDD ") == Xdd);
+  assert!(lookup_property("  X  ") == X);
 }
 
 #[test]
 fn test_lookup_command() {
-  use simdata::Command::*;
-
-  assert!(lookup_command("print ") == Print(SpringProperty::Invalid));
-  assert!(lookup_command("Print") == Print(SpringProperty::Invalid));
-  assert!(lookup_command("Runn") == Invalid);
-  assert!(lookup_command("  RUN   ") == Run);
-  assert!(lookup_command("  STOp  ") == Stop);
+  assert!(lookup_command("print ") == Command::Print(Property::Invalid));
+  assert!(lookup_command("Print") == Command::Print(Property::Invalid));
+  assert!(lookup_command("Runn") == Command::Invalid);
+  assert!(lookup_command("  RUN   ") == Command::Run);
+  assert!(lookup_command("  STOp  ") == Command::Stop);
 }
 
 #[test]
 fn test_parse_input_case() {
-  use simdata::Command::*;
-  use simdata::SpringProperty::*;
+  use self::Command::*;
+  use self::Property::*;
 
   let s = "Print X\n\
            print xD\n\
@@ -70,8 +86,8 @@ fn test_parse_input_case() {
 
 #[test]
 fn test_parse_input_whitespace() {
-  use simdata::Command::*;
-  use simdata::SpringProperty::*;
+  use self::Command::*;
+  use self::Property::*;
 
   let s = "Print     X   \n\
            print    xD       \n\
@@ -83,4 +99,30 @@ fn test_parse_input_whitespace() {
   println!("{:?}", parsed);
   let expected: Vec<Command> = vec![Print(X), Print(Xd), Run, Stop];
   assert!(parsed == expected)
+}
+
+#[test]
+fn test_build_run_list() {
+  use self::Command::*;
+  use self::Property::*;
+
+  let s = "Print X 16   \n\
+           Print Xd 17  \n\
+           Run          \n\
+           Print X 16   \n\
+           Print Xd 17  \n\
+           Print Xdd    \n\
+           Run          \n\
+           Stop         \n\
+           Print X 16   \n\
+           Print Xd 17  \n\
+           Print Xdd    \n\
+           Run          \n\
+           ";
+
+  let runs = build_run_list(&parse_input(s));
+  println!("{:?}", runs);
+  let expected: Vec<(Command, Vec<Property>)> =
+    vec![(Run, vec![Time, X, Xd]), (Run, vec![Time, X, Xd, Xdd])];
+  assert!(runs == expected)
 }

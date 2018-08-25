@@ -1,9 +1,8 @@
 *.o
 *.out
 
-.idea/*
-.vscode/*
-
-*/*/rls/*
-*/*/target/*
+**/.idea
+**/.vscode
+**/rls
+**/target
 

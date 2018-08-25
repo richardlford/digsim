@@ -1,5 +1,5 @@
 // struct to hold time data
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct TimeData {
   pub dt: f64,
   pub t_start: f64,
@@ -20,35 +20,26 @@ impl Default for TimeData {
 // objects for springs
 
 // spring simulation variable for dynamic printing
-#[derive(Debug, Clone, PartialEq)]
-pub enum SpringProperty {
-  DampingCoefficient,
-  Dt,
-  Gravity,
-  Mass,
-  SpringCoefficient,
+#[derive(Debug, Clone, PartialEq, Copy)]
+pub enum Property {
   Time,
-  TStart,
-  TStop,
   X,
   Xd,
   Xdd,
-  XdIc,
-  Xic,
   Invalid,
 }
 
 // command
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Copy)]
 pub enum Command {
-  Print(SpringProperty),
+  Print(Property),
   Run,
   Stop,
   Invalid,
 }
 
 // struct to hold simulation data
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct SpringData {
   pub damping_coefficient: f64,
   pub gravity: f64,
@@ -87,29 +78,20 @@ impl DiffEq for SpringData {
 pub fn lookup_command(s: &str) -> Command {
   let s_slice: &str = &s.to_lowercase();
   match s_slice.trim() {
-    "print" => Command::Print(SpringProperty::Invalid),
+    "print" => Command::Print(Property::Invalid),
     "stop" => Command::Stop,
     "run" => Command::Run,
     _ => Command::Invalid,
   }
 }
 
-pub fn lookup_spring_property(s: &str) -> SpringProperty {
+pub fn lookup_property(s: &str) -> Property {
   let s_slice: &str = &s.to_lowercase();
   match s_slice.trim() {
-    "dampingcoefficient" => SpringProperty::DampingCoefficient,
-    "dt" => SpringProperty::Dt,
-    "gravity" => SpringProperty::Gravity,
-    "mass" => SpringProperty::Mass,
-    "springcoefficient" => SpringProperty::SpringCoefficient,
-    "time" => SpringProperty::Time,
-    "tstart" => SpringProperty::TStart,
-    "tstop" => SpringProperty::TStop,
-    "x" => SpringProperty::X,
-    "xd" => SpringProperty::Xd,
-    "xdd" => SpringProperty::Xdd,
-    "xdic" => SpringProperty::XdIc,
-    "xic" => SpringProperty::Xic,
-    _ => SpringProperty::Invalid,
+    "time" => Property::Time,
+    "x" => Property::X,
+    "xd" => Property::Xd,
+    "xdd" => Property::Xdd,
+    _ => Property::Invalid,
   }
 }
