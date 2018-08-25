@@ -1,5 +1,7 @@
 use state::simdata::{lookup_command, lookup_property, Command, Property};
 
+// parse the input lines
+// error checks as it goes
 pub fn parse_input(in_str: &str) -> Vec<Command> {
   in_str
     .lines()
@@ -22,10 +24,31 @@ pub fn parse_input(in_str: &str) -> Vec<Command> {
     .collect()
 }
 
+// read a compiled stored input file
 pub fn parse_input_file() -> Vec<Command> {
   parse_input(include_str!("../../data/input.dat"))
 }
 
+// return true if list does not contain Command::Invalid
+pub fn commands_valid(commands: &Vec<Command>) -> bool {
+  !&commands[..].contains(&Command::Invalid)
+}
+
+// return true if list does not contain Command::Print(Property::Invalid)
+pub fn properties_valid(commands: &Vec<Command>) -> bool {
+  let xs: Vec<Command> = commands
+    .clone()
+    .into_iter()
+    .filter(|c| match c {
+      Command::Print(prop) => *prop == Property::Invalid,
+      _ => false,
+    })
+    .collect();
+  xs.len() == 0
+}
+
+// translate list of Commands to a run list
+// combines all Print statements for a Run
 pub fn build_run_list(commands: &Vec<Command>) -> Vec<(Command, Vec<Property>)> {
   // use self::Command::*;
   use self::Property::*;
@@ -45,26 +68,7 @@ pub fn build_run_list(commands: &Vec<Command>) -> Vec<(Command, Vec<Property>)> 
   runs
 }
 
-#[test]
-fn test_lookup_property() {
-  use self::Property::*;
-
-  assert!(lookup_property("tIMe") == Time);
-  assert!(lookup_property("aaa") == Invalid);
-  assert!(lookup_property("   xd  ") == Xd);
-  assert!(lookup_property("xDD ") == Xdd);
-  assert!(lookup_property("  X  ") == X);
-}
-
-#[test]
-fn test_lookup_command() {
-  assert!(lookup_command("print ") == Command::Print(Property::Invalid));
-  assert!(lookup_command("Print") == Command::Print(Property::Invalid));
-  assert!(lookup_command("Runn") == Command::Invalid);
-  assert!(lookup_command("  RUN   ") == Command::Run);
-  assert!(lookup_command("  STOp  ") == Command::Stop);
-}
-
+// tests
 #[test]
 fn test_parse_input_case() {
   use self::Command::*;
@@ -125,4 +129,20 @@ fn test_build_run_list() {
   let expected: Vec<(Command, Vec<Property>)> =
     vec![(Run, vec![Time, X, Xd]), (Run, vec![Time, X, Xd, Xdd])];
   assert!(runs == expected)
+}
+
+#[test]
+fn test_commands_valid() {
+  use self::Command::*;
+  assert!(commands_valid(&vec![Print(Property::X), Run, Stop]) == true);
+  assert!(commands_valid(&vec![Print(Property::X), Invalid, Stop]) == false);
+  assert!(commands_valid(&vec![Print(Property::X), Run, Print(Property::Invalid)]) == true)
+}
+
+#[test]
+fn test_properties_valid() {
+  use self::Command::*;
+  assert!(properties_valid(&vec![Print(Property::X), Run, Stop]) == true);
+  assert!(properties_valid(&vec![Print(Property::X), Invalid, Stop]) == true);
+  assert!(properties_valid(&vec![Print(Property::X), Run, Print(Property::Invalid)]) == false)
 }

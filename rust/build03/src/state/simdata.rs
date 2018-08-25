@@ -17,9 +17,7 @@ impl Default for TimeData {
   }
 }
 
-// objects for springs
-
-// spring simulation variable for dynamic printing
+// simulation variables for dynamic printing
 #[derive(Debug, Clone, PartialEq, Copy)]
 pub enum Property {
   Time,
@@ -29,7 +27,7 @@ pub enum Property {
   Invalid,
 }
 
-// command
+// dynamic simulation execution commands
 #[derive(Debug, Clone, PartialEq, Copy)]
 pub enum Command {
   Print(Property),
@@ -38,7 +36,14 @@ pub enum Command {
   Invalid,
 }
 
-// struct to hold simulation data
+// trait for calculating xdd
+pub trait DiffEq {
+  fn calc_xdd(&self, f64, f64) -> f64;
+}
+
+// objects for SPRINGS
+
+// struct to hold SPRING simulation data
 #[derive(Debug, Clone, Copy)]
 pub struct SpringData {
   pub damping_coefficient: f64,
@@ -50,7 +55,7 @@ pub struct SpringData {
   pub t_data: TimeData,
 }
 
-// default conditions for simulation data
+// default conditions for SPRING simulation data
 impl Default for SpringData {
   fn default() -> SpringData {
     SpringData {
@@ -65,16 +70,14 @@ impl Default for SpringData {
   }
 }
 
-pub trait DiffEq {
-  fn calc_xdd(&self, f64, f64) -> f64;
-}
-
+// implementation of DiffEq for SpringData
 impl DiffEq for SpringData {
   fn calc_xdd(&self, x: f64, xd: f64) -> f64 {
     -(self.spring_coefficient * x + self.damping_coefficient * xd) / self.mass - self.gravity
   }
 }
 
+// translate a string to a Command enum value
 pub fn lookup_command(s: &str) -> Command {
   let s_slice: &str = &s.to_lowercase();
   match s_slice.trim() {
@@ -85,6 +88,7 @@ pub fn lookup_command(s: &str) -> Command {
   }
 }
 
+// translate a string to a Property enum value
 pub fn lookup_property(s: &str) -> Property {
   let s_slice: &str = &s.to_lowercase();
   match s_slice.trim() {
@@ -94,4 +98,25 @@ pub fn lookup_property(s: &str) -> Property {
     "xdd" => Property::Xdd,
     _ => Property::Invalid,
   }
+}
+
+// tests
+#[test]
+fn test_lookup_property() {
+  use self::Property::*;
+
+  assert!(lookup_property("tIMe") == Time);
+  assert!(lookup_property("aaa") == Invalid);
+  assert!(lookup_property("   xd  ") == Xd);
+  assert!(lookup_property("xDD ") == Xdd);
+  assert!(lookup_property("  X  ") == X);
+}
+
+#[test]
+fn test_lookup_command() {
+  assert!(lookup_command("print ") == Command::Print(Property::Invalid));
+  assert!(lookup_command("Print") == Command::Print(Property::Invalid));
+  assert!(lookup_command("Runn") == Command::Invalid);
+  assert!(lookup_command("  RUN   ") == Command::Run);
+  assert!(lookup_command("  STOp  ") == Command::Stop);
 }
