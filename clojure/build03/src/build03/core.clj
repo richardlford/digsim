@@ -28,6 +28,28 @@
          (filter (comp not str/blank?))
          (map line->command))))
 
+(defn setup-batches [path]
+  (loop [last-command nil
+         commands (parse-config path)
+         loop-params (->LoopParams default-params [] [])]
+    (if (empty? commands)
+      (cond
+        (= last-command :stop) (:batches loop-params)   ; If the last command was a stop command, then everything is properly formed
+        (= last-command :run)  (:batches (process-command (->Command :stop '()) loop-params)) ; Properly close out the last batch
+        :else (:batches (->> loop-params (process-command (->Command :run '())) (process-command (->Command :stop '()))))) ; Same as above
+      (recur (:name (first commands)) (rest commands) (process-command (first commands) loop-params)))))
+
+(defn name-runs [batches]
+  (if (and (= 1 (count batches)) (= 1 (count (first batches))))
+    [(assoc (ffirst batches) :output-name "output.dat")]
+    (apply concat
+      (map-indexed 
+        (fn [i batch] 
+          (map-indexed 
+            (fn [j run] (assoc run :output-name (str "output" (inc i) "." (inc j) ".dat")))
+           batch))
+        batches))))
+
 (defn sim [params]
   (let [{:keys [state tstop dt]} params]
     (loop [current-state state
@@ -39,17 +61,8 @@
           (recur (apply ->State (mapv + [time x xd] [dt (* xd dt) (* xdd dt)]))
                  (conj output-lines (state->str current-state))))))))
 
-(defn setup-batches [path]
-  (loop [last-command nil
-         commands (parse-config path)
-         loop-params (->LoopParams default-params [] [])]
-    (if (empty? commands)
-      (cond
-        (= last-command :stop) (:batches loop-params)   ; If the last command was a stop command, then everything is properly formed
-        (= last-command :run)  (:batches (process-command (->Command :stop '()) loop-params)) ; Properly close out the last batch
-        :else (:batches (->> loop-params (process-command (->Command :run '())) (process-command (->Command :stop '())))))
-      (recur (:name (first commands)) (rest commands) (process-command (first commands) loop-params)))))
-
 (defn -main
   [& args]
-  (setup-batches "input.dat"))
+  (-> "input.dat"
+      setup-batches
+      name-runs))
