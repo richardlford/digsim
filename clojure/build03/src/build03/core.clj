@@ -1,43 +1,10 @@
 (ns build03.core
   (:require [build03.diffeq :refer [diff-eq]]
+            [build03.commands :refer :all]
             [build03.types :refer :all]
             [clojure.string :as str]
             [clojure.java.io :as io])  
   (:gen-class))
-
-(defrecord LoopParams [common-params current-batch batches])
-(defrecord Command [name params])
-
-(defmulti process-command (fn [{name :name} loop-params] name))
-
-(defmethod process-command :print [{[name idx] :params} loop-params]
-  (if (is-mapped? name idx)     ; TODO: Add time to print out if it isn't in there already
-    (update-in loop-params [:common-params :print-params] conj name)
-    (do
-      (println "No valid parameter " val " at index " idx)
-      loop-params)))
-
-(defmethod process-command :set [{[name idx val] :params} loop-params]
-  (if (is-mapped? name idx)
-    (assoc-in loop-params [:common-params (keyword name)] val)
-    (do
-      (println "No valid parameter " val " at index " idx)
-      loop-params)))
-
-(defmethod process-command :run [_ loop-params] 
-  (-> loop-params
-    (update :current-batch conj (:common-params loop-params))
-    (assoc :current-batch [])))
-
-(defmethod process-command :stop  [_ loop-params] 
-  (-> loop-params
-    (update :batches conj (:current-batch loop-params))
-    (assoc :current-batch [])))
-
-(defmethod process-command :default [{command :name} loop-params]
-  (do 
-    (println "Invalid command:" command)
-    loop-params))
 
 (defn reset [params]
   "Clears out values to plot and print, and sets recalc to false. In Ada version, also clears states, and sets quit and over to false."
@@ -50,7 +17,7 @@
   (let [tokens (str/split line #"\s+")
         to-parse (take-while #(not (str/starts-with? % "#")) tokens)
         name (keyword (first to-parse))
-        params (map read-string (rest to-parse))]
+        params (rest to-parse)]
     (->Command name params)))
 
 (defn parse-config [path]
@@ -60,7 +27,6 @@
          vec
          (filter (comp not str/blank?))
          (map line->command))))
-
 
 (defn sim [params]
   (let [{:keys [state tstop dt]} params]
@@ -73,6 +39,17 @@
           (recur (apply ->State (mapv + [time x xd] [dt (* xd dt) (* xdd dt)]))
                  (conj output-lines (state->str current-state))))))))
 
+(defn setup-batches [path]
+  (loop [last-command nil
+         commands (parse-config path)
+         loop-params (->LoopParams default-params [] [])]
+    (if (empty? commands)
+      (cond
+        (= last-command :stop) (:batches loop-params)   ; If the last command was a stop command, then everything is properly formed
+        (= last-command :run)  (:batches (process-command (->Command :stop '()) loop-params)) ; Properly close out the last batch
+        :else (:batches (->> loop-params (process-command (->Command :run '())) (process-command (->Command :stop '())))))
+      (recur (:name (first commands)) (rest commands) (process-command (first commands) loop-params)))))
+
 (defn -main
   [& args]
-  ())
+  (setup-batches "input.dat"))
