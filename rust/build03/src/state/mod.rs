@@ -1,5 +1,6 @@
 pub mod parse;
 pub mod simdata;
+pub mod spring;
 
 use self::simdata::*;
 
@@ -19,24 +20,28 @@ where
 }
 
 // simulation trait
-pub trait Simulation<T>
-where
-  T: DiffEq + Clone + Default,
-{
+pub trait Simulation {
   fn is_done(&self) -> bool;
   fn show_states(&self, &Vec<PrintProp>) -> String;
   fn lookup_state_print_props(&self, PrintProp) -> f64;
-  // fn display_items(&self, &Vec<PrintProp>) -> Vec<f64>;
 }
 
-// implementation of Simulation for SimState for SPRINGS
-impl Simulation<SpringData> for SimState<SpringData> {
+// trait for calculating xdd
+pub trait DiffEq {
+  fn calc_xdd(&self, f64, f64) -> f64;
+}
+
+// implementation of Simulation for SimState
+impl<T> Simulation for SimState<T>
+where
+  T: DiffEq + Clone + Default,
+{
   // is simulation complete
   fn is_done(&self) -> bool {
     self.time > self.t_stop
   }
 
-  // create a formated output string of states properties to view
+  // create a formated output string of state properties to view
   fn show_states(&self, props: &Vec<PrintProp>) -> String {
     let vs: Vec<f64> = props
       .into_iter()
@@ -59,7 +64,7 @@ impl Simulation<SpringData> for SimState<SpringData> {
       Invalid => 0.0,
     }
   }
-} // impl Simulation<SpringData> for SimState<SpringData>
+} // impl<T> Simulation for SimState<T>
 
 // implementation of Iterator for SimState
 impl<T> Iterator for SimState<T>
@@ -83,18 +88,5 @@ where
 
     // return next state
     Some(self.clone())
-  }
-}
-
-// initialize the data for the sim
-pub fn initialize_sim(time_data: TimeData, target: SpringData) -> SimState<SpringData> {
-  SimState {
-    dt: time_data.dt,
-    target: target,
-    time: time_data.t_start,
-    t_stop: time_data.t_stop,
-    x: target.x_ic,
-    xd: target.xd_ic,
-    xdd: 0.0,
   }
 }

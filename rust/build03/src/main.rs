@@ -2,6 +2,7 @@ mod state;
 
 use state::parse::*;
 use state::simdata::*;
+use state::spring::*;
 use state::*;
 
 fn main() {
