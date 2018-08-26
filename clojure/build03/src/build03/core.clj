@@ -11,15 +11,15 @@
 (defmulti process-command (fn [{name :name} loop-params] name))
 
 (defmethod process-command :print [{[name idx] :params} loop-params]
-  (if (is-mapped? name (read-string idx))     ; TODO: Add time to print out if it isn't in there already
+  (if (is-mapped? name idx)     ; TODO: Add time to print out if it isn't in there already
     (update-in loop-params [:common-params :print-params] conj name)
     (do
       (println "No valid parameter " val " at index " idx)
       loop-params)))
 
 (defmethod process-command :set [{[name idx val] :params} loop-params]
-  (if (is-mapped? name (read-string idx))
-    (update-in loop-params [:common-params (keyword name)] #((read-string val)))
+  (if (is-mapped? name idx)
+    (assoc-in loop-params [:common-params (keyword name)] val)
     (do
       (println "No valid parameter " val " at index " idx)
       loop-params)))
@@ -46,6 +46,20 @@
     (assoc :print-params [])
     (assoc :recalc false)))
 
+(defn line->command [line]
+  (let [tokens (str/split line #"\s+")
+        to-parse (take-while #(not (str/starts-with? % "#")) tokens)
+        name (keyword (first to-parse))
+        params (map read-string (rest to-parse))]
+    (->Command name params)))
+
+(defn parse-config [path]
+  (with-open [rdr (io/reader path)]
+    (->> rdr
+         line-seq
+         vec
+         (filter (comp not str/blank?))
+         (map line->command))))
 
 
 (defn sim [params]
