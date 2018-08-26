@@ -8,7 +8,6 @@ pub fn parse_input(in_str: &str) -> Vec<Command> {
     .filter(|&s| s.trim() != "")
     .map(|s| {
       let words: Vec<&str> = s.split(' ').filter(|&s| s.trim() != "").collect();
-      // println!("{:?}", words);
       match &words[..] {
         [c, v] | [c, v, _] => {
           let command = lookup_command(c);
@@ -48,19 +47,16 @@ pub fn properties_valid(commands: &Vec<Command>) -> bool {
 }
 
 // translate list of Commands to a run list
-// for each run combines all Print statements for a Run
+// combines all Print statements for a Run
 pub fn build_run_list(commands: &Vec<Command>) -> Vec<(Command, Vec<PrintProp>)> {
-  // use self::Command::*;
-  use self::PrintProp::*;
-
-  let mut runs: Vec<(Command, Vec<PrintProp>)> = vec![];
-  let mut props: Vec<PrintProp> = vec![Time];
+  let mut runs: Vec<(Command, Vec<PrintProp>)> = vec![]; // list of runs
+  let mut props: Vec<PrintProp> = vec![PrintProp::Time]; // list of print per run
   for command in commands {
     match command {
       Command::Print(prop) => props.push(*prop),
       Command::Run => {
         runs.push((*command, props.clone()));
-        props = vec![Time]
+        props = vec![PrintProp::Time]
       }
       _ => break,
     }
@@ -83,7 +79,7 @@ fn test_parse_input_case() {
            stop\n";
 
   let parsed = parse_input(s);
-  println!("{:?}", parsed);
+  println!("parsed inputs: {:?}", parsed);
   let expected: Vec<Command> = vec![Print(X), Print(Xd), Print(Xdd), Run, Stop];
   assert!(parsed == expected)
 }
@@ -100,7 +96,7 @@ fn test_parse_input_whitespace() {
            stop   \n";
 
   let parsed = parse_input(s);
-  println!("{:?}", parsed);
+  println!("parsed inputs: {:?}", parsed);
   let expected: Vec<Command> = vec![Print(X), Print(Xd), Run, Stop];
   assert!(parsed == expected)
 }
@@ -123,9 +119,10 @@ fn test_build_run_list() {
            Print Xdd    \n\
            Run          \n\
            ";
-
-  let runs = build_run_list(&parse_input(s));
-  println!("{:?}", runs);
+  let parsed = parse_input(s);
+  println!("{:?}", parsed);
+  let runs = build_run_list(&parsed);
+  println!("runs: {:?}", runs);
   let expected: Vec<(Command, Vec<PrintProp>)> =
     vec![(Run, vec![Time, X, Xd]), (Run, vec![Time, X, Xd, Xdd])];
   assert!(runs == expected)

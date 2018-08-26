@@ -73,17 +73,12 @@ where
 {
   type Item = SimState<T>;
   fn next(&mut self) -> Option<SimState<T>> {
-    // assign short name to constants
-    let target = &self.target;
-
     // calculate diff eq at current time
-    self.xdd = target.calc_xdd(self.x, self.xd);
+    self.xdd = self.target.calc_xdd(self.x, self.xd);
 
     // advance the state one time step
     self.x += self.xd * self.dt;
     self.xd += self.xdd * self.dt;
-
-    // advance time and continue simulation loop
     self.time += self.dt;
 
     // return next state
