@@ -1,9 +1,8 @@
 mod state;
 
-use state::parse::{build_run_list, commands_valid, parse_input_file, properties_valid};
-use state::simdata::{Command, SpringData, TimeData};
-
-use state::{display_items, initialize_sim, Simulation};
+use state::parse::*;
+use state::simdata::*;
+use state::*;
 
 fn main() {
   // parse input.dat
@@ -14,23 +13,24 @@ fn main() {
     // build run list
     let runs = build_run_list(&commands);
 
-    runs.into_iter().for_each(|(command, props)| {
+    runs.into_iter().for_each(|(command, print_props)| {
       match command {
+        // process the run, print defs are in print_props
         Command::Run => {
           // initialize time data object and spring data object
           let time_data: TimeData = Default::default();
           let spring_data: SpringData = Default::default();
 
-          // initialize the simulation state object
-          let st_ic = initialize_sim(&time_data, &spring_data);
+          // create initialized simulation state object
+          let st_ic = initialize_sim(time_data, spring_data);
 
           // display initial state
-          println!("{}", st_ic.show_states(display_items(&st_ic, &props)));
+          println!("{}", st_ic.show_states(&print_props));
 
           // iterate the simulation
           st_ic
             .take_while(|st| !st.is_done())
-            .for_each(|st| println!("{}", st.show_states(display_items(&st, &props))));
+            .for_each(|st| println!("{}", st.show_states(&print_props)));
         }
         _ => (),
       }
