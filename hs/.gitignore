@@ -2,3 +2,4 @@ digsim.exe
 *.hi
 output.dat
 output.pdf
+dist
