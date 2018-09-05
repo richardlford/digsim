@@ -3,16 +3,16 @@
               '[build03.types :refer :all]
               '[clojure.java.io :as io]))
 
-(defn print-state [state [& ks]]
-    (->> state
-        ((apply juxt ks))
-        (map (partial format "%.5e"))
-        (str/join " ")))
-           
-
-(defn termination? [params state]
+(defn is-done? [params state]
     (>= (:time state) (:tstop params)))
 
-(defn run [params output-name]
-    (with-open [outfile (io/writer output-name)]
-        ))
+(defn run [params]
+    (let [{:keys [state tstop dt]} params]
+      (loop [current-state state
+             output-lines []]
+        (if (is-done? params state))
+          output-lines
+          (let [xdd (diff-eq (:x current-state) (:xd current-state) params)
+                {:keys [time x xd]} current-state]
+            (recur (apply ->State (mapv + [time x xd] [dt (* xd dt) (* xdd dt)]))
+                   (conj output-lines (state->str current-state)))))))

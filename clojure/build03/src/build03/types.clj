@@ -18,6 +18,7 @@
 
 (defrecord LoopParams [common-params current-batch batches])
 (defrecord Command [name params])
+(defrecord Event [time name])
 
 (def initial-state (->State 0.0 0.0 0.0))
 (def default-params (->Common 8.88 9.88 1.0 39.47 0.0 2.5 0.01 0.01 [] initial-state))

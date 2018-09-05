@@ -1,9 +1,8 @@
 (ns build03.core
-  (:require [build03.diffeq :refer [diff-eq]]
-            [build03.commands :refer :all]
+  (:require [build03.commands :refer :all]
             [build03.types :refer :all]
-            [clojure.string :as str]
-            [clojure.java.io :as io])  
+            [build03.sim :as sim]
+            [clojure.string :as str])  
   (:gen-class))
 
 (defn reset [params]
@@ -21,7 +20,7 @@
     (->Command name params)))
 
 (defn parse-config [path]
-  (with-open [rdr (io/reader path)]
+  (with-open [rdr (clojure.java.io/reader path)]
     (->> rdr
          line-seq
          vec
@@ -29,13 +28,13 @@
          (map line->command))))
 
 (defn setup-batches [path]
-  (loop [last-command nil
+  (loop [prev-command nil
          commands (parse-config path)
          loop-params (->LoopParams default-params [] [])]
     (if (empty? commands)
       (cond
-        (= last-command :stop) (:batches loop-params)   ; If the last command was a stop command, then everything is properly formed
-        (= last-command :run)  (:batches (process-command (->Command :stop '()) loop-params)) ; Properly close out the last batch
+        (= prev-command :stop) (:batches loop-params)   ; If the last command was a stop command, then everything is properly formed
+        (= prev-command :run)  (:batches (process-command (->Command :stop '()) loop-params)) ; Properly close out the last batch
         :else (:batches (->> loop-params (process-command (->Command :run '())) (process-command (->Command :stop '()))))) ; Same as above
       (recur (:name (first commands)) (rest commands) (process-command (first commands) loop-params)))))
 
@@ -50,19 +49,10 @@
            batch))
         batches))))
 
-(defn sim [params]
-  (let [{:keys [state tstop dt]} params]
-    (loop [current-state state
-           output-lines []]
-      (if (> (:time current-state) tstop)
-        output-lines
-        (let [xdd (diff-eq (:x current-state) (:xd current-state) params)
-              {:keys [time x xd]} current-state]
-          (recur (apply ->State (mapv + [time x xd] [dt (* xd dt) (* xdd dt)]))
-                 (conj output-lines (state->str current-state))))))))
 
 (defn -main
   [& args]
-  (-> "input.dat"
-      setup-batches
-      name-runs))
+  (->> "input.dat"
+       setup-batches
+       name-runs
+       (doall sim/run)))
