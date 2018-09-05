@@ -6,3 +6,5 @@
 **/rls
 **/target
 
+*.swp
+*~
