@@ -18,8 +18,8 @@ HEADERS = advance.h def_data.h deriv.h diffeq.h global.h init.h sysvars.h term.h
 OBJECTS = advance.o def_data.o diffeq.o digsim.o init.o term.o global.o deriv.o
 .PHONY: clean $(INPUT)
 
-CC = gcc
-#CC = ccomp
+#CC = gcc
+CC = ccomp
 CFLAGS = -g -Wall
 
 $(PROGRAM): $(OBJECTS)

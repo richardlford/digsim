@@ -51,8 +51,8 @@ OBJECTS += $(DRV)advance.o  $(DRV)arctan.o $(DRV)defstate.o $(DRV)delim.o $(DRV)
 
 .PHONY: clean $(INPUT)
 
-CC = gcc -I. -I../driver
-#CC = ccomp -I. -I../driver 
+#CC = gcc -I. -I../driver
+CC = ccomp -I. -I../driver 
 CFLAGS = -g -Wall
 CLIBS = -lm
 

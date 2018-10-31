@@ -9,8 +9,8 @@ OBJECTS = digsim.o
 SOURCES = digsim.c
 .PHONY: clean $(INPUT)
 
-CC = gcc
-#CC = ccomp
+#CC = gcc
+CC = ccomp
 CFLAGS = -g -Wall # -fbounds-check
 
 $(PROGRAM): $(OBJECTS)
