@@ -1,0 +1,8 @@
+Print X_bi_i 500
+Print Z_bi_i 503
+Print Xd_bi_i 501
+Print Zd_bi_i 504
+Print Theta_b 506
+Print Q_s 600
+Run
+Stop
