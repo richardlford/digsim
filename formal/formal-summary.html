@@ -1,0 +1,1137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-11-21 Wed 15:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Formal Methods Summary</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="SS-FORDR-LAP" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Formal Methods Summary</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org27d00a9">1. Formal Methods Research Groups</a>
+<ul>
+<li><a href="#orgbf0b179">1.1. DeepSpec Project</a></li>
+<li><a href="#org3b0a1f0">1.2. Galois Inc</a></li>
+<li><a href="#orged31fcc">1.3. Yale FLINT Group</a></li>
+<li><a href="#org9b5b1d9">1.4. Everest Expedition</a></li>
+</ul>
+</li>
+<li><a href="#org8a9fef4">2. Formal Methods Proof Systems</a>
+<ul>
+<li><a href="#org24cfaa0">2.1. Coq</a></li>
+<li><a href="#org911e0b0">2.2. KeYmaeraX</a></li>
+<li><a href="#org49a38c0">2.3. Isabelle</a></li>
+<li><a href="#org4a2eef8">2.4. HOL</a></li>
+<li><a href="#orge92e58a">2.5. HOL-Light</a></li>
+<li><a href="#orgfcbf305">2.6. Daphny</a></li>
+<li><a href="#orgb45fd3f">2.7. Boogie</a></li>
+<li><a href="#org58fd6c2">2.8. Why3</a></li>
+<li><a href="#org50edf95">2.9. Frama-C</a></li>
+<li><a href="#org74bdac2">2.10. F*</a></li>
+<li><a href="#orgd4d02eb">2.11. LEAN</a></li>
+</ul>
+</li>
+<li><a href="#org2f58a6d">3. Formal Methods Projects</a>
+<ul>
+<li><a href="#org5596aa8">3.1. DeepSpec Projects</a>
+<ul>
+<li><a href="#orgee2f6dc">3.1.1. CompCert</a></li>
+<li><a href="#orgacf8338">3.1.2. Verified Software Toolchain</a></li>
+<li><a href="#orgc0ed4f9">3.1.3. CertiKOS - Certified Kit Operating System</a></li>
+<li><a href="#org6e1cf0c">3.1.4. VeriML</a></li>
+<li><a href="#org2a69e9a">3.1.5. Certifying Low-Level Programs with Hardware Interrupts and Preemptive Threads</a></li>
+<li><a href="#org643b5c2">3.1.6. Kami</a></li>
+<li><a href="#org8d0d72b">3.1.7. Haskell Core Spec</a></li>
+<li><a href="#org059cfc6">3.1.8. Deep Spec Server</a>
+<ul>
+<li><a href="#org8618f94">3.1.8.1. GNU Libmicrohttpd</a></li>
+</ul>
+</li>
+<li><a href="#org7b36d71">3.1.9. Kami</a></li>
+<li><a href="#orgc3a8fcd">3.1.10. Verdi</a></li>
+<li><a href="#org15eb98e">3.1.11. Vellvm</a></li>
+<li><a href="#orgeb5f924">3.1.12. Deep Spec Crypto</a></li>
+<li><a href="#orgbebcf31">3.1.13. DeepSpecDb</a></li>
+<li><a href="#org457454e">3.1.14. Fiat</a></li>
+<li><a href="#orgf74a63e">3.1.15. Narcissus</a></li>
+<li><a href="#org41491e4">3.1.16. CertiCoq</a></li>
+<li><a href="#orge3b4151">3.1.17. Template-Coq</a></li>
+<li><a href="#org70e9c11">3.1.18. QuickChick</a></li>
+<li><a href="#orge5f96bb">3.1.19. Galois Voting System</a></li>
+</ul>
+</li>
+<li><a href="#orgf20d2ba">3.2. Non-DeepSpec Projects</a>
+<ul>
+<li><a href="#org15ad727">3.2.1. CakeML</a></li>
+<li><a href="#org6130d35">3.2.2. VCC - A verifier for Concurrent C</a></li>
+<li><a href="#org25a1d24">3.2.3. Compositional CompCert</a></li>
+<li><a href="#orgbc53d44">3.2.4. GaloisInc Projects</a></li>
+<li><a href="#org5ea7477">3.2.5. Bedrock</a></li>
+<li><a href="#org8e91acb">3.2.6. FSCQ</a></li>
+<li><a href="#orgb74bde2">3.2.7. Ur/Web</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orga683e5a">4. Formal Methods Researchers</a>
+<ul>
+<li><a href="#org0f4e153">4.1. Andrew W Appel</a></li>
+<li><a href="#org81f9ee6">4.2. Adam Chlipala</a></li>
+<li><a href="#org6e95bd1">4.3. Robert Harper</a></li>
+<li><a href="#orgcef1342">4.4. Benjamin Pierce</a></li>
+<li><a href="#orge613bc1">4.5. Zhong Shao</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+This document briefly summarizes current formal method groups, proof
+systems, projects and researchers. For each it gives pointers for
+further information. It is a work-in-progress and is necessarily
+incomplete.
+</p>
+
+<div id="outline-container-org27d00a9" class="outline-2">
+<h2 id="org27d00a9"><span class="section-number-2">1</span> Formal Methods Research Groups</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgbf0b179" class="outline-3">
+<h3 id="orgbf0b179"><span class="section-number-3">1.1</span> DeepSpec Project</h3>
+<div class="outline-text-3" id="text-1-1">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://deepspec.org">https://deepspec.org</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org3b0a1f0" class="outline-3">
+<h3 id="org3b0a1f0"><span class="section-number-3">1.2</span> Galois Inc</h3>
+<div class="outline-text-3" id="text-1-2">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://galois.com/">https://galois.com/</a></dd>
+<dt>Sources</dt><dd><a href="https://github.com/GaloisInc">https://github.com/GaloisInc</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orged31fcc" class="outline-3">
+<h3 id="orged31fcc"><span class="section-number-3">1.3</span> Yale FLINT Group</h3>
+<div class="outline-text-3" id="text-1-3">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/flint/">http://flint.cs.yale.edu/flint/</a></dd>
+<dt>(no term)</dt><dd>Publications:
+<ul class="org-ul">
+<li><a href="https://www.cs.purdue.edu/homes/suresh/590s-Fall2002/papers/Flintoverview.pdf">https://www.cs.purdue.edu/homes/suresh/590s-Fall2002/papers/Flintoverview.pdf</a></li>
+</ul></dd>
+</dl>
+
+<p>
+"The FLINT group at Yale aims to develop a novel and practical
+programming infrastructure for constructing large-scale certified
+systems software. By combining recent new advances in programming
+languages, formal semantics, certified operating systems, program
+verification, proof assistants and automation, language-based
+secrurity, and certifying compilers, we hope to attack the following
+research questions:
+</p>
+
+<ul class="org-ul">
+<li>what system software structures can offer the best support for extensibility, security, and resilience?</li>
+<li>what program logics and semantic models can best capture these abstractions?</li>
+<li>what are the right programming languages and environments for developing such certified system software?</li>
+<li>how to build new automation facilities to make certified software really scale?"</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9b5b1d9" class="outline-3">
+<h3 id="org9b5b1d9"><span class="section-number-3">1.4</span> Everest Expedition</h3>
+<div class="outline-text-3" id="text-1-4">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://project-everest.github.io/">https://project-everest.github.io/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/project-everest">https://github.com/project-everest</a></dd>
+</dl>
+
+<p>
+"We are a team of researchers and engineers from several
+organizations, including Microsoft Research, Carnegie Mellon
+University, INRIA, and the MSR-INRIA joint center.
+</p>
+
+<p>
+Everest is a recursive acronym: It stands for the “Everest VERified
+End-to-end Secure Transport”."
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8a9fef4" class="outline-2">
+<h2 id="org8a9fef4"><span class="section-number-2">2</span> Formal Methods Proof Systems</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org24cfaa0" class="outline-3">
+<h3 id="org24cfaa0"><span class="section-number-3">2.1</span> Coq</h3>
+<div class="outline-text-3" id="text-2-1">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://coq.inria.fr/">https://coq.inria.fr/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/coq/coq.git">https://github.com/coq/coq.git</a></dd>
+</dl>
+
+<p>
+Coq is a formal proof management system. It provides a formal language
+to write mathematical definitions, executable algorithms and theorems
+together with an environment for semi-interactive development of
+machine-checked proofs. Typical applications include the certification
+of properties of programming languages (e.g. the CompCert compiler
+certification project, or the Bedrock verified low-level programming
+library), the formalization of mathematics (e.g. the full
+formalization of the Feit-Thompson theorem or homotopy type theory)
+and teaching.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org911e0b0" class="outline-3">
+<h3 id="org911e0b0"><span class="section-number-3">2.2</span> KeYmaeraX</h3>
+<div class="outline-text-3" id="text-2-2">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://www.ls.cs.cmu.edu/KeYmaeraX/">http://www.ls.cs.cmu.edu/KeYmaeraX/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/LS-Lab/KeYmaeraX-release">https://github.com/LS-Lab/KeYmaeraX-release</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org49a38c0" class="outline-3">
+<h3 id="org49a38c0"><span class="section-number-3">2.3</span> Isabelle</h3>
+</div>
+<div id="outline-container-org4a2eef8" class="outline-3">
+<h3 id="org4a2eef8"><span class="section-number-3">2.4</span> HOL</h3>
+<div class="outline-text-3" id="text-2-4">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://hol-theorem-prover.org/">https://hol-theorem-prover.org/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/HOL-Theorem-Prover">https://github.com/HOL-Theorem-Prover</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orge92e58a" class="outline-3">
+<h3 id="orge92e58a"><span class="section-number-3">2.5</span> HOL-Light</h3>
+<div class="outline-text-3" id="text-2-5">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://www.cl.cam.ac.uk/~jrh13/hol-light/">https://www.cl.cam.ac.uk/~jrh13/hol-light/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/jrh13/hol-light/">https://github.com/jrh13/hol-light/</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgfcbf305" class="outline-3">
+<h3 id="orgfcbf305"><span class="section-number-3">2.6</span> Daphny</h3>
+</div>
+<div id="outline-container-orgb45fd3f" class="outline-3">
+<h3 id="orgb45fd3f"><span class="section-number-3">2.7</span> Boogie</h3>
+</div>
+<div id="outline-container-org58fd6c2" class="outline-3">
+<h3 id="org58fd6c2"><span class="section-number-3">2.8</span> Why3</h3>
+</div>
+<div id="outline-container-org50edf95" class="outline-3">
+<h3 id="org50edf95"><span class="section-number-3">2.9</span> Frama-C</h3>
+</div>
+<div id="outline-container-org74bdac2" class="outline-3">
+<h3 id="org74bdac2"><span class="section-number-3">2.10</span> F*</h3>
+</div>
+<div id="outline-container-orgd4d02eb" class="outline-3">
+<h3 id="orgd4d02eb"><span class="section-number-3">2.11</span> LEAN</h3>
+</div>
+</div>
+
+<div id="outline-container-org2f58a6d" class="outline-2">
+<h2 id="org2f58a6d"><span class="section-number-2">3</span> Formal Methods Projects</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org5596aa8" class="outline-3">
+<h3 id="org5596aa8"><span class="section-number-3">3.1</span> DeepSpec Projects</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="outline-container-orgee2f6dc" class="outline-4">
+<h4 id="orgee2f6dc"><span class="section-number-4">3.1.1</span> CompCert</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://compcert.inria.fr">http://compcert.inria.fr</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/AbsInt/CompCert.git">https://github.com/AbsInt/CompCert.git</a></dd>
+</dl>
+
+<p>
+The CompCert C verified compiler is a compiler for a large subset of
+the C programming language that generates code for the PowerPC, ARM,
+x86 and RISC-V processors.
+</p>
+
+<p>
+The distinguishing feature of CompCert is that it has been formally
+verified using the Coq proof assistant: the generated assembly code is
+formally guaranteed to behave as prescribed by the semantics of the
+source C code.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgacf8338" class="outline-4">
+<h4 id="orgacf8338"><span class="section-number-4">3.1.2</span> Verified Software Toolchain</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://vst.cs.princeton.edu/">http://vst.cs.princeton.edu/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/PrincetonUniversity/VST.git">https://github.com/PrincetonUniversity/VST.git</a></dd>
+</dl>
+
+<p>
+The software toolchain includes static analyzers to check assertions
+about your program; optimizing compilers to translate your program to
+machine language; operating systems and libraries to supply context
+for your program. The Verified Software Toolchain project assures with
+machine-checked proofs that the assertions claimed at the top of the
+toolchain really hold in the machine-language program, running in the
+operating-system context.
+</p>
+
+<p>
+In some application domains it is not enough to build reliable
+software systems, one wants proved-correct software. This is the case
+for safety-critical systems (where software bugs can cause injury or
+death) and for security-critical applications (where an attacker is
+deliberately searching for, and exploiting, software bugs). Since
+proofs are large and complex, the proof-checking must be
+mechanized. Machine-checked proofs of real software systems are
+difficult, but now should be possible, given the recent advances in
+the theory and engineering of mechanized proof systems applied to
+software verification. But there are several challenges:
+</p>
+
+<ul class="org-ul">
+<li>Real software systems are usually built from components in different
+programming languages.</li>
+
+<li>Some parts of the program need full correctness proofs, which must
+be constructed with great effort; other parts need only safety
+proofs, which can be constructed automatically.</li>
+
+<li>One reasons about correctness at the source-code level, but one runs
+a machine-code program translated by a compiler; the compiler must
+be proved correct.</li>
+
+<li>These proofs about different properties, with respect to different
+programming languages, must be integrated together end-to-end in a
+way that is also proved correct and machine-checked.</li>
+</ul>
+
+<p>
+We address these challenges by defining Verifiable C, a program logic
+for the C programming language. Verifiable C is proved sound with
+respect to the operational semantics of CompCert C; in turn, the
+CompCert verified optimizing C compiler is proved correct with respect
+to the assembly-language semantics of the PowerPC, ARM, and x86
+processors.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc0ed4f9" class="outline-4">
+<h4 id="orgc0ed4f9"><span class="section-number-4">3.1.3</span> CertiKOS - Certified Kit Operating System</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/certikos/">http://flint.cs.yale.edu/certikos/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/npe9/certikos.git">https://github.com/npe9/certikos.git</a></dd>
+</dl>
+
+<p>
+Developed by the FLINT group.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6e1cf0c" class="outline-4">
+<h4 id="org6e1cf0c"><span class="section-number-4">3.1.4</span> VeriML</h4>
+<div class="outline-text-4" id="text-3-1-4">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/shao/papers/veriml.html">http://flint.cs.yale.edu/shao/papers/veriml.html</a></dd>
+<dt>Source</dt><dd><a href="http://flint.cs.yale.edu/flint/publications/veriml-0.1.tar.gz">http://flint.cs.yale.edu/flint/publications/veriml-0.1.tar.gz</a></dd>
+<dt>Paper</dt><dd><a href="http://flint.cs.yale.edu/flint/publications/verimltr.pdf">http://flint.cs.yale.edu/flint/publications/verimltr.pdf</a></dd>
+</dl>
+
+<p>
+Developed by the FLINT group.
+</p>
+
+<p>
+Modern proof assistants such as Coq and Isabelle provide high degrees
+of expressiveness and assurance because they support formal reasoning
+in higher-order logic and supply explicit machine-checkable proof
+objects. Unfortunately, large scale proof development in these proof
+assistants is still an extremely difficult and time-consuming
+task. One major weakness of these proof assistants is the lack of a
+single language where users can develop complex tactics and decision
+procedures using a rich programming model and in a typeful
+manner. This limits the scalability of the proof development process,
+as users avoid developing domain-specific tactics and decision
+procedures.
+</p>
+
+<p>
+In this paper, we present VeriML&#x2014;a novel language design that
+couples a type-safe effectful computational language with first-class
+support for manipulating logical terms such as propositions and
+proofs. The main idea behind our design is to integrate a rich logical
+framework&#x2014;similar to the one supported by Coq&#x2014;inside a
+computational language inspired by ML. The language design is such
+that the added features are orthogonal to the rest of the
+computational language, and also do not require significant additions
+to the logic language, so soundness is guaranteed. We have built a
+prototype implementation of VeriML including both its type-checker and
+an interpreter. We demonstrate the effectiveness of our design by
+showing a number of type-safe tactics and decision procedures written
+in VeriML.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2a69e9a" class="outline-4">
+<h4 id="org2a69e9a"><span class="section-number-4">3.1.5</span> Certifying Low-Level Programs with Hardware Interrupts and Preemptive Threads</h4>
+<div class="outline-text-4" id="text-3-1-5">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/shao/papers/aimjar.html">http://flint.cs.yale.edu/shao/papers/aimjar.html</a></dd>
+<dt>Source</dt><dd><a href="http://flint.cs.yale.edu/flint/publications/aim.coq.tar.gz">http://flint.cs.yale.edu/flint/publications/aim.coq.tar.gz</a></dd>
+<dt>Local repo</dt><dd>e/certhwint</dd>
+</dl>
+
+<p>
+Developed by the FLINT group.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org643b5c2" class="outline-4">
+<h4 id="org643b5c2"><span class="section-number-4">3.1.6</span> Kami</h4>
+<div class="outline-text-4" id="text-3-1-6">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/kami/">http://plv.csail.mit.edu/kami/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/mit-plv/kami">https://github.com/mit-plv/kami</a></dd>
+</dl>
+
+<p>
+Kami is a library that turns Coq into an IDE for digital hardware
+development, based on a clean-slate reimplementation of a core of the
+<a href="http://www.bluespec.com/">Bluespec</a> language. We span the gap from mathematical specifications to
+hardware circuit descriptions (RTL netlists). We support specifying,
+implementing, verifying, and compiling hardware, reasoning at a high
+level about particular hardware components but in the end deriving
+first-principles Coq theorems about circuits. No part of Kami need be
+trusted beside the formalization of low-level (Verilog-style) circuit
+descriptions; all other aspects have end-to-end correctness proofs
+checked by Coq. Hardware designs are broken into separately verified
+modules, reasoned about with a novel take on labeled transition
+systems. Furthermore, Coq provides a natural and expressive platform
+for metaprogramming, or building verified circuit generators, as for a
+memory caching system autogenerated for a particular shape of cache
+hierarchy, or a CPU generated given a number of concurrent cores as
+input.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8d0d72b" class="outline-4">
+<h4 id="org8d0d72b"><span class="section-number-4">3.1.7</span> Haskell Core Spec</h4>
+<div class="outline-text-4" id="text-3-1-7">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/Haskell+CoreSpec">https://deepspec.org/entry/Project/Haskell+CoreSpec</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/sweirich/corespec.git">https://github.com/sweirich/corespec.git</a></dd>
+</dl>
+
+<p>
+The Haskell CoreSpec Project aims to develop formal specifications for
+a high-level, industrially-relevant functional programming
+language. In particular, this project targets the core language of the
+Glasgow Haskell Compiler, the primary compiler for the Haskell
+programming language. GHC has long been used as both an industrial
+strength compiler and a platform for language research. The compiler
+itself is open source, and has primarily been developed and is
+currently maintained by researchers at Microsoft Research,
+Cambridge. The CoreSpec project will develop a formal Coq
+specification of the GHC Core language, including the syntax, type
+system, and semantics, and connect that specification to other
+components of the DeepSpec project.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org059cfc6" class="outline-4">
+<h4 id="org059cfc6"><span class="section-number-4">3.1.8</span> Deep Spec Server</h4>
+<div class="outline-text-4" id="text-3-1-8">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/DeepSpec+Web+Server">https://deepspec.org/entry/Project/DeepSpec+Web+Server</a></dd>
+<dt>Source</dt><dd>Not available but see Libmicrohttpd below.</dd>
+</dl>
+
+
+<p>
+"For a final demo, unifying many of the Expedition threads, we aim to
+build a verified web server."
+</p>
+
+<p>
+Status: "A team at Penn has begun exploring the design space and
+building a first-draft prototype (for now, running on Linux) of a web
+server library loosely based on the popular libmicrohttpd.  The goal
+of this short-term effort is to understand the integration issues that
+will be involved in putting together a fully functional server from
+components under development within DeepSpec.  In particular, we want
+to understand what demands it will place on CertiKOS in terms of OS
+features (IPC, network support, shared-memory processes,
+interoperation between native clients and Linux VMs), what
+verification challenges it raises for VST, what integration challenges
+it poses for using VST and CertiKOS together."
+</p>
+</div>
+
+<div id="outline-container-org8618f94" class="outline-5">
+<h5 id="org8618f94"><span class="section-number-5">3.1.8.1</span> GNU Libmicrohttpd</h5>
+<div class="outline-text-5" id="text-3-1-8-1">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://www.gnu.org/software/libmicrohttpd/">https://www.gnu.org/software/libmicrohttpd/</a></dd>
+<dt>Source</dt><dd><a href="https://gnunet.org/git/libmicrohttpd.git">https://gnunet.org/git/libmicrohttpd.git</a></dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7b36d71" class="outline-4">
+<h4 id="org7b36d71"><span class="section-number-4">3.1.9</span> Kami</h4>
+<div class="outline-text-4" id="text-3-1-9">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/kami/">http://plv.csail.mit.edu/kami/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/mit-plv/kami.git">https://github.com/mit-plv/kami.git</a></dd>
+</dl>
+
+<p>
+A Coq framework to support implementing, specifying, verifying, and
+compiling Bluespec-style hardware components with high developer
+productivity.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc3a8fcd" class="outline-4">
+<h4 id="orgc3a8fcd"><span class="section-number-4">3.1.10</span> Verdi</h4>
+<div class="outline-text-4" id="text-3-1-10">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://verdi.uwplse.org/">http://verdi.uwplse.org/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/uwplse/verdi">https://github.com/uwplse/verdi</a></dd>
+<dt>Example</dt><dd><a href="https://github.com/uwplse/verdi-raft">https://github.com/uwplse/verdi-raft</a></dd>
+</dl>
+
+<p>
+Verification of distributed systems.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org15eb98e" class="outline-4">
+<h4 id="org15eb98e"><span class="section-number-4">3.1.11</span> Vellvm</h4>
+<div class="outline-text-4" id="text-3-1-11">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://www.cis.upenn.edu/~stevez/vellvm/">http://www.cis.upenn.edu/~stevez/vellvm/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/vellvm/vellvm">https://github.com/vellvm/vellvm</a></dd>
+<dt>Old Source</dt><dd><a href="https://github.com/vellvm/vellvm-legacy">https://github.com/vellvm/vellvm-legacy</a></dd>
+</dl>
+
+<p>
+"The Vellvm project is building a (verified LLVM), a framework for
+reasoning about programs expressed in LLVM's intermediate
+representation and transformations that operate on it. Vellvm provides
+a mechanized formal semantics of LLVM's intermediate representation,
+its type system, and properties of its SSA form. The framework is
+built using the Coq interactive theorem prover. It includes multiple
+operational semantics and proves relations among them to facilitate
+different reasoning styles and proof techniques.
+</p>
+
+<p>
+Latest Results
+</p>
+
+<p>
+During the first year of DeepSpec we
+</p>
+
+<ol class="org-ol">
+<li>worked on developing a new modular semantics for Vellvm, factoring out the memory model</li>
+
+<li>made progress on connecting LLVM-IR like SSA semantics with higher-level structural operational semantics</li>
+
+<li>applied low-level language verification techniques to the problem of race detectection instrumentation"</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgeb5f924" class="outline-4">
+<h4 id="orgeb5f924"><span class="section-number-4">3.1.12</span> Deep Spec Crypto</h4>
+<div class="outline-text-4" id="text-3-1-12">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/Cryptography">https://deepspec.org/entry/Project/Cryptography</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/mit-plv/fiat-crypto">https://github.com/mit-plv/fiat-crypto</a></dd>
+<dt>Papers</dt><dd><a href="http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf">http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf</a>
+<a href="http://www.cs.princeton.edu/~appel/papers/verified-hmac-drbg.pdf">http://www.cs.princeton.edu/~appel/papers/verified-hmac-drbg.pdf</a></dd>
+</dl>
+
+<p>
+"We are pursuing end-to-end proofs of cryptographic functionality, via
+verification of C code at Princeton and synthesis of assembly code at
+MIT.  We are considering both cryptographic primitives
+(e.g. pseudorandom number generation with VST at Princeton and
+elliptic curve operations with fiat-crypto at MIT) and protocols
+(verified with the Foundational Cryptography Framework and connected
+to results about C and assembly programs)."
+</p>
+
+<p>
+<b>Latest Results</b>:
+</p>
+
+<p>
+Fiat Cryptography is now used in Google's BoringSSL library for
+elliptic-curve arithmetic.  As a result, Chrome HTTPS connections now
+run our Coq-generated code.  Our upcoming S&amp;P 2019 paper goes into
+more detail.
+</p>
+
+<p>
+VST verification has recently focused on the primitives HMAC-DGBG and
+HKDF &#x2013; both clients of HMAC/SHA256, AES, and parts of the TweetNaCl
+library. In addition to verifying (families of) primitives, we hope to
+soon turn to integration in larger contexts like verified TLS
+libraries.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbebcf31" class="outline-4">
+<h4 id="orgbebcf31"><span class="section-number-4">3.1.13</span> DeepSpecDb</h4>
+<div class="outline-text-4" id="text-3-1-13">
+<dl class="org-dl">
+<dt>Home Page</dt><dd>?</dd>
+<dt>Source</dt><dd><a href="https://github.com/PrincetonUniversity/DeepSpecDB">https://github.com/PrincetonUniversity/DeepSpecDB</a></dd>
+<dt>(no term)</dt><dd>Papers:
+<ul class="org-ul">
+<li>VST Verification of B+Trees with Cursors
+<a href="http://perso.eleves.ens-rennes.fr/people/Aurele.Barriere/papers/vstbtrees.pdf">http://perso.eleves.ens-rennes.fr/people/Aurele.Barriere/papers/vstbtrees.pdf</a></li>
+<li>Implementing a high-performance key-value store using a trie of
+B+-Trees with cursors.
+<a href="https://github.com/PrincetonUniversity/DeepSpecDB/blob/master/papers/adewale/Masters_Thesis.pdf">https://github.com/PrincetonUniversity/DeepSpecDB/blob/master/papers/adewale/Masters_Thesis.pdf</a></li>
+<li>Project Report on DeepSpecDB
+<a href="https://github.com/PrincetonUniversity/DeepSpecDB/blob/master/papers/luke/report.pdf">https://github.com/PrincetonUniversity/DeepSpecDB/blob/master/papers/luke/report.pdf</a></li>
+<li>The Theory and Verification of B+Tree Cursor Relations
+<a href="https://github.com/PrincetonUniversity/DeepSpecDB/blob/master/papers/mcswiggen/McSwiggen-Thesis.pdf">https://github.com/PrincetonUniversity/DeepSpecDB/blob/master/papers/mcswiggen/McSwiggen-Thesis.pdf</a></li>
+</ul></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org457454e" class="outline-4">
+<h4 id="org457454e"><span class="section-number-4">3.1.14</span> Fiat</h4>
+<div class="outline-text-4" id="text-3-1-14">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/fiat/">http://plv.csail.mit.edu/fiat/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/mit-plv/fiat.git">https://github.com/mit-plv/fiat.git</a></dd>
+</dl>
+
+<p>
+"Fiat is a library for the Coq proof assistant for synthesizing
+efficient correct-by-construction programs from declarative
+specifications. Programming by Fiat starts with a high-level
+description of a program, which can be written using libraries of
+specification languages for describing common programming tasks like
+querying a relational database. These specifications are then
+iteratively refined into efficient implementations via automated
+tactics. Each derivation in Fiat produces a formal proof trail
+certifying that the synthesized program meets the original
+specification. Code synthesized by Fiat can be extracted to an
+equivalent OCaml program that can be compiled and run as normal."
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf74a63e" class="outline-4">
+<h4 id="orgf74a63e"><span class="section-number-4">3.1.15</span> Narcissus</h4>
+<div class="outline-text-4" id="text-3-1-15">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://www.cs.purdue.edu/homes/bendy/Narcissus/">https://www.cs.purdue.edu/homes/bendy/Narcissus/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/mit-plv/fiat/tree/master/src/Narcissus">https://github.com/mit-plv/fiat/tree/master/src/Narcissus</a></dd>
+<dt>Papers</dt><dd>NARCISSUS: Deriving Correct-By-Construction Decoders and Encoders from Binary Formats
+<a href="https://www.cs.purdue.edu/homes/bendy/Narcissus/narcissus.pdf">https://www.cs.purdue.edu/homes/bendy/Narcissus/narcissus.pdf</a></dd>
+<dt>Video</dt><dd><a href="https://deepspec.org/event/dsss18/videos.html">https://deepspec.org/event/dsss18/videos.html</a> Scroll to video</dd>
+</dl>
+
+<p>
+Narcissus is part of the fiat project to derive
+Correct-By-Construction Decoders and Encoders from Binary Formats.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org41491e4" class="outline-4">
+<h4 id="org41491e4"><span class="section-number-4">3.1.16</span> CertiCoq</h4>
+<div class="outline-text-4" id="text-3-1-16">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://www.cs.princeton.edu/~appel/certicoq/">https://www.cs.princeton.edu/~appel/certicoq/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/PrincetonUniversity/certicoq">https://github.com/PrincetonUniversity/certicoq</a></dd>
+<dt>Paper</dt><dd><a href="http://www.cs.princeton.edu/~appel/papers/certicoq-coqpl.pdf">http://www.cs.princeton.edu/~appel/papers/certicoq-coqpl.pdf</a></dd>
+</dl>
+
+<p>
+"The CertiCoq project aims to build a proven-correct compiler for
+dependently-typed, functional languages, such as Gallinathe core
+language of the Coq proof assistant. A proved-correct compiler
+consists of a high-level functional specification, machine-verified
+proofs of important properties, such as safety and correctness, and a
+mechanism to transport those proofs to the generated machine code. The
+project exposes both engineering challenges and foundational questions
+about compilers for dependently-typed languages."
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge3b4151" class="outline-4">
+<h4 id="orge3b4151"><span class="section-number-4">3.1.17</span> Template-Coq</h4>
+<div class="outline-text-4" id="text-3-1-17">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://template-coq.github.io/template-coq/">https://template-coq.github.io/template-coq/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/Template-Coq/template-coq">https://github.com/Template-Coq/template-coq</a></dd>
+<dt>Papeers</dt><dd><a href="https://popl18.sigplan.org/event/coqpl-2018-typed-template-coq">https://popl18.sigplan.org/event/coqpl-2018-typed-template-coq</a></dd>
+</dl>
+
+<p>
+Template Coq is a quoting library for [Coq](<a href="http://coq.inria.fr">http://coq.inria.fr</a>). It
+takes `Coq` terms and constructs a representation of their syntax tree as
+a `Coq` inductive data type. The representation is based on the kernel's
+term representation.
+</p>
+
+<p>
+This is used as the first stage of CertiCoq.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org70e9c11" class="outline-4">
+<h4 id="org70e9c11"><span class="section-number-4">3.1.18</span> QuickChick</h4>
+<div class="outline-text-4" id="text-3-1-18">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/QuickChick">https://deepspec.org/entry/Project/QuickChick</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/QuickChick">https://github.com/QuickChick</a></dd>
+<dt>Book</dt><dd><a href="https://softwarefoundations.cis.upenn.edu/qc-current/">QuickChick: Property-Based Testing in Coq</a></dd>
+
+<dt>(no term)</dt><dd>Randomized property-based testing plugin for Coq; a clone of Haskell QuickCheck</dd>
+<dt>(no term)</dt><dd>Includes a foundational verification framework for testing code</dd>
+<dt>(no term)</dt><dd>Includes a mechanism for automatically deriving generators for inductive relations</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orge5f96bb" class="outline-4">
+<h4 id="orge5f96bb"><span class="section-number-4">3.1.19</span> Galois Voting System</h4>
+<div class="outline-text-4" id="text-3-1-19">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://galois.com/blog/2009/03/trustworthy-voting-systems/">https://galois.com/blog/2009/03/trustworthy-voting-systems/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf20d2ba" class="outline-3">
+<h3 id="orgf20d2ba"><span class="section-number-3">3.2</span> Non-DeepSpec Projects</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-org15ad727" class="outline-4">
+<h4 id="org15ad727"><span class="section-number-4">3.2.1</span> CakeML</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<dl class="org-dl">
+<dt>Home page</dt><dd><a href="https://cakeml.org/">https://cakeml.org/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/CakeML/cakeml">https://github.com/CakeML/cakeml</a></dd>
+</dl>
+
+<p>
+"CakeML is a functional programming language and an ecosystem of proofs
+and tools built around the language. The ecosystem includes a
+proven-correct compiler that can bootstrap itself."
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6130d35" class="outline-4">
+<h4 id="org6130d35"><span class="section-number-4">3.2.2</span> VCC - A verifier for Concurrent C</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://www.microsoft.com/en-us/research/project/vcc-a-verifier-for-concurrent-c/">https://www.microsoft.com/en-us/research/project/vcc-a-verifier-for-concurrent-c/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/Microsoft/vcc.git">https://github.com/Microsoft/vcc.git</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org25a1d24" class="outline-4">
+<h4 id="org25a1d24"><span class="section-number-4">3.2.3</span> Compositional CompCert</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<dl class="org-dl">
+<dt>Source</dt><dd><a href="https://github.com/PrincetonUniversity/compcomp">https://github.com/PrincetonUniversity/compcomp</a></dd>
+</dl>
+
+<p>
+Compcert supporting separate compilation. Last modified in 2015.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbc53d44" class="outline-4">
+<h4 id="orgbc53d44"><span class="section-number-4">3.2.4</span> GaloisInc Projects</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://galois.com/">https://galois.com/</a></dd>
+<dt>Source</dt><dd><p>
+<a href="https://github.com/GaloisInc">https://github.com/GaloisInc</a>
+"Galois develops technology to guarantee the trustworthiness of
+systems where failure is unacceptable.
+</p>
+
+<p>
+We apply cutting edge computer science and mathematics to advance the
+state of the art in software and hardware trustworthiness."
+</p></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org5ea7477" class="outline-4">
+<h4 id="org5ea7477"><span class="section-number-4">3.2.5</span> Bedrock</h4>
+<div class="outline-text-4" id="text-3-2-5">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/bedrock/">http://plv.csail.mit.edu/bedrock/</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org8e91acb" class="outline-4">
+<h4 id="org8e91acb"><span class="section-number-4">3.2.6</span> FSCQ</h4>
+<div class="outline-text-4" id="text-3-2-6">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://css.csail.mit.edu/fscq/">http://css.csail.mit.edu/fscq/</a></dd>
+</dl>
+
+<p>
+A file system verified in Coq using a separation logic for reasoning about crash safety
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb74bde2" class="outline-4">
+<h4 id="orgb74bde2"><span class="section-number-4">3.2.7</span> Ur/Web</h4>
+<div class="outline-text-4" id="text-3-2-7">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/ur/">http://plv.csail.mit.edu/ur/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga683e5a" class="outline-2">
+<h2 id="orga683e5a"><span class="section-number-2">4</span> Formal Methods Researchers</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Alphabetically by last name, then first.
+</p>
+</div>
+
+<div id="outline-container-org0f4e153" class="outline-3">
+<h3 id="org0f4e153"><span class="section-number-3">4.1</span> Andrew W Appel</h3>
+<div class="outline-text-3" id="text-4-1">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://www.cs.princeton.edu/~appel/index.html">http://www.cs.princeton.edu/~appel/index.html</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org81f9ee6" class="outline-3">
+<h3 id="org81f9ee6"><span class="section-number-3">4.2</span> Adam Chlipala</h3>
+<div class="outline-text-3" id="text-4-2">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://adam.chlipala.net/">http://adam.chlipala.net/</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org6e95bd1" class="outline-3">
+<h3 id="org6e95bd1"><span class="section-number-3">4.3</span> Robert Harper</h3>
+<div class="outline-text-3" id="text-4-3">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://www.cs.cmu.edu/~rwh/">http://www.cs.cmu.edu/~rwh/</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgcef1342" class="outline-3">
+<h3 id="orgcef1342"><span class="section-number-3">4.4</span> Benjamin Pierce</h3>
+<div class="outline-text-3" id="text-4-4">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://www.cis.upenn.edu/~bcpierce/">http://www.cis.upenn.edu/~bcpierce/</a></dd>
+<dt>LinkedIn</dt><dd><a href="https://github.com/bcpierce00">https://github.com/bcpierce00</a></dd>
+</dl>
+<p>
+Professor Department of Computer and Information Science University of Pennsylvania.
+Author of <a href="http://www.cis.upenn.edu/~bcpierce/sf">Software Foundations</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge613bc1" class="outline-3">
+<h3 id="orge613bc1"><span class="section-number-3">4.5</span> Zhong Shao</h3>
+<div class="outline-text-3" id="text-4-5">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://cs-www.cs.yale.edu/homes/shao/">http://cs-www.cs.yale.edu/homes/shao/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: SS-FORDR-LAP</p>
+<p class="date">Created: 2018-11-21 Wed 15:49</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

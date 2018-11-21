@@ -1,0 +1,57 @@
+ArchiveEntry "00: Mass Spring Damper System"
+  Description "Mass hanging from spring with damper".
+  Title "Mass Spring Damper".
+
+Functions  /* function symbols cannot change their value */
+  Real tstop;                  /* Simulation stop time [sec] */
+  Real dt;                     /* Simulation time step [sec] */
+  Real dampingCoefficient;    /* Damping force per velo'city [N/m/s] */
+  Real gravity;                /* Acceleration due to gravity [m/sec**2] */
+  Real mass;                   /* Restoring force per position [N/m] */
+  Real springCoefficient;     /* Mass suspended from spring [Kg] */
+  Real xdIc;                  /* Initial position of suspended mass (m] */
+  Real xIc;                   /* Initial velocity of suspended mass [m/sec] */
+  Real E0;                     /* Initial total energy */
+  Real dCm;                    /* dampingCoefficient/mass */
+  Real sCm;                    /* springCoefficient/mass */
+End.
+
+ProgramVariables  /* program variables may change their value over time */
+  Real time;                   /* Simulation time [sec] */
+  Real x;                      /* Position of suspended mass (m] */
+  Real xd;                     /* Velocity of suspended mass [m/sec] */
+End.
+
+Problem                                 /* conjecture in differential dynamic logic */
+  dampingCoefficient =  8.88 &
+  dt                  =  0.01 &
+  gravity             =  9.88 &
+  mass                =  1.00 &
+  springCoefficient  = 39.47 &
+  dCm                 = (dampingCoefficient/mass) &
+  sCm                 = (springCoefficient/mass) &
+  tstop               =  2.50 &
+  xIc                =  0.00 &
+  xdIc               =  0.00 &
+  (E0                  = ((springCoefficient*xIc^2)/2 +
+                          (mass*xdIc^2)/2 +
+                          mass*x)) &
+
+  /* Set initial conditions */
+  x    = xIc &
+  xd   = xdIc &
+  time = 0.0
+
+->                                      /* implies */
+[                                       /* all runs of hybrid program dynamics */
+  {                                     /* braces {} for grouping of programs */
+    {x'=xd , xd'= -sCm*x - dCm*xd - gravity} /* differential equation system with domain */
+  }*@invariant(((springCoefficient*xIc^2)/2 +   /* loop repeats, with invariant contract */
+                          (mass*xdIc^2)/2 +
+                          mass*x) <= E0)
+] (((springCoefficient*xIc^2)/2 +               /* safety/postcondition */
+                          (mass*xdIc^2)/2 +
+                          mass*x) <= E0) 
+End.
+
+End.

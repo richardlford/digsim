@@ -1,0 +1,24 @@
+ArchiveEntry "00: Test ODE solver"
+  Description "Second order".
+  Title "Second Order".
+
+Functions  /* function symbols cannot change their value */
+End.
+
+ProgramVariables  /* program variables may change their value over time */
+  Real x;                      /* Position of suspended mass (m] */
+  Real v;                     /* Velocity of suspended mass [m/sec] */
+End.
+
+Problem                                 /* conjecture in differential dynamic logic */
+  x    = 0.0 &
+  v   = 0.0
+->                                      /* implies */
+[                                       /* all runs of hybrid program dynamics */
+  {                                     /* braces {} for grouping of programs */
+    {x'=v , v'= 2.0*x + 3.0*v}   /* differential equation system with domain */
+  }*@invariant(x >= 0)
+] x >= 0
+End.
+
+End.

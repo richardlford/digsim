@@ -1,0 +1,112 @@
+#+TITLE: Formal Verification Steps
+
+The following are steps in formally specifying a system.
+
+* Formal Verification Steps
+** Produce Formal Specifications from English Requirements
+Formal specifications are specifications written in a formal language
+such as Coq's Gallina. The specification language must be one that can
+express propositions and proofs and that is supported by a theorem
+prover.
+
+The input to the process is an English language description of the system
+and its required properties. These must be translated into a formal
+specification.
+
+The formal specifications will define data types and functions that
+will model the system being specified and the functions it performs.
+
+** Produce Properties of the Modeled System
+The English language system requirements must be translated into
+formal properties using the formal specification language.
+These formal requirements will be written in terms of the 
+types and functions in the formal specifications.
+
+** Produce an Abstract Implementation of the System
+This step involves producing an implementation of the system
+in the specification language that satisfies the given 
+requirements. It is not required that the final implementation
+follow this abstract implementation. The abstract implementation
+is just a witness to the possibility of implementing the system.
+
+** Prove the Formal Properties For the Abstract Implementation
+This step involves using the theorem prover to prove that the abstract
+implementation of the system satisfies the formal properties.
+
+* Formal Verification Examples
+** Maps
+A map is a structure that, given an element of the input domain,
+will produce an element of the output domain.
+
+*** Formal Specification of a Map
+The following example shows a Coq module type, TableSignature, which
+models a lookup table taking natural numbers as keys and
+an arbitrary type V as target type.
+
+#+BEGIN_SRC coq
+Module Type TableSignature.
+ Parameter V: Type.
+ Parameter default: V.
+ Parameter table: Type.
+ Definition key := nat.
+ Parameter empty: table.
+ Parameter get: key -> table -> V.
+ Parameter set: key -> V -> table -> table.
+End TableSignature.
+#+END_SRC
+
+*** Properties of a Map
+The specification in the previous section gave the signature of the
+operations but not their semantics. The semantics are given
+now in a module type that extends the signature with required
+properties.
+
+#+BEGIN_SRC coq
+Module Type TABLE.
+ Include TableSignature.
+ Axiom gempty: forall k,   (* get-empty *)
+       get k empty = default.
+ Axiom gss: forall k v t,      (* get-set-same *)
+      get k (set k v t) = v.
+ Axiom gso: forall j k v t,    (* get-set-other *)
+      j <> k -> get j (set k v t) = get j t.
+End TABLE.
+#+END_SRC
+
+*** Abstract Implementation of a Map
+The following code shows a Coq module that provides an implementation
+of the TableSignature module type. It uses total maps (implemented in
+separate Coq module Maps, not shown) to implement the lookup table.
+
+#+BEGIN_SRC coq
+Require Import Maps.
+
+Module MapsTableSignature <: TableSignature.
+ Definition V := Type.
+ Definition default: V := Prop.
+ Definition table := total_map V.
+ Definition key := nat.
+ Definition empty : table := t_empty default.
+ Definition get (k: key) (m: table) : V := m k.
+ Definition set (k: key) (v: V) (m: table) : table :=
+    t_update m k v.
+End MapsTableSignature .
+#+END_SRC
+
+*** Prove Properties for the Abstract Implementation
+We place the proofs of the properties in module MapsTable which
+extends MapsTableSignature.
+
+#+BEGIN_SRC coq
+Module MapsTable <: TABLE.
+ Include MapsTableSignature.
+ Theorem gempty: forall k, get k empty = default.
+   Proof. intros. reflexivity. Qed.
+ Theorem gss: forall k v t,  get k (set k v t) = v.
+   Proof. intros. unfold get, set. apply t_update_eq. Qed.
+ Theorem gso: forall j k v t, j<>k -> get j (set k v t) = get j t.
+   Proof. intros. unfold get, set. apply t_update_neq.
+       congruence.
+   Qed.
+End MapsTable.
+#+END_SRC
