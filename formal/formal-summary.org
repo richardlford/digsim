@@ -63,16 +63,49 @@ and teaching.
 - Home Page :: http://www.ls.cs.cmu.edu/KeYmaeraX/
 - Source :: https://github.com/LS-Lab/KeYmaeraX-release
 
+KeYmaeraX is a system for specifying and verifying Hybrid
+Cyber-Physical Systems.
+
 ** Isabelle
-** HOL
+- Home Page :: https://isabelle.in.tum.de/
+- Source :: hg clone https://isabelle.in.tum.de/repos/isabelle
+
+"Isabelle is a generic proof assistant. It allows mathematical
+formulas to be expressed in a formal language and provides tools for
+proving those formulas in a logical calculus. The main application is
+the formalization of mathematical proofs and in particular formal
+verification, which includes proving the correctness of computer
+hardware or software and proving properties of computer languages and
+protocols."
+
+** HOL4
 - Home Page :: https://hol-theorem-prover.org/
 - Source :: https://github.com/HOL-Theorem-Prover
+
+"The HOL interactive theorem prover is a proof assistant for
+higher-order logic: a programming environment in which theorems can be
+proved and proof tools implemented. Built-in decision procedures and
+theorem provers can automatically establish many simple theorems
+(users may have to prove the hard theorems themselves!) An oracle
+mechanism gives access to external programs such as SMT and BDD
+engines. HOL is particularly suitable as a platform for implementing
+combinations of deduction, execution and property checking."
 
 ** HOL-Light
 - Home Page :: https://www.cl.cam.ac.uk/~jrh13/hol-light/
 - Source :: https://github.com/jrh13/hol-light/
 
+"HOL Light is a computer program to help users prove interesting
+mathematical theorems completely formally in higher order logic. It
+sets a very exacting standard of correctness, but provides a number of
+automated tools and pre-proved mathematical theorems (e.g. about
+arithmetic, basic set theory and real analysis) to save the user
+work. It is also fully programmable, so users can extend it with new
+theorems and inference rules without compromising its soundness."
+
 ** Daphny
+- Home Page :: 
+
 ** Boogie
 ** Why3
 ** Frama-C
@@ -306,7 +339,7 @@ to results about C and assembly programs)."
 
 Fiat Cryptography is now used in Google's BoringSSL library for
 elliptic-curve arithmetic.  As a result, Chrome HTTPS connections now
-run our Coq-generated code.  Our upcoming S&P 2019 paper goes into
+run our Coq-generated code.  Our  upcoming S&P 2019 paper goes into
 more detail.
 
 VST verification has recently focused on the primitives HMAC-DGBG and
@@ -355,6 +388,11 @@ equivalent OCaml program that can be compiled and run as normal."
 Narcissus is part of the fiat project to derive
 Correct-By-Construction Decoders and Encoders from Binary Formats.
 
+*** Bedrock
+
+*** Bedrock2
+- Source :: 
+
 *** CertiCoq
 - Home Page :: https://www.cs.princeton.edu/~appel/certicoq/
 - Source :: https://github.com/PrincetonUniversity/certicoq
@@ -393,8 +431,13 @@ This is used as the first stage of CertiCoq.
 *** Galois Voting System
 - Home Page :: https://galois.com/blog/2009/03/trustworthy-voting-systems/
 
+** Everest Projects
+*** Everest
+- Home Page :: 
+- Source :: https://github.com/project-everest/everest.git
 
-** Non-DeepSpec Projects
+
+** Other Projects
 *** CakeML
 - Home page :: https://cakeml.org/
 - Source :: https://github.com/CakeML/cakeml
