@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-11-27 Tue 14:34 -->
+<!-- 2018-12-12 Wed 10:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Formal Methods Summary</title>
@@ -234,84 +234,96 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1ce754b">1. Formal Methods Research Groups</a>
+<li><a href="#orgdf4bc67">1. Formal Methods Research Groups</a>
 <ul>
-<li><a href="#org42689cd">1.1. DeepSpec Project</a></li>
-<li><a href="#orgd596fe4">1.2. Galois Inc</a></li>
-<li><a href="#org1dece03">1.3. Yale FLINT Group</a></li>
-<li><a href="#orgccda949">1.4. Everest Expedition</a></li>
+<li><a href="#orgeb35671">1.1. DeepSpec Project</a></li>
+<li><a href="#orge637753">1.2. Galois Inc</a></li>
+<li><a href="#org4149f28">1.3. Yale FLINT Group</a></li>
+<li><a href="#org00a493d">1.4. Everest Expedition</a></li>
+<li><a href="#org8581a2a">1.5. University of Washington Programming Languages and Software Engineering</a></li>
 </ul>
 </li>
-<li><a href="#orge8afec2">2. Formal Methods Proof Systems</a>
+<li><a href="#orgfbc059f">2. Formal Methods Proof Systems</a>
 <ul>
-<li><a href="#org5a63041">2.1. Coq</a></li>
-<li><a href="#orgb5cb2a1">2.2. KeYmaeraX</a></li>
-<li><a href="#org9b4c180">2.3. Isabelle</a></li>
-<li><a href="#org3ae8f7b">2.4. HOL</a></li>
-<li><a href="#orgda5379a">2.5. HOL-Light</a></li>
-<li><a href="#org8421ccb">2.6. Daphny</a></li>
-<li><a href="#org3ce330f">2.7. Boogie</a></li>
-<li><a href="#org6e49498">2.8. Why3</a></li>
-<li><a href="#org2c8a80a">2.9. Frama-C</a></li>
-<li><a href="#org8a2e0dd">2.10. F*</a></li>
-<li><a href="#orga4056a4">2.11. LEAN</a></li>
+<li><a href="#org72f070e">2.1. Coq</a></li>
+<li><a href="#org2c27c0d">2.2. KeYmaeraX</a></li>
+<li><a href="#orgd097808">2.3. Isabelle</a></li>
+<li><a href="#org9406b36">2.4. HOL4</a></li>
+<li><a href="#orga4cc8c8">2.5. HOL-Light</a></li>
+<li><a href="#org9f48222">2.6. Daphny</a></li>
+<li><a href="#org6092d93">2.7. Boogie</a></li>
+<li><a href="#orgab868e9">2.8. Why3</a></li>
+<li><a href="#org7fbde30">2.9. Frama-C</a></li>
+<li><a href="#orgfa1d668">2.10. F*</a></li>
+<li><a href="#org0b85cc9">2.11. LEAN</a></li>
 </ul>
 </li>
-<li><a href="#org88cdd5b">3. Formal Methods Projects</a>
+<li><a href="#org3909bed">3. Formal Methods Projects</a>
 <ul>
-<li><a href="#org6a57485">3.1. DeepSpec Projects</a>
+<li><a href="#org772d329">3.1. DeepSpec Projects</a>
 <ul>
-<li><a href="#org859d87d">3.1.1. CompCert</a></li>
-<li><a href="#orgc6fb488">3.1.2. Verified Software Toolchain</a></li>
-<li><a href="#orgb7f813a">3.1.3. CertiKOS - Certified Kit Operating System</a></li>
-<li><a href="#org76628fe">3.1.4. VeriML</a></li>
-<li><a href="#org9607a9f">3.1.5. Certifying Low-Level Programs with Hardware Interrupts and Preemptive Threads</a></li>
-<li><a href="#org67d34c2">3.1.6. Kami</a></li>
-<li><a href="#orgf0c0a1e">3.1.7. Haskell Core Spec</a></li>
-<li><a href="#orgb1660ea">3.1.8. Deep Spec Server</a>
+<li><a href="#org1a118ac">3.1.1. CompCert</a></li>
+<li><a href="#org890ed48">3.1.2. Verified Software Toolchain</a></li>
+<li><a href="#org1f3ed2e">3.1.3. CertiKOS - Certified Kit Operating System</a></li>
+<li><a href="#orge4f08b5">3.1.4. VeriML</a></li>
+<li><a href="#org82f400f">3.1.5. Certifying Low-Level Programs with Hardware Interrupts and Preemptive Threads</a></li>
+<li><a href="#org3cc0a61">3.1.6. Kami</a></li>
+<li><a href="#orga827cb7">3.1.7. Haskell Core Spec</a></li>
+<li><a href="#orge63e34d">3.1.8. Deep Spec Server</a>
 <ul>
-<li><a href="#orgc7c9330">3.1.8.1. GNU Libmicrohttpd</a></li>
+<li><a href="#orgfb851db">3.1.8.1. GNU Libmicrohttpd</a></li>
 </ul>
 </li>
-<li><a href="#orgac98f53">3.1.9. Kami</a></li>
-<li><a href="#org916601b">3.1.10. Verdi</a></li>
-<li><a href="#org67f823e">3.1.11. Vellvm</a></li>
-<li><a href="#orgffcf9ba">3.1.12. Deep Spec Crypto</a></li>
-<li><a href="#org10637e6">3.1.13. DeepSpecDb</a></li>
-<li><a href="#orga9f5aa7">3.1.14. Fiat</a></li>
-<li><a href="#org496874f">3.1.15. Narcissus</a></li>
-<li><a href="#org5d327eb">3.1.16. CertiCoq</a></li>
-<li><a href="#orgae6d789">3.1.17. Template-Coq</a></li>
-<li><a href="#orga173b1e">3.1.18. QuickChick</a></li>
-<li><a href="#org17273b3">3.1.19. Galois Voting System</a></li>
+<li><a href="#org4d448f1">3.1.9. Kami</a></li>
+<li><a href="#org18589c2">3.1.10. Verdi</a></li>
+<li><a href="#org1d26709">3.1.11. Vellvm</a></li>
+<li><a href="#org5d92653">3.1.12. Deep Spec Crypto</a></li>
+<li><a href="#orgc0d5090">3.1.13. DeepSpecDb</a></li>
+<li><a href="#orge9bae2c">3.1.14. Fiat</a></li>
+<li><a href="#orgb744768">3.1.15. Narcissus</a></li>
+<li><a href="#org5cef1c2">3.1.16. Bedrock</a></li>
+<li><a href="#org5b3affe">3.1.17. Bedrock2</a></li>
+<li><a href="#org2a11f37">3.1.18. CertiCoq</a></li>
+<li><a href="#org9892002">3.1.19. Template-Coq</a></li>
+<li><a href="#orgb430836">3.1.20. QuickChick</a></li>
+<li><a href="#orgc9cb70e">3.1.21. Galois Voting System</a></li>
 </ul>
 </li>
-<li><a href="#org9f9fd01">3.2. Non-DeepSpec Projects</a>
+<li><a href="#orgd9a8110">3.2. Everest Projects</a>
 <ul>
-<li><a href="#org724c78b">3.2.1. CakeML</a></li>
-<li><a href="#orgb29be2a">3.2.2. VCC - A verifier for Concurrent C</a></li>
-<li><a href="#org7282c71">3.2.3. Compositional CompCert</a></li>
-<li><a href="#org3f8a2b1">3.2.4. GaloisInc Projects</a></li>
-<li><a href="#org44b49f1">3.2.5. Bedrock</a></li>
-<li><a href="#orgb6ca67e">3.2.6. FSCQ</a></li>
-<li><a href="#org0f45fee">3.2.7. Ur/Web</a></li>
+<li><a href="#org881b873">3.2.1. Everest</a></li>
+<li><a href="#org89891bd">3.2.2. Quackyducky</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#orgfca3aee">4. Formal Methods Researchers</a>
+<li><a href="#org88114d4">3.3. Other Projects</a>
 <ul>
-<li><a href="#org972cf28">4.1. Andrew W Appel</a></li>
-<li><a href="#org3455983">4.2. Adam Chlipala</a></li>
-<li><a href="#orgd4c36e9">4.3. Robert Harper</a></li>
-<li><a href="#org5a59f3a">4.4. Benjamin Pierce</a></li>
-<li><a href="#org4ec77e8">4.5. Zhong Shao</a></li>
+<li><a href="#orgb97201e">3.3.1. CakeML</a></li>
+<li><a href="#orgbead91f">3.3.2. VCC - A verifier for Concurrent C</a></li>
+<li><a href="#org6b20d69">3.3.3. Compositional CompCert</a></li>
+<li><a href="#org089183f">3.3.4. GaloisInc Projects</a></li>
+<li><a href="#org5944ddc">3.3.5. Bedrock</a></li>
+<li><a href="#org02aef1d">3.3.6. FSCQ</a></li>
+<li><a href="#org732b931">3.3.7. Ur/Web</a></li>
 </ul>
 </li>
-<li><a href="#orgadc1c93">5. Statistics</a></li>
+</ul>
+</li>
+<li><a href="#orgf26882d">4. Formal Methods Researchers</a>
+<ul>
+<li><a href="#org0256316">4.1. Andrew W Appel</a></li>
+<li><a href="#orgbd3ca68">4.2. Adam Chlipala</a></li>
+<li><a href="#org7f04122">4.3. Robert Harper</a></li>
+<li><a href="#org69f7c66">4.4. Benjamin Pierce</a></li>
+<li><a href="#org511077f">4.5. Zhong Shao</a></li>
+</ul>
+</li>
+<li><a href="#org6029604">5. Statistics</a></li>
 </ul>
 </div>
 </div>
+<p>
+&lt;!&#x2013;  -<b>- mode: org; -</b>- &#x2013;&gt;
+</p>
 <p>
 This document briefly summarizes current formal method groups, proof
 systems, projects and researchers. For each it gives pointers for
@@ -319,12 +331,12 @@ further information. It is a work-in-progress and is necessarily
 incomplete.
 </p>
 
-<div id="outline-container-org1ce754b" class="outline-2">
-<h2 id="org1ce754b"><span class="section-number-2">1</span> Formal Methods Research Groups</h2>
+<div id="outline-container-orgdf4bc67" class="outline-2">
+<h2 id="orgdf4bc67"><span class="section-number-2">1</span> Formal Methods Research Groups</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org42689cd" class="outline-3">
-<h3 id="org42689cd"><span class="section-number-3">1.1</span> DeepSpec Project</h3>
+<div id="outline-container-orgeb35671" class="outline-3">
+<h3 id="orgeb35671"><span class="section-number-3">1.1</span> DeepSpec Project</h3>
 <div class="outline-text-3" id="text-1-1">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://deepspec.org">https://deepspec.org</a></dd>
@@ -332,8 +344,8 @@ incomplete.
 </div>
 </div>
 
-<div id="outline-container-orgd596fe4" class="outline-3">
-<h3 id="orgd596fe4"><span class="section-number-3">1.2</span> Galois Inc</h3>
+<div id="outline-container-orge637753" class="outline-3">
+<h3 id="orge637753"><span class="section-number-3">1.2</span> Galois Inc</h3>
 <div class="outline-text-3" id="text-1-2">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://galois.com/">https://galois.com/</a></dd>
@@ -342,8 +354,8 @@ incomplete.
 </div>
 </div>
 
-<div id="outline-container-org1dece03" class="outline-3">
-<h3 id="org1dece03"><span class="section-number-3">1.3</span> Yale FLINT Group</h3>
+<div id="outline-container-org4149f28" class="outline-3">
+<h3 id="org4149f28"><span class="section-number-3">1.3</span> Yale FLINT Group</h3>
 <div class="outline-text-3" id="text-1-3">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/flint/">http://flint.cs.yale.edu/flint/</a></dd>
@@ -372,8 +384,8 @@ research questions:
 </div>
 </div>
 
-<div id="outline-container-orgccda949" class="outline-3">
-<h3 id="orgccda949"><span class="section-number-3">1.4</span> Everest Expedition</h3>
+<div id="outline-container-org00a493d" class="outline-3">
+<h3 id="org00a493d"><span class="section-number-3">1.4</span> Everest Expedition</h3>
 <div class="outline-text-3" id="text-1-4">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://project-everest.github.io/">https://project-everest.github.io/</a></dd>
@@ -392,14 +404,24 @@ End-to-end Secure Transport”."
 </p>
 </div>
 </div>
+
+<div id="outline-container-org8581a2a" class="outline-3">
+<h3 id="org8581a2a"><span class="section-number-3">1.5</span> University of Washington Programming Languages and Software Engineering</h3>
+<div class="outline-text-3" id="text-1-5">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="http://uwplse.org/">http://uwplse.org/</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/uwplse">https://github.com/uwplse</a></dd>
+</dl>
+</div>
+</div>
 </div>
 
-<div id="outline-container-orge8afec2" class="outline-2">
-<h2 id="orge8afec2"><span class="section-number-2">2</span> Formal Methods Proof Systems</h2>
+<div id="outline-container-orgfbc059f" class="outline-2">
+<h2 id="orgfbc059f"><span class="section-number-2">2</span> Formal Methods Proof Systems</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org5a63041" class="outline-3">
-<h3 id="org5a63041"><span class="section-number-3">2.1</span> Coq</h3>
+<div id="outline-container-org72f070e" class="outline-3">
+<h3 id="org72f070e"><span class="section-number-3">2.1</span> Coq</h3>
 <div class="outline-text-3" id="text-2-1">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://coq.inria.fr/">https://coq.inria.fr/</a></dd>
@@ -420,69 +442,139 @@ and teaching.
 </div>
 </div>
 
-<div id="outline-container-orgb5cb2a1" class="outline-3">
-<h3 id="orgb5cb2a1"><span class="section-number-3">2.2</span> KeYmaeraX</h3>
+<div id="outline-container-org2c27c0d" class="outline-3">
+<h3 id="org2c27c0d"><span class="section-number-3">2.2</span> KeYmaeraX</h3>
 <div class="outline-text-3" id="text-2-2">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://www.ls.cs.cmu.edu/KeYmaeraX/">http://www.ls.cs.cmu.edu/KeYmaeraX/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/LS-Lab/KeYmaeraX-release">https://github.com/LS-Lab/KeYmaeraX-release</a></dd>
 </dl>
+
+<p>
+KeYmaeraX is a system for specifying and verifying Hybrid
+Cyber-Physical Systems.
+</p>
 </div>
 </div>
 
-<div id="outline-container-org9b4c180" class="outline-3">
-<h3 id="org9b4c180"><span class="section-number-3">2.3</span> Isabelle</h3>
+<div id="outline-container-orgd097808" class="outline-3">
+<h3 id="orgd097808"><span class="section-number-3">2.3</span> Isabelle</h3>
+<div class="outline-text-3" id="text-2-3">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://isabelle.in.tum.de/">https://isabelle.in.tum.de/</a></dd>
+<dt>Source</dt><dd>hg clone <a href="https://isabelle.in.tum.de/repos/isabelle">https://isabelle.in.tum.de/repos/isabelle</a></dd>
+</dl>
+
+<p>
+"Isabelle is a generic proof assistant. It allows mathematical
+formulas to be expressed in a formal language and provides tools for
+proving those formulas in a logical calculus. The main application is
+the formalization of mathematical proofs and in particular formal
+verification, which includes proving the correctness of computer
+hardware or software and proving properties of computer languages and
+protocols."
+</p>
 </div>
-<div id="outline-container-org3ae8f7b" class="outline-3">
-<h3 id="org3ae8f7b"><span class="section-number-3">2.4</span> HOL</h3>
+</div>
+
+<div id="outline-container-org9406b36" class="outline-3">
+<h3 id="org9406b36"><span class="section-number-3">2.4</span> HOL4</h3>
 <div class="outline-text-3" id="text-2-4">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://hol-theorem-prover.org/">https://hol-theorem-prover.org/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/HOL-Theorem-Prover">https://github.com/HOL-Theorem-Prover</a></dd>
 </dl>
+
+<p>
+"The HOL interactive theorem prover is a proof assistant for
+higher-order logic: a programming environment in which theorems can be
+proved and proof tools implemented. Built-in decision procedures and
+theorem provers can automatically establish many simple theorems
+(users may have to prove the hard theorems themselves!) An oracle
+mechanism gives access to external programs such as SMT and BDD
+engines. HOL is particularly suitable as a platform for implementing
+combinations of deduction, execution and property checking."
+</p>
 </div>
 </div>
 
-<div id="outline-container-orgda5379a" class="outline-3">
-<h3 id="orgda5379a"><span class="section-number-3">2.5</span> HOL-Light</h3>
+<div id="outline-container-orga4cc8c8" class="outline-3">
+<h3 id="orga4cc8c8"><span class="section-number-3">2.5</span> HOL-Light</h3>
 <div class="outline-text-3" id="text-2-5">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://www.cl.cam.ac.uk/~jrh13/hol-light/">https://www.cl.cam.ac.uk/~jrh13/hol-light/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/jrh13/hol-light/">https://github.com/jrh13/hol-light/</a></dd>
 </dl>
+
+<p>
+"HOL Light is a computer program to help users prove interesting
+mathematical theorems completely formally in higher order logic. It
+sets a very exacting standard of correctness, but provides a number of
+automated tools and pre-proved mathematical theorems (e.g. about
+arithmetic, basic set theory and real analysis) to save the user
+work. It is also fully programmable, so users can extend it with new
+theorems and inference rules without compromising its soundness."
+</p>
 </div>
 </div>
 
-<div id="outline-container-org8421ccb" class="outline-3">
-<h3 id="org8421ccb"><span class="section-number-3">2.6</span> Daphny</h3>
-</div>
-<div id="outline-container-org3ce330f" class="outline-3">
-<h3 id="org3ce330f"><span class="section-number-3">2.7</span> Boogie</h3>
-</div>
-<div id="outline-container-org6e49498" class="outline-3">
-<h3 id="org6e49498"><span class="section-number-3">2.8</span> Why3</h3>
-</div>
-<div id="outline-container-org2c8a80a" class="outline-3">
-<h3 id="org2c8a80a"><span class="section-number-3">2.9</span> Frama-C</h3>
-</div>
-<div id="outline-container-org8a2e0dd" class="outline-3">
-<h3 id="org8a2e0dd"><span class="section-number-3">2.10</span> F*</h3>
-</div>
-<div id="outline-container-orga4056a4" class="outline-3">
-<h3 id="orga4056a4"><span class="section-number-3">2.11</span> LEAN</h3>
+<div id="outline-container-org9f48222" class="outline-3">
+<h3 id="org9f48222"><span class="section-number-3">2.6</span> Daphny</h3>
+<div class="outline-text-3" id="text-2-6">
+<dl class="org-dl">
+<dt>Home Page</dt><dd></dd>
+</dl>
 </div>
 </div>
 
-<div id="outline-container-org88cdd5b" class="outline-2">
-<h2 id="org88cdd5b"><span class="section-number-2">3</span> Formal Methods Projects</h2>
+<div id="outline-container-org6092d93" class="outline-3">
+<h3 id="org6092d93"><span class="section-number-3">2.7</span> Boogie</h3>
+</div>
+<div id="outline-container-orgab868e9" class="outline-3">
+<h3 id="orgab868e9"><span class="section-number-3">2.8</span> Why3</h3>
+</div>
+<div id="outline-container-org7fbde30" class="outline-3">
+<h3 id="org7fbde30"><span class="section-number-3">2.9</span> Frama-C</h3>
+</div>
+<div id="outline-container-orgfa1d668" class="outline-3">
+<h3 id="orgfa1d668"><span class="section-number-3">2.10</span> F*</h3>
+<div class="outline-text-3" id="text-2-10">
+<dl class="org-dl">
+<dt>Home Page</dt><dd><a href="https://www.fstar-lang.org/">https://www.fstar-lang.org/</a></dd>
+<dt>Source</dt><dd><a href="http://github.com/FStarLang/FStar">http://github.com/FStarLang/FStar</a></dd>
+
+<dt>(no term)</dt><dd>Papers:
+<ul class="org-ul">
+<li><a href="https://www.fstar-lang.org/tutorial/">https://www.fstar-lang.org/tutorial/</a></li>
+</ul></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org0b85cc9" class="outline-3">
+<h3 id="org0b85cc9"><span class="section-number-3">2.11</span> LEAN</h3>
+<div class="outline-text-3" id="text-2-11">
+<ul class="org-ul">
+<li>Papers:
+<ul class="org-ul">
+<li>A Metaprogramming Framework for Formal Verification
+<a href="https://pp.ipd.kit.edu/uploads/publikationen/ebner17meta.pdf">https://pp.ipd.kit.edu/uploads/publikationen/ebner17meta.pdf</a></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3909bed" class="outline-2">
+<h2 id="org3909bed"><span class="section-number-2">3</span> Formal Methods Projects</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org6a57485" class="outline-3">
-<h3 id="org6a57485"><span class="section-number-3">3.1</span> DeepSpec Projects</h3>
+<div id="outline-container-org772d329" class="outline-3">
+<h3 id="org772d329"><span class="section-number-3">3.1</span> DeepSpec Projects</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org859d87d" class="outline-4">
-<h4 id="org859d87d"><span class="section-number-4">3.1.1</span> CompCert</h4>
+<div id="outline-container-org1a118ac" class="outline-4">
+<h4 id="org1a118ac"><span class="section-number-4">3.1.1</span> CompCert</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://compcert.inria.fr">http://compcert.inria.fr</a></dd>
@@ -504,8 +596,8 @@ source C code.
 </div>
 </div>
 
-<div id="outline-container-orgc6fb488" class="outline-4">
-<h4 id="orgc6fb488"><span class="section-number-4">3.1.2</span> Verified Software Toolchain</h4>
+<div id="outline-container-org890ed48" class="outline-4">
+<h4 id="org890ed48"><span class="section-number-4">3.1.2</span> Verified Software Toolchain</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://vst.cs.princeton.edu/">http://vst.cs.princeton.edu/</a></dd>
@@ -563,8 +655,8 @@ processors.
 </div>
 </div>
 
-<div id="outline-container-orgb7f813a" class="outline-4">
-<h4 id="orgb7f813a"><span class="section-number-4">3.1.3</span> CertiKOS - Certified Kit Operating System</h4>
+<div id="outline-container-org1f3ed2e" class="outline-4">
+<h4 id="org1f3ed2e"><span class="section-number-4">3.1.3</span> CertiKOS - Certified Kit Operating System</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/certikos/">http://flint.cs.yale.edu/certikos/</a></dd>
@@ -577,8 +669,8 @@ Developed by the FLINT group.
 </div>
 </div>
 
-<div id="outline-container-org76628fe" class="outline-4">
-<h4 id="org76628fe"><span class="section-number-4">3.1.4</span> VeriML</h4>
+<div id="outline-container-orge4f08b5" class="outline-4">
+<h4 id="orge4f08b5"><span class="section-number-4">3.1.4</span> VeriML</h4>
 <div class="outline-text-4" id="text-3-1-4">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/shao/papers/veriml.html">http://flint.cs.yale.edu/shao/papers/veriml.html</a></dd>
@@ -622,8 +714,8 @@ in VeriML.
 </div>
 </div>
 
-<div id="outline-container-org9607a9f" class="outline-4">
-<h4 id="org9607a9f"><span class="section-number-4">3.1.5</span> Certifying Low-Level Programs with Hardware Interrupts and Preemptive Threads</h4>
+<div id="outline-container-org82f400f" class="outline-4">
+<h4 id="org82f400f"><span class="section-number-4">3.1.5</span> Certifying Low-Level Programs with Hardware Interrupts and Preemptive Threads</h4>
 <div class="outline-text-4" id="text-3-1-5">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://flint.cs.yale.edu/shao/papers/aimjar.html">http://flint.cs.yale.edu/shao/papers/aimjar.html</a></dd>
@@ -637,8 +729,8 @@ Developed by the FLINT group.
 </div>
 </div>
 
-<div id="outline-container-org67d34c2" class="outline-4">
-<h4 id="org67d34c2"><span class="section-number-4">3.1.6</span> Kami</h4>
+<div id="outline-container-org3cc0a61" class="outline-4">
+<h4 id="org3cc0a61"><span class="section-number-4">3.1.6</span> Kami</h4>
 <div class="outline-text-4" id="text-3-1-6">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/kami/">http://plv.csail.mit.edu/kami/</a></dd>
@@ -666,8 +758,8 @@ input.
 </div>
 </div>
 
-<div id="outline-container-orgf0c0a1e" class="outline-4">
-<h4 id="orgf0c0a1e"><span class="section-number-4">3.1.7</span> Haskell Core Spec</h4>
+<div id="outline-container-orga827cb7" class="outline-4">
+<h4 id="orga827cb7"><span class="section-number-4">3.1.7</span> Haskell Core Spec</h4>
 <div class="outline-text-4" id="text-3-1-7">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/Haskell+CoreSpec">https://deepspec.org/entry/Project/Haskell+CoreSpec</a></dd>
@@ -691,8 +783,8 @@ components of the DeepSpec project.
 </div>
 </div>
 
-<div id="outline-container-orgb1660ea" class="outline-4">
-<h4 id="orgb1660ea"><span class="section-number-4">3.1.8</span> Deep Spec Server</h4>
+<div id="outline-container-orge63e34d" class="outline-4">
+<h4 id="orge63e34d"><span class="section-number-4">3.1.8</span> Deep Spec Server</h4>
 <div class="outline-text-4" id="text-3-1-8">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/DeepSpec+Web+Server">https://deepspec.org/entry/Project/DeepSpec+Web+Server</a></dd>
@@ -720,8 +812,8 @@ it poses for using VST and CertiKOS together."
 </p>
 </div>
 
-<div id="outline-container-orgc7c9330" class="outline-5">
-<h5 id="orgc7c9330"><span class="section-number-5">3.1.8.1</span> GNU Libmicrohttpd</h5>
+<div id="outline-container-orgfb851db" class="outline-5">
+<h5 id="orgfb851db"><span class="section-number-5">3.1.8.1</span> GNU Libmicrohttpd</h5>
 <div class="outline-text-5" id="text-3-1-8-1">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://www.gnu.org/software/libmicrohttpd/">https://www.gnu.org/software/libmicrohttpd/</a></dd>
@@ -731,8 +823,8 @@ it poses for using VST and CertiKOS together."
 </div>
 </div>
 
-<div id="outline-container-orgac98f53" class="outline-4">
-<h4 id="orgac98f53"><span class="section-number-4">3.1.9</span> Kami</h4>
+<div id="outline-container-org4d448f1" class="outline-4">
+<h4 id="org4d448f1"><span class="section-number-4">3.1.9</span> Kami</h4>
 <div class="outline-text-4" id="text-3-1-9">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/kami/">http://plv.csail.mit.edu/kami/</a></dd>
@@ -747,8 +839,8 @@ productivity.
 </div>
 </div>
 
-<div id="outline-container-org916601b" class="outline-4">
-<h4 id="org916601b"><span class="section-number-4">3.1.10</span> Verdi</h4>
+<div id="outline-container-org18589c2" class="outline-4">
+<h4 id="org18589c2"><span class="section-number-4">3.1.10</span> Verdi</h4>
 <div class="outline-text-4" id="text-3-1-10">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://verdi.uwplse.org/">http://verdi.uwplse.org/</a></dd>
@@ -762,8 +854,8 @@ Verification of distributed systems.
 </div>
 </div>
 
-<div id="outline-container-org67f823e" class="outline-4">
-<h4 id="org67f823e"><span class="section-number-4">3.1.11</span> Vellvm</h4>
+<div id="outline-container-org1d26709" class="outline-4">
+<h4 id="org1d26709"><span class="section-number-4">3.1.11</span> Vellvm</h4>
 <div class="outline-text-4" id="text-3-1-11">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://www.cis.upenn.edu/~stevez/vellvm/">http://www.cis.upenn.edu/~stevez/vellvm/</a></dd>
@@ -800,8 +892,8 @@ During the first year of DeepSpec we
 </div>
 </div>
 
-<div id="outline-container-orgffcf9ba" class="outline-4">
-<h4 id="orgffcf9ba"><span class="section-number-4">3.1.12</span> Deep Spec Crypto</h4>
+<div id="outline-container-org5d92653" class="outline-4">
+<h4 id="org5d92653"><span class="section-number-4">3.1.12</span> Deep Spec Crypto</h4>
 <div class="outline-text-4" id="text-3-1-12">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/Cryptography">https://deepspec.org/entry/Project/Cryptography</a></dd>
@@ -827,7 +919,7 @@ to results about C and assembly programs)."
 <p>
 Fiat Cryptography is now used in Google's BoringSSL library for
 elliptic-curve arithmetic.  As a result, Chrome HTTPS connections now
-run our Coq-generated code.  Our upcoming S&amp;P 2019 paper goes into
+run our Coq-generated code.  Our  upcoming S&amp;P 2019 paper goes into
 more detail.
 </p>
 
@@ -841,8 +933,8 @@ libraries.
 </div>
 </div>
 
-<div id="outline-container-org10637e6" class="outline-4">
-<h4 id="org10637e6"><span class="section-number-4">3.1.13</span> DeepSpecDb</h4>
+<div id="outline-container-orgc0d5090" class="outline-4">
+<h4 id="orgc0d5090"><span class="section-number-4">3.1.13</span> DeepSpecDb</h4>
 <div class="outline-text-4" id="text-3-1-13">
 <dl class="org-dl">
 <dt>Home Page</dt><dd>?</dd>
@@ -863,12 +955,17 @@ B+-Trees with cursors.
 </div>
 </div>
 
-<div id="outline-container-orga9f5aa7" class="outline-4">
-<h4 id="orga9f5aa7"><span class="section-number-4">3.1.14</span> Fiat</h4>
+<div id="outline-container-orge9bae2c" class="outline-4">
+<h4 id="orge9bae2c"><span class="section-number-4">3.1.14</span> Fiat</h4>
 <div class="outline-text-4" id="text-3-1-14">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/fiat/">http://plv.csail.mit.edu/fiat/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/mit-plv/fiat.git">https://github.com/mit-plv/fiat.git</a></dd>
+<dt>Papers</dt><dd><ul class="org-ul">
+<li>The End of History? Using a Proof Assistant to
+Replace Language Design with Library Design
+<a href="https://www.cs.purdue.edu/homes/bendy/Fiat/fiat-snapl.pdf">https://www.cs.purdue.edu/homes/bendy/Fiat/fiat-snapl.pdf</a></li>
+</ul></dd>
 </dl>
 
 <p>
@@ -887,12 +984,13 @@ equivalent OCaml program that can be compiled and run as normal."
 </div>
 </div>
 
-<div id="outline-container-org496874f" class="outline-4">
-<h4 id="org496874f"><span class="section-number-4">3.1.15</span> Narcissus</h4>
+<div id="outline-container-orgb744768" class="outline-4">
+<h4 id="orgb744768"><span class="section-number-4">3.1.15</span> Narcissus</h4>
 <div class="outline-text-4" id="text-3-1-15">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://www.cs.purdue.edu/homes/bendy/Narcissus/">https://www.cs.purdue.edu/homes/bendy/Narcissus/</a></dd>
-<dt>Source</dt><dd><a href="https://github.com/mit-plv/fiat/tree/master/src/Narcissus">https://github.com/mit-plv/fiat/tree/master/src/Narcissus</a></dd>
+<dt>Source</dt><dd><a href="https://github.com/mit-plv/fiat/tree/master/src/Narcissus">https://github.com/mit-plv/fiat/tree/master/src/Narcissus</a>
+<a href="https://github.com/bendy/fiat-asn.1">https://github.com/bendy/fiat-asn.1</a></dd>
 <dt>Papers</dt><dd>NARCISSUS: Deriving Correct-By-Construction Decoders and Encoders from Binary Formats
 <a href="https://www.cs.purdue.edu/homes/bendy/Narcissus/narcissus.pdf">https://www.cs.purdue.edu/homes/bendy/Narcissus/narcissus.pdf</a></dd>
 <dt>Video</dt><dd><a href="https://deepspec.org/event/dsss18/videos.html">https://deepspec.org/event/dsss18/videos.html</a> Scroll to video</dd>
@@ -905,9 +1003,22 @@ Correct-By-Construction Decoders and Encoders from Binary Formats.
 </div>
 </div>
 
-<div id="outline-container-org5d327eb" class="outline-4">
-<h4 id="org5d327eb"><span class="section-number-4">3.1.16</span> CertiCoq</h4>
-<div class="outline-text-4" id="text-3-1-16">
+<div id="outline-container-org5cef1c2" class="outline-4">
+<h4 id="org5cef1c2"><span class="section-number-4">3.1.16</span> Bedrock</h4>
+</div>
+
+<div id="outline-container-org5b3affe" class="outline-4">
+<h4 id="org5b3affe"><span class="section-number-4">3.1.17</span> Bedrock2</h4>
+<div class="outline-text-4" id="text-3-1-17">
+<dl class="org-dl">
+<dt>Source</dt><dd></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org2a11f37" class="outline-4">
+<h4 id="org2a11f37"><span class="section-number-4">3.1.18</span> CertiCoq</h4>
+<div class="outline-text-4" id="text-3-1-18">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://www.cs.princeton.edu/~appel/certicoq/">https://www.cs.princeton.edu/~appel/certicoq/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/PrincetonUniversity/certicoq">https://github.com/PrincetonUniversity/certicoq</a></dd>
@@ -927,9 +1038,9 @@ about compilers for dependently-typed languages."
 </div>
 </div>
 
-<div id="outline-container-orgae6d789" class="outline-4">
-<h4 id="orgae6d789"><span class="section-number-4">3.1.17</span> Template-Coq</h4>
-<div class="outline-text-4" id="text-3-1-17">
+<div id="outline-container-org9892002" class="outline-4">
+<h4 id="org9892002"><span class="section-number-4">3.1.19</span> Template-Coq</h4>
+<div class="outline-text-4" id="text-3-1-19">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://template-coq.github.io/template-coq/">https://template-coq.github.io/template-coq/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/Template-Coq/template-coq">https://github.com/Template-Coq/template-coq</a></dd>
@@ -949,9 +1060,9 @@ This is used as the first stage of CertiCoq.
 </div>
 </div>
 
-<div id="outline-container-orga173b1e" class="outline-4">
-<h4 id="orga173b1e"><span class="section-number-4">3.1.18</span> QuickChick</h4>
-<div class="outline-text-4" id="text-3-1-18">
+<div id="outline-container-orgb430836" class="outline-4">
+<h4 id="orgb430836"><span class="section-number-4">3.1.20</span> QuickChick</h4>
+<div class="outline-text-4" id="text-3-1-20">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://deepspec.org/entry/Project/QuickChick">https://deepspec.org/entry/Project/QuickChick</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/QuickChick">https://github.com/QuickChick</a></dd>
@@ -964,9 +1075,9 @@ This is used as the first stage of CertiCoq.
 </div>
 </div>
 
-<div id="outline-container-org17273b3" class="outline-4">
-<h4 id="org17273b3"><span class="section-number-4">3.1.19</span> Galois Voting System</h4>
-<div class="outline-text-4" id="text-3-1-19">
+<div id="outline-container-orgc9cb70e" class="outline-4">
+<h4 id="orgc9cb70e"><span class="section-number-4">3.1.21</span> Galois Voting System</h4>
+<div class="outline-text-4" id="text-3-1-21">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://galois.com/blog/2009/03/trustworthy-voting-systems/">https://galois.com/blog/2009/03/trustworthy-voting-systems/</a></dd>
 </dl>
@@ -974,14 +1085,45 @@ This is used as the first stage of CertiCoq.
 </div>
 </div>
 
-
-<div id="outline-container-org9f9fd01" class="outline-3">
-<h3 id="org9f9fd01"><span class="section-number-3">3.2</span> Non-DeepSpec Projects</h3>
+<div id="outline-container-orgd9a8110" class="outline-3">
+<h3 id="orgd9a8110"><span class="section-number-3">3.2</span> Everest Projects</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org724c78b" class="outline-4">
-<h4 id="org724c78b"><span class="section-number-4">3.2.1</span> CakeML</h4>
+<div id="outline-container-org881b873" class="outline-4">
+<h4 id="org881b873"><span class="section-number-4">3.2.1</span> Everest</h4>
 <div class="outline-text-4" id="text-3-2-1">
+<dl class="org-dl">
+<dt>Home Page</dt><dd></dd>
+
+<dt>Source</dt><dd><a href="https://github.com/project-everest/everest.git">https://github.com/project-everest/everest.git</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org89891bd" class="outline-4">
+<h4 id="org89891bd"><span class="section-number-4">3.2.2</span> Quackyducky</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<dl class="org-dl">
+<dt>Source</dt><dd><a href="https://github.com/project-everest/quackyducky">https://github.com/project-everest/quackyducky</a></dd>
+</dl>
+
+<p>
+QuackyDucky is a small tool to translate informal specification of
+message formats found in RFC (in particular for TLS 1.3) into formal
+F* specifications, which are in turn transformed into efficient and
+verified parser implementations.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88114d4" class="outline-3">
+<h3 id="org88114d4"><span class="section-number-3">3.3</span> Other Projects</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="outline-container-orgb97201e" class="outline-4">
+<h4 id="orgb97201e"><span class="section-number-4">3.3.1</span> CakeML</h4>
+<div class="outline-text-4" id="text-3-3-1">
 <dl class="org-dl">
 <dt>Home page</dt><dd><a href="https://cakeml.org/">https://cakeml.org/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/CakeML/cakeml">https://github.com/CakeML/cakeml</a></dd>
@@ -995,9 +1137,9 @@ proven-correct compiler that can bootstrap itself."
 </div>
 </div>
 
-<div id="outline-container-orgb29be2a" class="outline-4">
-<h4 id="orgb29be2a"><span class="section-number-4">3.2.2</span> VCC - A verifier for Concurrent C</h4>
-<div class="outline-text-4" id="text-3-2-2">
+<div id="outline-container-orgbead91f" class="outline-4">
+<h4 id="orgbead91f"><span class="section-number-4">3.3.2</span> VCC - A verifier for Concurrent C</h4>
+<div class="outline-text-4" id="text-3-3-2">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://www.microsoft.com/en-us/research/project/vcc-a-verifier-for-concurrent-c/">https://www.microsoft.com/en-us/research/project/vcc-a-verifier-for-concurrent-c/</a></dd>
 <dt>Source</dt><dd><a href="https://github.com/Microsoft/vcc.git">https://github.com/Microsoft/vcc.git</a></dd>
@@ -1005,9 +1147,9 @@ proven-correct compiler that can bootstrap itself."
 </div>
 </div>
 
-<div id="outline-container-org7282c71" class="outline-4">
-<h4 id="org7282c71"><span class="section-number-4">3.2.3</span> Compositional CompCert</h4>
-<div class="outline-text-4" id="text-3-2-3">
+<div id="outline-container-org6b20d69" class="outline-4">
+<h4 id="org6b20d69"><span class="section-number-4">3.3.3</span> Compositional CompCert</h4>
+<div class="outline-text-4" id="text-3-3-3">
 <dl class="org-dl">
 <dt>Source</dt><dd><a href="https://github.com/PrincetonUniversity/compcomp">https://github.com/PrincetonUniversity/compcomp</a></dd>
 </dl>
@@ -1018,9 +1160,9 @@ Compcert supporting separate compilation. Last modified in 2015.
 </div>
 </div>
 
-<div id="outline-container-org3f8a2b1" class="outline-4">
-<h4 id="org3f8a2b1"><span class="section-number-4">3.2.4</span> GaloisInc Projects</h4>
-<div class="outline-text-4" id="text-3-2-4">
+<div id="outline-container-org089183f" class="outline-4">
+<h4 id="org089183f"><span class="section-number-4">3.3.4</span> GaloisInc Projects</h4>
+<div class="outline-text-4" id="text-3-3-4">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="https://galois.com/">https://galois.com/</a></dd>
 <dt>Source</dt><dd><p>
@@ -1037,18 +1179,18 @@ state of the art in software and hardware trustworthiness."
 </div>
 </div>
 
-<div id="outline-container-org44b49f1" class="outline-4">
-<h4 id="org44b49f1"><span class="section-number-4">3.2.5</span> Bedrock</h4>
-<div class="outline-text-4" id="text-3-2-5">
+<div id="outline-container-org5944ddc" class="outline-4">
+<h4 id="org5944ddc"><span class="section-number-4">3.3.5</span> Bedrock</h4>
+<div class="outline-text-4" id="text-3-3-5">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/bedrock/">http://plv.csail.mit.edu/bedrock/</a></dd>
 </dl>
 </div>
 </div>
 
-<div id="outline-container-orgb6ca67e" class="outline-4">
-<h4 id="orgb6ca67e"><span class="section-number-4">3.2.6</span> FSCQ</h4>
-<div class="outline-text-4" id="text-3-2-6">
+<div id="outline-container-org02aef1d" class="outline-4">
+<h4 id="org02aef1d"><span class="section-number-4">3.3.6</span> FSCQ</h4>
+<div class="outline-text-4" id="text-3-3-6">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://css.csail.mit.edu/fscq/">http://css.csail.mit.edu/fscq/</a></dd>
 </dl>
@@ -1059,9 +1201,9 @@ A file system verified in Coq using a separation logic for reasoning about crash
 </div>
 </div>
 
-<div id="outline-container-org0f45fee" class="outline-4">
-<h4 id="org0f45fee"><span class="section-number-4">3.2.7</span> Ur/Web</h4>
-<div class="outline-text-4" id="text-3-2-7">
+<div id="outline-container-org732b931" class="outline-4">
+<h4 id="org732b931"><span class="section-number-4">3.3.7</span> Ur/Web</h4>
+<div class="outline-text-4" id="text-3-3-7">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://plv.csail.mit.edu/ur/">http://plv.csail.mit.edu/ur/</a></dd>
 </dl>
@@ -1070,16 +1212,16 @@ A file system verified in Coq using a separation logic for reasoning about crash
 </div>
 </div>
 
-<div id="outline-container-orgfca3aee" class="outline-2">
-<h2 id="orgfca3aee"><span class="section-number-2">4</span> Formal Methods Researchers</h2>
+<div id="outline-container-orgf26882d" class="outline-2">
+<h2 id="orgf26882d"><span class="section-number-2">4</span> Formal Methods Researchers</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Alphabetically by last name, then first.
 </p>
 </div>
 
-<div id="outline-container-org972cf28" class="outline-3">
-<h3 id="org972cf28"><span class="section-number-3">4.1</span> Andrew W Appel</h3>
+<div id="outline-container-org0256316" class="outline-3">
+<h3 id="org0256316"><span class="section-number-3">4.1</span> Andrew W Appel</h3>
 <div class="outline-text-3" id="text-4-1">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://www.cs.princeton.edu/~appel/index.html">http://www.cs.princeton.edu/~appel/index.html</a></dd>
@@ -1087,8 +1229,8 @@ Alphabetically by last name, then first.
 </div>
 </div>
 
-<div id="outline-container-org3455983" class="outline-3">
-<h3 id="org3455983"><span class="section-number-3">4.2</span> Adam Chlipala</h3>
+<div id="outline-container-orgbd3ca68" class="outline-3">
+<h3 id="orgbd3ca68"><span class="section-number-3">4.2</span> Adam Chlipala</h3>
 <div class="outline-text-3" id="text-4-2">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://adam.chlipala.net/">http://adam.chlipala.net/</a></dd>
@@ -1096,8 +1238,8 @@ Alphabetically by last name, then first.
 </div>
 </div>
 
-<div id="outline-container-orgd4c36e9" class="outline-3">
-<h3 id="orgd4c36e9"><span class="section-number-3">4.3</span> Robert Harper</h3>
+<div id="outline-container-org7f04122" class="outline-3">
+<h3 id="org7f04122"><span class="section-number-3">4.3</span> Robert Harper</h3>
 <div class="outline-text-3" id="text-4-3">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://www.cs.cmu.edu/~rwh/">http://www.cs.cmu.edu/~rwh/</a></dd>
@@ -1105,8 +1247,8 @@ Alphabetically by last name, then first.
 </div>
 </div>
 
-<div id="outline-container-org5a59f3a" class="outline-3">
-<h3 id="org5a59f3a"><span class="section-number-3">4.4</span> Benjamin Pierce</h3>
+<div id="outline-container-org69f7c66" class="outline-3">
+<h3 id="org69f7c66"><span class="section-number-3">4.4</span> Benjamin Pierce</h3>
 <div class="outline-text-3" id="text-4-4">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://www.cis.upenn.edu/~bcpierce/">http://www.cis.upenn.edu/~bcpierce/</a></dd>
@@ -1119,8 +1261,8 @@ Author of <a href="http://www.cis.upenn.edu/~bcpierce/sf">Software Foundations</
 </div>
 </div>
 
-<div id="outline-container-org4ec77e8" class="outline-3">
-<h3 id="org4ec77e8"><span class="section-number-3">4.5</span> Zhong Shao</h3>
+<div id="outline-container-org511077f" class="outline-3">
+<h3 id="org511077f"><span class="section-number-3">4.5</span> Zhong Shao</h3>
 <div class="outline-text-3" id="text-4-5">
 <dl class="org-dl">
 <dt>Home Page</dt><dd><a href="http://cs-www.cs.yale.edu/homes/shao/">http://cs-www.cs.yale.edu/homes/shao/</a></dd>
@@ -1128,8 +1270,8 @@ Author of <a href="http://www.cis.upenn.edu/~bcpierce/sf">Software Foundations</
 </div>
 </div>
 </div>
-<div id="outline-container-orgadc1c93" class="outline-2">
-<h2 id="orgadc1c93"><span class="section-number-2">5</span> Statistics</h2>
+<div id="outline-container-org6029604" class="outline-2">
+<h2 id="org6029604"><span class="section-number-2">5</span> Statistics</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Here are some statistics for projects using Coq. The "Types" column is
@@ -1648,7 +1790,7 @@ of "Definitions". Some projects are broken up by component.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: SS-FORDR-LAP</p>
-<p class="date">Created: 2018-11-27 Tue 14:34</p>
+<p class="date">Created: 2018-12-12 Wed 10:21</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

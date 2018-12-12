@@ -44,6 +44,10 @@ University, INRIA, and the MSR-INRIA joint center.
 Everest is a recursive acronym: It stands for the “Everest VERified
 End-to-end Secure Transport”."
 
+** University of Washington Programming Languages and Software Engineering
+- Home Page :: http://uwplse.org/
+- Source :: https://github.com/uwplse
+
 * Formal Methods Proof Systems
 ** Coq
 - Home Page :: https://coq.inria.fr/
@@ -110,7 +114,18 @@ theorems and inference rules without compromising its soundness."
 ** Why3
 ** Frama-C
 ** F*
+- Home Page :: https://www.fstar-lang.org/
+- Source :: http://github.com/FStarLang/FStar
+
+- Papers:
+  - https://www.fstar-lang.org/tutorial/
+
 ** LEAN
+
+
+- Papers:
+  - A Metaprogramming Framework for Formal Verification
+    https://pp.ipd.kit.edu/uploads/publikationen/ebner17meta.pdf
 
 * Formal Methods Projects
 
@@ -365,6 +380,10 @@ libraries.
 *** Fiat
 - Home Page :: http://plv.csail.mit.edu/fiat/
 - Source :: https://github.com/mit-plv/fiat.git
+- Papers ::
+  - The End of History? Using a Proof Assistant to
+    Replace Language Design with Library Design
+    https://www.cs.purdue.edu/homes/bendy/Fiat/fiat-snapl.pdf
 
 "Fiat is a library for the Coq proof assistant for synthesizing
 efficient correct-by-construction programs from declarative
@@ -381,6 +400,7 @@ equivalent OCaml program that can be compiled and run as normal."
 *** Narcissus
 - Home Page :: https://www.cs.purdue.edu/homes/bendy/Narcissus/
 - Source :: https://github.com/mit-plv/fiat/tree/master/src/Narcissus
+            https://github.com/bendy/fiat-asn.1
 - Papers :: NARCISSUS: Deriving Correct-By-Construction Decoders and Encoders from Binary Formats
             https://www.cs.purdue.edu/homes/bendy/Narcissus/narcissus.pdf
 - Video :: https://deepspec.org/event/dsss18/videos.html Scroll to video
@@ -436,6 +456,13 @@ This is used as the first stage of CertiCoq.
 - Home Page :: 
 - Source :: https://github.com/project-everest/everest.git
 
+*** Quackyducky
+- Source :: https://github.com/project-everest/quackyducky
+
+QuackyDucky is a small tool to translate informal specification of
+message formats found in RFC (in particular for TLS 1.3) into formal
+F* specifications, which are in turn transformed into efficient and
+verified parser implementations.
 
 ** Other Projects
 *** CakeML
