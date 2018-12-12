@@ -1,3 +1,4 @@
+<!--  -*- mode: org; -*- -->
 #+TITLE: Formal Methods Summary
 #+OPTIONS: H:5
 #+STARTUP: showeverything
