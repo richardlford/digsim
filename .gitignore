@@ -8,3 +8,9 @@
 
 *.swp
 *~
+*.aux
+*.glob
+*.vo
+.coqdeps.d
+CoqMakefile*
+
