@@ -1,2 +1,4 @@
--R /mnt/c/Users/FordRL/e/coquelicot/theories Coquelicot
+-Q /mnt/c/Users/FordRL/e/digsim-jim/formal/theories Digsim -R /mnt/c/Users/FordRL/e/coquelicot2/theories Coquelicot -Q /mnt/c/Users/FordRL/e/vstgit VST -Q ../../CompCert compcert
 theories/Euler.v
+theories/dadd.v
+theories/verif_dadd.v

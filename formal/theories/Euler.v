@@ -1,4 +1,5 @@
 (** * Formulation of Euler Numerical Integration *)
+Require Import VST.floyd.proofauto.
 Require Import Coquelicot.Coquelicot.
 Require Import Reals.
 Open Scope R_scope.
