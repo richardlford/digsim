@@ -2,3 +2,5 @@
 theories/Euler.v
 theories/dadd.v
 theories/verif_dadd.v
+theories/step.v
+theories/verif_step.v
