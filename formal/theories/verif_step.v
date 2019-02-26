@@ -57,12 +57,11 @@ Section XDD_Abstract.
             LOCAL (temp ret_temp (Vfloat (acceleration {| t := tf; x := xf; xd := xdf |}))) 
             SEP().
 
-  Definition xddp_type := 
-    (Tcons
-         (tptr
-            (Tfunction (Tcons tdouble (Tcons tdouble (Tcons tdouble Tnil))) tdouble cc_default))
-         (Tcons tdouble Tnil)).
-
+  Definition xddp_type :=
+    (tptr (Tfunction
+             (Tcons tdouble (Tcons tdouble (Tcons tdouble Tnil)))
+                         tdouble cc_default)).
+  
   Definition step_spec :=
     DECLARE _step
       WITH s: state, dt: float, stp: val, xddp: val
@@ -79,12 +78,38 @@ Section XDD_Abstract.
 
   Definition Gprog : funspecs :=
     ltac:(with_library prog [ step_spec ]).
-  
+
+
   Lemma body_step: semax_body Vprog Gprog f_step step_spec.
   Proof.
     start_function.
+    unfold state_rep.
+    unfold_data_at (data_at _ _ _ stp).
     forward.
     forward.
+    forward.
+    fwd_call subsume_funspec_refl (t s, x s, xd s).
+    {
+      admit.
+    }
+    {
+      forward.
+      forward.
+      forward.
+      forward.
+      forward.
+      forward.
+      forward.
+      forward.
+      forward.
+      entailer!.
+      unfold oneStep.
+      unfold state_rep.
+      unfold_data_at (data_at _ _ _ stp).
+      simpl.
+      entailer!.
+    }
+    
   Qed.
   
 End XDD_Abstract

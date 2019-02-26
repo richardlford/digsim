@@ -2,162 +2,91 @@ From Coq Require Import String List ZArith.
 From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clightdefs.
 Local Open Scope Z_scope.
 
-Definition ___builtin_ais_annot : ident := 5%positive.
-Definition ___builtin_annot : ident := 12%positive.
-Definition ___builtin_annot_intval : ident := 13%positive.
-Definition ___builtin_bswap : ident := 6%positive.
-Definition ___builtin_bswap16 : ident := 8%positive.
-Definition ___builtin_bswap32 : ident := 7%positive.
-Definition ___builtin_bswap64 : ident := 38%positive.
-Definition ___builtin_clz : ident := 39%positive.
-Definition ___builtin_clzl : ident := 40%positive.
-Definition ___builtin_clzll : ident := 41%positive.
-Definition ___builtin_ctz : ident := 42%positive.
-Definition ___builtin_ctzl : ident := 43%positive.
-Definition ___builtin_ctzll : ident := 44%positive.
-Definition ___builtin_debug : ident := 56%positive.
-Definition ___builtin_fabs : ident := 9%positive.
-Definition ___builtin_fmadd : ident := 47%positive.
-Definition ___builtin_fmax : ident := 45%positive.
-Definition ___builtin_fmin : ident := 46%positive.
-Definition ___builtin_fmsub : ident := 48%positive.
-Definition ___builtin_fnmadd : ident := 49%positive.
-Definition ___builtin_fnmsub : ident := 50%positive.
-Definition ___builtin_fsqrt : ident := 10%positive.
-Definition ___builtin_membar : ident := 14%positive.
-Definition ___builtin_memcpy_aligned : ident := 11%positive.
-Definition ___builtin_nop : ident := 55%positive.
-Definition ___builtin_read16_reversed : ident := 51%positive.
-Definition ___builtin_read32_reversed : ident := 52%positive.
-Definition ___builtin_va_arg : ident := 16%positive.
-Definition ___builtin_va_copy : ident := 17%positive.
-Definition ___builtin_va_end : ident := 18%positive.
-Definition ___builtin_va_start : ident := 15%positive.
-Definition ___builtin_write16_reversed : ident := 53%positive.
-Definition ___builtin_write32_reversed : ident := 54%positive.
-Definition ___compcert_i64_dtos : ident := 23%positive.
-Definition ___compcert_i64_dtou : ident := 24%positive.
-Definition ___compcert_i64_sar : ident := 35%positive.
-Definition ___compcert_i64_sdiv : ident := 29%positive.
-Definition ___compcert_i64_shl : ident := 33%positive.
-Definition ___compcert_i64_shr : ident := 34%positive.
-Definition ___compcert_i64_smod : ident := 31%positive.
-Definition ___compcert_i64_smulh : ident := 36%positive.
-Definition ___compcert_i64_stod : ident := 25%positive.
-Definition ___compcert_i64_stof : ident := 27%positive.
-Definition ___compcert_i64_udiv : ident := 30%positive.
-Definition ___compcert_i64_umod : ident := 32%positive.
-Definition ___compcert_i64_umulh : ident := 37%positive.
-Definition ___compcert_i64_utod : ident := 26%positive.
-Definition ___compcert_i64_utof : ident := 28%positive.
-Definition ___compcert_va_composite : ident := 22%positive.
-Definition ___compcert_va_float64 : ident := 21%positive.
-Definition ___compcert_va_int32 : ident := 19%positive.
-Definition ___compcert_va_int64 : ident := 20%positive.
-Definition _dt : ident := 59%positive.
-Definition _main : ident := 62%positive.
-Definition _s_state : ident := 4%positive.
-Definition _step : ident := 61%positive.
-Definition _stp : ident := 57%positive.
-Definition _t : ident := 1%positive.
-Definition _x : ident := 2%positive.
-Definition _xd : ident := 3%positive.
-Definition _xdd : ident := 60%positive.
-Definition _xddp : ident := 58%positive.
-Definition _t'1 : ident := 63%positive.
-Definition _t'2 : ident := 64%positive.
-Definition _t'3 : ident := 65%positive.
-Definition _t'4 : ident := 66%positive.
-Definition _t'5 : ident := 67%positive.
-Definition _t'6 : ident := 68%positive.
-Definition _t'7 : ident := 69%positive.
-Definition _t'8 : ident := 70%positive.
+Definition ___builtin_ais_annot : ident := 1%positive.
+Definition ___builtin_annot : ident := 8%positive.
+Definition ___builtin_annot_intval : ident := 9%positive.
+Definition ___builtin_bswap : ident := 2%positive.
+Definition ___builtin_bswap16 : ident := 4%positive.
+Definition ___builtin_bswap32 : ident := 3%positive.
+Definition ___builtin_bswap64 : ident := 34%positive.
+Definition ___builtin_clz : ident := 35%positive.
+Definition ___builtin_clzl : ident := 36%positive.
+Definition ___builtin_clzll : ident := 37%positive.
+Definition ___builtin_ctz : ident := 38%positive.
+Definition ___builtin_ctzl : ident := 39%positive.
+Definition ___builtin_ctzll : ident := 40%positive.
+Definition ___builtin_debug : ident := 52%positive.
+Definition ___builtin_fabs : ident := 5%positive.
+Definition ___builtin_fmadd : ident := 43%positive.
+Definition ___builtin_fmax : ident := 41%positive.
+Definition ___builtin_fmin : ident := 42%positive.
+Definition ___builtin_fmsub : ident := 44%positive.
+Definition ___builtin_fnmadd : ident := 45%positive.
+Definition ___builtin_fnmsub : ident := 46%positive.
+Definition ___builtin_fsqrt : ident := 6%positive.
+Definition ___builtin_membar : ident := 10%positive.
+Definition ___builtin_memcpy_aligned : ident := 7%positive.
+Definition ___builtin_nop : ident := 51%positive.
+Definition ___builtin_read16_reversed : ident := 47%positive.
+Definition ___builtin_read32_reversed : ident := 48%positive.
+Definition ___builtin_va_arg : ident := 12%positive.
+Definition ___builtin_va_copy : ident := 13%positive.
+Definition ___builtin_va_end : ident := 14%positive.
+Definition ___builtin_va_start : ident := 11%positive.
+Definition ___builtin_write16_reversed : ident := 49%positive.
+Definition ___builtin_write32_reversed : ident := 50%positive.
+Definition ___compcert_i64_dtos : ident := 19%positive.
+Definition ___compcert_i64_dtou : ident := 20%positive.
+Definition ___compcert_i64_sar : ident := 31%positive.
+Definition ___compcert_i64_sdiv : ident := 25%positive.
+Definition ___compcert_i64_shl : ident := 29%positive.
+Definition ___compcert_i64_shr : ident := 30%positive.
+Definition ___compcert_i64_smod : ident := 27%positive.
+Definition ___compcert_i64_smulh : ident := 32%positive.
+Definition ___compcert_i64_stod : ident := 21%positive.
+Definition ___compcert_i64_stof : ident := 23%positive.
+Definition ___compcert_i64_udiv : ident := 26%positive.
+Definition ___compcert_i64_umod : ident := 28%positive.
+Definition ___compcert_i64_umulh : ident := 33%positive.
+Definition ___compcert_i64_utod : ident := 22%positive.
+Definition ___compcert_i64_utof : ident := 24%positive.
+Definition ___compcert_va_composite : ident := 18%positive.
+Definition ___compcert_va_float64 : ident := 17%positive.
+Definition ___compcert_va_int32 : ident := 15%positive.
+Definition ___compcert_va_int64 : ident := 16%positive.
+Definition _main : ident := 58%positive.
+Definition _result : ident := 56%positive.
+Definition _step0 : ident := 57%positive.
+Definition _x : ident := 53%positive.
+Definition _xd : ident := 55%positive.
+Definition _xdp : ident := 54%positive.
+Definition _t'1 : ident := 59%positive.
 
-Definition f_step := {|
-  fn_return := tvoid;
+Definition f_step0 := {|
+  fn_return := tdouble;
   fn_callconv := cc_default;
-  fn_params := ((_stp, (tptr (Tstruct _s_state noattr))) ::
-                (_xddp,
-                 (tptr (Tfunction
-                         (Tcons tdouble (Tcons tdouble (Tcons tdouble Tnil)))
-                         tdouble cc_default))) :: (_dt, tdouble) :: nil);
+  fn_params := ((_x, tdouble) ::
+                (_xdp,
+                 (tptr (Tfunction (Tcons tdouble Tnil) tdouble cc_default))) ::
+                nil);
   fn_vars := nil;
-  fn_temps := ((_xdd, tdouble) :: (_t'1, tdouble) :: (_t'8, tdouble) ::
-               (_t'7, tdouble) :: (_t'6, tdouble) :: (_t'5, tdouble) ::
-               (_t'4, tdouble) :: (_t'3, tdouble) :: (_t'2, tdouble) :: nil);
+  fn_temps := ((_xd, tdouble) :: (_result, tdouble) :: (_t'1, tdouble) ::
+               nil);
   fn_body :=
 (Ssequence
   (Ssequence
-    (Ssequence
-      (Sset _t'6
-        (Efield
-          (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-            (Tstruct _s_state noattr)) _t tdouble))
-      (Ssequence
-        (Sset _t'7
-          (Efield
-            (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-              (Tstruct _s_state noattr)) _x tdouble))
-        (Ssequence
-          (Sset _t'8
-            (Efield
-              (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                (Tstruct _s_state noattr)) _xd tdouble))
-          (Scall (Some _t'1)
-            (Etempvar _xddp (tptr (Tfunction
-                                    (Tcons tdouble
-                                      (Tcons tdouble (Tcons tdouble Tnil)))
-                                    tdouble cc_default)))
-            ((Etempvar _t'6 tdouble) :: (Etempvar _t'7 tdouble) ::
-             (Etempvar _t'8 tdouble) :: nil)))))
-    (Sset _xdd (Etempvar _t'1 tdouble)))
+    (Scall (Some _t'1)
+      (Etempvar _xdp (tptr (Tfunction (Tcons tdouble Tnil) tdouble
+                             cc_default))) ((Etempvar _x tdouble) :: nil))
+    (Sset _xd (Etempvar _t'1 tdouble)))
   (Ssequence
-    (Ssequence
-      (Sset _t'5
-        (Efield
-          (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-            (Tstruct _s_state noattr)) _t tdouble))
-      (Sassign
-        (Efield
-          (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-            (Tstruct _s_state noattr)) _t tdouble)
-        (Ebinop Oadd (Etempvar _t'5 tdouble) (Etempvar _dt tdouble) tdouble)))
-    (Ssequence
-      (Ssequence
-        (Sset _t'3
-          (Efield
-            (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-              (Tstruct _s_state noattr)) _x tdouble))
-        (Ssequence
-          (Sset _t'4
-            (Efield
-              (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                (Tstruct _s_state noattr)) _xd tdouble))
-          (Sassign
-            (Efield
-              (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                (Tstruct _s_state noattr)) _x tdouble)
-            (Ebinop Oadd (Etempvar _t'3 tdouble)
-              (Ebinop Omul (Etempvar _t'4 tdouble) (Etempvar _dt tdouble)
-                tdouble) tdouble))))
-      (Ssequence
-        (Sset _t'2
-          (Efield
-            (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-              (Tstruct _s_state noattr)) _xd tdouble))
-        (Sassign
-          (Efield
-            (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-              (Tstruct _s_state noattr)) _xd tdouble)
-          (Ebinop Oadd (Etempvar _t'2 tdouble)
-            (Ebinop Omul (Etempvar _xdd tdouble) (Etempvar _dt tdouble)
-              tdouble) tdouble))))))
+    (Sset _result
+      (Ebinop Oadd (Etempvar _x tdouble) (Etempvar _xd tdouble) tdouble))
+    (Sreturn (Some (Etempvar _result tdouble)))))
 |}.
 
 Definition composites : list composite_definition :=
-(Composite _s_state Struct
-   ((_t, tdouble) :: (_x, tdouble) :: (_xd, tdouble) :: nil)
-   noattr :: nil).
+nil.
 
 Definition global_definitions : list (ident * globdef fundef type) :=
 ((___builtin_ais_annot,
@@ -407,10 +336,10 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
      (Tcons tint Tnil) tvoid
      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|})) ::
- (_step, Gfun(Internal f_step)) :: nil).
+ (_step0, Gfun(Internal f_step0)) :: nil).
 
 Definition public_idents : list ident :=
-(_step :: ___builtin_debug :: ___builtin_nop ::
+(_step0 :: ___builtin_debug :: ___builtin_nop ::
  ___builtin_write32_reversed :: ___builtin_write16_reversed ::
  ___builtin_read32_reversed :: ___builtin_read16_reversed ::
  ___builtin_fnmsub :: ___builtin_fnmadd :: ___builtin_fmsub ::

@@ -1,6 +1,11 @@
 -Q /mnt/c/Users/FordRL/e/digsim-jim/formal/theories Digsim -R /mnt/c/Users/FordRL/e/coquelicot2/theories Coquelicot -Q /mnt/c/Users/FordRL/e/vstgit VST -Q ../../CompCert compcert
+theories/float_text_io.v
 theories/Euler.v
 theories/dadd.v
 theories/verif_dadd.v
+theories/step0.v
 theories/step.v
-theories/verif_step.v
+theories/verif_step0.v
+theories/stepn.v
+theories/verif_stepn.v
+theories/Task01/digsim1.v

@@ -2,6 +2,7 @@
 Require Import VST.floyd.proofauto.
 Require Import Coquelicot.Coquelicot.
 Require Import Reals.
+Require Import Digsim.float_text_io.
 Open Scope R_scope.
 
 Section NumericalIntegration.
