@@ -2,7 +2,6 @@ From Coq Require Import String List ZArith.
 From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clightdefs.
 Local Open Scope Z_scope.
 
-Definition _StateVector : ident := 1%positive.
 Definition ___builtin_ais_annot : ident := 3%positive.
 Definition ___builtin_annot : ident := 10%positive.
 Definition ___builtin_annot_intval : ident := 11%positive.
@@ -55,91 +54,184 @@ Definition ___compcert_va_composite : ident := 20%positive.
 Definition ___compcert_va_float64 : ident := 19%positive.
 Definition ___compcert_va_int32 : ident := 17%positive.
 Definition ___compcert_va_int64 : ident := 18%positive.
-Definition __res : ident := 60%positive.
-Definition _derivatives : ident := 58%positive.
+Definition ___stringlit_1 : ident := 69%positive.
+Definition __res : ident := 68%positive.
+Definition _derivative : ident := 56%positive.
+Definition _derivatives : ident := 67%positive.
+Definition _diffeq : ident := 62%positive.
 Definition _dt : ident := 57%positive.
-Definition _i : ident := 59%positive.
-Definition _main : ident := 62%positive.
+Definition _i : ident := 58%positive.
+Definition _item : ident := 1%positive.
+Definition _main : ident := 60%positive.
+Definition _one_step : ident := 59%positive.
+Definition _printf : ident := 61%positive.
 Definition _s_state : ident := 2%positive.
-Definition _step : ident := 61%positive.
-Definition _stp : ident := 55%positive.
-Definition _xddp : ident := 56%positive.
-Definition _t'1 : ident := 63%positive.
-Definition _t'2 : ident := 64%positive.
+Definition _state : ident := 55%positive.
+Definition _time : ident := 64%positive.
+Definition _tstop : ident := 63%positive.
+Definition _x : ident := 65%positive.
+Definition _xd : ident := 66%positive.
 
-Definition f_step := {|
-  fn_return := tvoid;
+Definition v___stringlit_1 := {|
+  gvar_info := (tarray tschar 16);
+  gvar_init := (Init_int8 (Int.repr 37) :: Init_int8 (Int.repr 46) ::
+                Init_int8 (Int.repr 52) :: Init_int8 (Int.repr 102) ::
+                Init_int8 (Int.repr 9) :: Init_int8 (Int.repr 37) ::
+                Init_int8 (Int.repr 46) :: Init_int8 (Int.repr 54) ::
+                Init_int8 (Int.repr 102) :: Init_int8 (Int.repr 9) ::
+                Init_int8 (Int.repr 37) :: Init_int8 (Int.repr 46) ::
+                Init_int8 (Int.repr 54) :: Init_int8 (Int.repr 102) ::
+                Init_int8 (Int.repr 10) :: Init_int8 (Int.repr 0) :: nil);
+  gvar_readonly := true;
+  gvar_volatile := false
+|}.
+
+Definition f_main := {|
+  fn_return := tint;
   fn_callconv := cc_default;
-  fn_params := ((_stp, (tptr (Tstruct _s_state noattr))) ::
-                (_xddp,
-                 (tptr (Tfunction
-                         (Tcons (tptr (Tstruct _s_state noattr))
-                           (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
-                         tvoid
-                         {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|}))) ::
-                (_dt, tdouble) :: nil);
-  fn_vars := ((_derivatives, (Tstruct _s_state noattr)) ::
+  fn_params := nil;
+  fn_vars := ((_state, (Tstruct _s_state noattr)) ::
+              (_derivatives, (Tstruct _s_state noattr)) ::
               (__res, (Tstruct _s_state noattr)) :: nil);
-  fn_temps := ((_i, tint) :: (_t'2, tdouble) :: (_t'1, tdouble) :: nil);
+  fn_temps := ((_dt, tdouble) :: (_tstop, tdouble) :: (_time, tdouble) ::
+               (_x, tdouble) :: (_xd, tdouble) :: nil);
   fn_body :=
 (Ssequence
   (Ssequence
-    (Scall None
-      (Etempvar _xddp (tptr (Tfunction
-                              (Tcons (tptr (Tstruct _s_state noattr))
-                                (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
-                              tvoid
-                              {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|})))
-      ((Eaddrof (Evar __res (Tstruct _s_state noattr))
-         (tptr (Tstruct _s_state noattr))) ::
-       (Etempvar _stp (tptr (Tstruct _s_state noattr))) :: nil))
-    (Sassign (Evar _derivatives (Tstruct _s_state noattr))
-      (Evar __res (Tstruct _s_state noattr))))
-  (Ssequence
-    (Sset _i (Econst_int (Int.repr 0) tint))
-    (Sloop
+    (Sset _dt
+      (Econst_float (Float.of_bits (Int64.repr 4576918229304087675)) tdouble))
+    (Ssequence
+      (Sset _tstop
+        (Econst_float (Float.of_bits (Int64.repr 4612811918334230528)) tdouble))
       (Ssequence
-        (Sifthenelse (Ebinop Olt (Etempvar _i tint)
-                       (Econst_int (Int.repr 3) tint) tint)
-          Sskip
-          Sbreak)
+        (Sassign
+          (Ederef
+            (Ebinop Oadd
+              (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                (tarray tdouble 3)) (Econst_int (Int.repr 0) tint)
+              (tptr tdouble)) tdouble)
+          (Econst_float (Float.of_bits (Int64.repr 0)) tdouble))
         (Ssequence
-          (Sset _t'1
+          (Sassign
             (Ederef
               (Ebinop Oadd
-                (Efield
-                  (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                    (Tstruct _s_state noattr)) _StateVector
-                  (tarray tdouble 3)) (Etempvar _i tint) (tptr tdouble))
-              tdouble))
+                (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                  (tarray tdouble 3)) (Econst_int (Int.repr 1) tint)
+                (tptr tdouble)) tdouble)
+            (Econst_float (Float.of_bits (Int64.repr 0)) tdouble))
           (Ssequence
-            (Sset _t'2
-              (Ederef
-                (Ebinop Oadd
-                  (Efield (Evar _derivatives (Tstruct _s_state noattr))
-                    _StateVector (tarray tdouble 3)) (Etempvar _i tint)
-                  (tptr tdouble)) tdouble))
             (Sassign
               (Ederef
                 (Ebinop Oadd
-                  (Efield
-                    (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                      (Tstruct _s_state noattr)) _StateVector
-                    (tarray tdouble 3)) (Etempvar _i tint) (tptr tdouble))
-                tdouble)
-              (Ebinop Oadd (Etempvar _t'1 tdouble)
-                (Ebinop Omul (Etempvar _t'2 tdouble) (Etempvar _dt tdouble)
-                  tdouble) tdouble)))))
-      (Sset _i
-        (Ebinop Oadd (Etempvar _i tint) (Econst_int (Int.repr 1) tint) tint)))))
+                  (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                    (tarray tdouble 3)) (Econst_int (Int.repr 2) tint)
+                  (tptr tdouble)) tdouble)
+              (Econst_float (Float.of_bits (Int64.repr 0)) tdouble))
+            (Ssequence
+              (Sset _time
+                (Ederef
+                  (Ebinop Oadd
+                    (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                      (tarray tdouble 3)) (Econst_int (Int.repr 0) tint)
+                    (tptr tdouble)) tdouble))
+              (Ssequence
+                (Sset _x
+                  (Ederef
+                    (Ebinop Oadd
+                      (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                        (tarray tdouble 3)) (Econst_int (Int.repr 1) tint)
+                      (tptr tdouble)) tdouble))
+                (Ssequence
+                  (Sset _xd
+                    (Ederef
+                      (Ebinop Oadd
+                        (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                          (tarray tdouble 3)) (Econst_int (Int.repr 2) tint)
+                        (tptr tdouble)) tdouble))
+                  (Ssequence
+                    (Swhile
+                      (Ebinop Ole (Etempvar _time tdouble)
+                        (Etempvar _tstop tdouble) tint)
+                      (Ssequence
+                        (Scall None
+                          (Evar _printf (Tfunction (Tcons (tptr tschar) Tnil)
+                                          tint
+                                          {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
+                          ((Evar ___stringlit_1 (tarray tschar 16)) ::
+                           (Etempvar _time tdouble) ::
+                           (Etempvar _x tdouble) :: (Etempvar _xd tdouble) ::
+                           nil))
+                        (Ssequence
+                          (Ssequence
+                            (Scall None
+                              (Evar _diffeq (Tfunction
+                                              (Tcons
+                                                (tptr (Tstruct _s_state noattr))
+                                                (Tcons
+                                                  (Tstruct _s_state noattr)
+                                                  Tnil)) tvoid
+                                              {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|}))
+                              ((Eaddrof
+                                 (Evar __res (Tstruct _s_state noattr))
+                                 (tptr (Tstruct _s_state noattr))) ::
+                               (Evar _state (Tstruct _s_state noattr)) ::
+                               nil))
+                            (Sassign
+                              (Evar _derivatives (Tstruct _s_state noattr))
+                              (Evar __res (Tstruct _s_state noattr))))
+                          (Ssequence
+                            (Scall None
+                              (Evar _one_step (Tfunction
+                                                (Tcons
+                                                  (tptr (Tstruct _s_state noattr))
+                                                  (Tcons
+                                                    (tptr (Tstruct _s_state noattr))
+                                                    (Tcons tdouble Tnil)))
+                                                tvoid cc_default))
+                              ((Eaddrof
+                                 (Evar _state (Tstruct _s_state noattr))
+                                 (tptr (Tstruct _s_state noattr))) ::
+                               (Eaddrof
+                                 (Evar _derivatives (Tstruct _s_state noattr))
+                                 (tptr (Tstruct _s_state noattr))) ::
+                               (Etempvar _dt tdouble) :: nil))
+                            (Ssequence
+                              (Sset _time
+                                (Ederef
+                                  (Ebinop Oadd
+                                    (Efield
+                                      (Evar _state (Tstruct _s_state noattr))
+                                      _item (tarray tdouble 3))
+                                    (Econst_int (Int.repr 0) tint)
+                                    (tptr tdouble)) tdouble))
+                              (Ssequence
+                                (Sset _x
+                                  (Ederef
+                                    (Ebinop Oadd
+                                      (Efield
+                                        (Evar _state (Tstruct _s_state noattr))
+                                        _item (tarray tdouble 3))
+                                      (Econst_int (Int.repr 1) tint)
+                                      (tptr tdouble)) tdouble))
+                                (Sset _xd
+                                  (Ederef
+                                    (Ebinop Oadd
+                                      (Efield
+                                        (Evar _state (Tstruct _s_state noattr))
+                                        _item (tarray tdouble 3))
+                                      (Econst_int (Int.repr 2) tint)
+                                      (tptr tdouble)) tdouble))))))))
+                    (Sreturn (Some (Econst_int (Int.repr 0) tint))))))))))))
+  (Sreturn (Some (Econst_int (Int.repr 0) tint))))
 |}.
 
 Definition composites : list composite_definition :=
-(Composite _s_state Struct ((_StateVector, (tarray tdouble 3)) :: nil) noattr ::
+(Composite _s_state Struct ((_item, (tarray tdouble 3)) :: nil) noattr ::
  nil).
 
 Definition global_definitions : list (ident * globdef fundef type) :=
-((___builtin_ais_annot,
+((___stringlit_1, Gvar v___stringlit_1) ::
+ (___builtin_ais_annot,
    Gfun(External (EF_builtin "__builtin_ais_annot"
                    (mksignature (AST.Tint :: nil) None
                      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
@@ -386,28 +478,47 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
      (Tcons tint Tnil) tvoid
      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|})) ::
- (_step, Gfun(Internal f_step)) :: nil).
+ (_printf,
+   Gfun(External (EF_external "printf"
+                   (mksignature (AST.Tint :: nil) (Some AST.Tint)
+                     {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
+     (Tcons (tptr tschar) Tnil) tint
+     {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|})) ::
+ (_diffeq,
+   Gfun(External (EF_external "diffeq"
+                   (mksignature (AST.Tint :: AST.Tint :: nil) None
+                     {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|}))
+     (Tcons (tptr (Tstruct _s_state noattr))
+       (Tcons (Tstruct _s_state noattr) Tnil)) tvoid
+     {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|})) ::
+ (_one_step,
+   Gfun(External (EF_external "one_step"
+                   (mksignature (AST.Tint :: AST.Tint :: AST.Tfloat :: nil)
+                     None cc_default))
+     (Tcons (tptr (Tstruct _s_state noattr))
+       (Tcons (tptr (Tstruct _s_state noattr)) (Tcons tdouble Tnil))) tvoid
+     cc_default)) :: (_main, Gfun(Internal f_main)) :: nil).
 
 Definition public_idents : list ident :=
-(_step :: ___builtin_debug :: ___builtin_nop ::
- ___builtin_write32_reversed :: ___builtin_write16_reversed ::
- ___builtin_read32_reversed :: ___builtin_read16_reversed ::
- ___builtin_fnmsub :: ___builtin_fnmadd :: ___builtin_fmsub ::
- ___builtin_fmadd :: ___builtin_fmin :: ___builtin_fmax ::
- ___builtin_ctzll :: ___builtin_ctzl :: ___builtin_ctz :: ___builtin_clzll ::
- ___builtin_clzl :: ___builtin_clz :: ___builtin_bswap64 ::
- ___compcert_i64_umulh :: ___compcert_i64_smulh :: ___compcert_i64_sar ::
- ___compcert_i64_shr :: ___compcert_i64_shl :: ___compcert_i64_umod ::
- ___compcert_i64_smod :: ___compcert_i64_udiv :: ___compcert_i64_sdiv ::
- ___compcert_i64_utof :: ___compcert_i64_stof :: ___compcert_i64_utod ::
- ___compcert_i64_stod :: ___compcert_i64_dtou :: ___compcert_i64_dtos ::
- ___compcert_va_composite :: ___compcert_va_float64 ::
- ___compcert_va_int64 :: ___compcert_va_int32 :: ___builtin_va_end ::
- ___builtin_va_copy :: ___builtin_va_arg :: ___builtin_va_start ::
- ___builtin_membar :: ___builtin_annot_intval :: ___builtin_annot ::
- ___builtin_memcpy_aligned :: ___builtin_fsqrt :: ___builtin_fabs ::
- ___builtin_bswap16 :: ___builtin_bswap32 :: ___builtin_bswap ::
- ___builtin_ais_annot :: nil).
+(_main :: _one_step :: _diffeq :: _printf :: ___builtin_debug ::
+ ___builtin_nop :: ___builtin_write32_reversed ::
+ ___builtin_write16_reversed :: ___builtin_read32_reversed ::
+ ___builtin_read16_reversed :: ___builtin_fnmsub :: ___builtin_fnmadd ::
+ ___builtin_fmsub :: ___builtin_fmadd :: ___builtin_fmin ::
+ ___builtin_fmax :: ___builtin_ctzll :: ___builtin_ctzl :: ___builtin_ctz ::
+ ___builtin_clzll :: ___builtin_clzl :: ___builtin_clz ::
+ ___builtin_bswap64 :: ___compcert_i64_umulh :: ___compcert_i64_smulh ::
+ ___compcert_i64_sar :: ___compcert_i64_shr :: ___compcert_i64_shl ::
+ ___compcert_i64_umod :: ___compcert_i64_smod :: ___compcert_i64_udiv ::
+ ___compcert_i64_sdiv :: ___compcert_i64_utof :: ___compcert_i64_stof ::
+ ___compcert_i64_utod :: ___compcert_i64_stod :: ___compcert_i64_dtou ::
+ ___compcert_i64_dtos :: ___compcert_va_composite ::
+ ___compcert_va_float64 :: ___compcert_va_int64 :: ___compcert_va_int32 ::
+ ___builtin_va_end :: ___builtin_va_copy :: ___builtin_va_arg ::
+ ___builtin_va_start :: ___builtin_membar :: ___builtin_annot_intval ::
+ ___builtin_annot :: ___builtin_memcpy_aligned :: ___builtin_fsqrt ::
+ ___builtin_fabs :: ___builtin_bswap16 :: ___builtin_bswap32 ::
+ ___builtin_bswap :: ___builtin_ais_annot :: nil).
 
 Definition prog : Clight.program := 
   mkprogram composites global_definitions public_idents _main Logic.I.

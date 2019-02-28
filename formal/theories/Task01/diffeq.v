@@ -2,7 +2,6 @@ From Coq Require Import String List ZArith.
 From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clightdefs.
 Local Open Scope Z_scope.
 
-Definition _StateVector : ident := 1%positive.
 Definition ___builtin_ais_annot : ident := 3%positive.
 Definition ___builtin_annot : ident := 10%positive.
 Definition ___builtin_annot_intval : ident := 11%positive.
@@ -55,87 +54,116 @@ Definition ___compcert_va_composite : ident := 20%positive.
 Definition ___compcert_va_float64 : ident := 19%positive.
 Definition ___compcert_va_int32 : ident := 17%positive.
 Definition ___compcert_va_int64 : ident := 18%positive.
-Definition __res : ident := 60%positive.
-Definition _derivatives : ident := 58%positive.
-Definition _dt : ident := 57%positive.
-Definition _i : ident := 59%positive.
-Definition _main : ident := 62%positive.
+Definition __res : ident := 55%positive.
+Definition _damping_coefficient : ident := 57%positive.
+Definition _diffeq : ident := 65%positive.
+Definition _gravity : ident := 58%positive.
+Definition _item : ident := 1%positive.
+Definition _main : ident := 66%positive.
+Definition _mass : ident := 59%positive.
+Definition _result : ident := 64%positive.
 Definition _s_state : ident := 2%positive.
-Definition _step : ident := 61%positive.
-Definition _stp : ident := 55%positive.
-Definition _xddp : ident := 56%positive.
-Definition _t'1 : ident := 63%positive.
-Definition _t'2 : ident := 64%positive.
+Definition _spring_coefficient : ident := 60%positive.
+Definition _state : ident := 56%positive.
+Definition _time : ident := 61%positive.
+Definition _x : ident := 62%positive.
+Definition _xd : ident := 63%positive.
 
-Definition f_step := {|
+Definition f_diffeq := {|
   fn_return := tvoid;
-  fn_callconv := cc_default;
-  fn_params := ((_stp, (tptr (Tstruct _s_state noattr))) ::
-                (_xddp,
-                 (tptr (Tfunction
-                         (Tcons (tptr (Tstruct _s_state noattr))
-                           (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
-                         tvoid
-                         {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|}))) ::
-                (_dt, tdouble) :: nil);
-  fn_vars := ((_derivatives, (Tstruct _s_state noattr)) ::
-              (__res, (Tstruct _s_state noattr)) :: nil);
-  fn_temps := ((_i, tint) :: (_t'2, tdouble) :: (_t'1, tdouble) :: nil);
+  fn_callconv := {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|};
+  fn_params := ((__res, (tptr (Tstruct _s_state noattr))) ::
+                (_state, (Tstruct _s_state noattr)) :: nil);
+  fn_vars := ((_state, (Tstruct _s_state noattr)) ::
+              (_result, (Tstruct _s_state noattr)) :: nil);
+  fn_temps := ((_damping_coefficient, tdouble) :: (_gravity, tdouble) ::
+               (_mass, tdouble) :: (_spring_coefficient, tdouble) ::
+               (_time, tdouble) :: (_x, tdouble) :: (_xd, tdouble) :: nil);
   fn_body :=
 (Ssequence
+  (Sassign (Evar _state (Tstruct _s_state noattr))
+    (Etempvar _state (Tstruct _s_state noattr)))
   (Ssequence
-    (Scall None
-      (Etempvar _xddp (tptr (Tfunction
-                              (Tcons (tptr (Tstruct _s_state noattr))
-                                (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
-                              tvoid
-                              {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|})))
-      ((Eaddrof (Evar __res (Tstruct _s_state noattr))
-         (tptr (Tstruct _s_state noattr))) ::
-       (Etempvar _stp (tptr (Tstruct _s_state noattr))) :: nil))
-    (Sassign (Evar _derivatives (Tstruct _s_state noattr))
-      (Evar __res (Tstruct _s_state noattr))))
-  (Ssequence
-    (Sset _i (Econst_int (Int.repr 0) tint))
-    (Sloop
+    (Sset _damping_coefficient
+      (Econst_float (Float.of_bits (Int64.repr 4621188613641139651)) tdouble))
+    (Ssequence
+      (Sset _gravity
+        (Econst_float (Float.of_bits (Int64.repr 4621751563594560963)) tdouble))
       (Ssequence
-        (Sifthenelse (Ebinop Olt (Etempvar _i tint)
-                       (Econst_int (Int.repr 3) tint) tint)
-          Sskip
-          Sbreak)
+        (Sset _mass
+          (Econst_float (Float.of_bits (Int64.repr 4607182418800017408)) tdouble))
         (Ssequence
-          (Sset _t'1
-            (Ederef
-              (Ebinop Oadd
-                (Efield
-                  (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                    (Tstruct _s_state noattr)) _StateVector
-                  (tarray tdouble 3)) (Etempvar _i tint) (tptr tdouble))
-              tdouble))
+          (Sset _spring_coefficient
+            (Econst_float (Float.of_bits (Int64.repr 4630751725974884188)) tdouble))
           (Ssequence
-            (Sset _t'2
+            (Sset _time
               (Ederef
                 (Ebinop Oadd
-                  (Efield (Evar _derivatives (Tstruct _s_state noattr))
-                    _StateVector (tarray tdouble 3)) (Etempvar _i tint)
+                  (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                    (tarray tdouble 3)) (Econst_int (Int.repr 0) tint)
                   (tptr tdouble)) tdouble))
-            (Sassign
-              (Ederef
-                (Ebinop Oadd
-                  (Efield
-                    (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                      (Tstruct _s_state noattr)) _StateVector
-                    (tarray tdouble 3)) (Etempvar _i tint) (tptr tdouble))
-                tdouble)
-              (Ebinop Oadd (Etempvar _t'1 tdouble)
-                (Ebinop Omul (Etempvar _t'2 tdouble) (Etempvar _dt tdouble)
-                  tdouble) tdouble)))))
-      (Sset _i
-        (Ebinop Oadd (Etempvar _i tint) (Econst_int (Int.repr 1) tint) tint)))))
+            (Ssequence
+              (Sset _x
+                (Ederef
+                  (Ebinop Oadd
+                    (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                      (tarray tdouble 3)) (Econst_int (Int.repr 1) tint)
+                    (tptr tdouble)) tdouble))
+              (Ssequence
+                (Sset _xd
+                  (Ederef
+                    (Ebinop Oadd
+                      (Efield (Evar _state (Tstruct _s_state noattr)) _item
+                        (tarray tdouble 3)) (Econst_int (Int.repr 2) tint)
+                      (tptr tdouble)) tdouble))
+                (Ssequence
+                  (Sassign
+                    (Ederef
+                      (Ebinop Oadd
+                        (Efield (Evar _result (Tstruct _s_state noattr))
+                          _item (tarray tdouble 3))
+                        (Econst_int (Int.repr 0) tint) (tptr tdouble))
+                      tdouble)
+                    (Econst_float (Float.of_bits (Int64.repr 4607182418800017408)) tdouble))
+                  (Ssequence
+                    (Sassign
+                      (Ederef
+                        (Ebinop Oadd
+                          (Efield (Evar _result (Tstruct _s_state noattr))
+                            _item (tarray tdouble 3))
+                          (Econst_int (Int.repr 1) tint) (tptr tdouble))
+                        tdouble) (Etempvar _xd tdouble))
+                    (Ssequence
+                      (Sassign
+                        (Ederef
+                          (Ebinop Oadd
+                            (Efield (Evar _result (Tstruct _s_state noattr))
+                              _item (tarray tdouble 3))
+                            (Econst_int (Int.repr 2) tint) (tptr tdouble))
+                          tdouble)
+                        (Ebinop Osub
+                          (Ebinop Odiv
+                            (Eunop Oneg
+                              (Ebinop Oadd
+                                (Ebinop Omul
+                                  (Etempvar _spring_coefficient tdouble)
+                                  (Etempvar _x tdouble) tdouble)
+                                (Ebinop Omul
+                                  (Etempvar _damping_coefficient tdouble)
+                                  (Etempvar _xd tdouble) tdouble) tdouble)
+                              tdouble) (Etempvar _mass tdouble) tdouble)
+                          (Etempvar _gravity tdouble) tdouble))
+                      (Ssequence
+                        (Sassign
+                          (Ederef
+                            (Etempvar __res (tptr (Tstruct _s_state noattr)))
+                            (Tstruct _s_state noattr))
+                          (Evar _result (Tstruct _s_state noattr)))
+                        (Sreturn None)))))))))))))
 |}.
 
 Definition composites : list composite_definition :=
-(Composite _s_state Struct ((_StateVector, (tarray tdouble 3)) :: nil) noattr ::
+(Composite _s_state Struct ((_item, (tarray tdouble 3)) :: nil) noattr ::
  nil).
 
 Definition global_definitions : list (ident * globdef fundef type) :=
@@ -386,10 +414,10 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
      (Tcons tint Tnil) tvoid
      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|})) ::
- (_step, Gfun(Internal f_step)) :: nil).
+ (_diffeq, Gfun(Internal f_diffeq)) :: nil).
 
 Definition public_idents : list ident :=
-(_step :: ___builtin_debug :: ___builtin_nop ::
+(_diffeq :: ___builtin_debug :: ___builtin_nop ::
  ___builtin_write32_reversed :: ___builtin_write16_reversed ::
  ___builtin_read32_reversed :: ___builtin_read16_reversed ::
  ___builtin_fnmsub :: ___builtin_fnmadd :: ___builtin_fmsub ::

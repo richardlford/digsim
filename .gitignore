@@ -13,4 +13,4 @@
 *.vo
 .coqdeps.d
 CoqMakefile*
-
+cmake-build-*

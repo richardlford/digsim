@@ -1,9 +1,9 @@
 // A step in a Euler solver
 #include "state.h"
 
-void step(State* stp, double (*xddp)(double, double, double), double dt) {
-  double xdd = xddp(stp->t, stp->x, stp->xd);
-  stp->t += dt;
-  stp->x += stp->xd * dt;
-  stp->xd += xdd * dt;
+void step(State* stp, State (*xddp)(State*), double dt) {
+  State derivatives = xddp(stp);
+  for(int i=0; i < StateSize; i++) {
+    stp->StateVector[i] += derivatives.StateVector[i] * dt;
+  }
 }

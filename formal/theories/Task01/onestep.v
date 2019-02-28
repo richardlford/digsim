@@ -2,7 +2,6 @@ From Coq Require Import String List ZArith.
 From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clightdefs.
 Local Open Scope Z_scope.
 
-Definition _StateVector : ident := 1%positive.
 Definition ___builtin_ais_annot : ident := 3%positive.
 Definition ___builtin_annot : ident := 10%positive.
 Definition ___builtin_annot_intval : ident := 11%positive.
@@ -55,87 +54,67 @@ Definition ___compcert_va_composite : ident := 20%positive.
 Definition ___compcert_va_float64 : ident := 19%positive.
 Definition ___compcert_va_int32 : ident := 17%positive.
 Definition ___compcert_va_int64 : ident := 18%positive.
-Definition __res : ident := 60%positive.
-Definition _derivatives : ident := 58%positive.
+Definition _derivative : ident := 56%positive.
 Definition _dt : ident := 57%positive.
-Definition _i : ident := 59%positive.
-Definition _main : ident := 62%positive.
+Definition _i : ident := 58%positive.
+Definition _item : ident := 1%positive.
+Definition _main : ident := 60%positive.
+Definition _one_step : ident := 59%positive.
 Definition _s_state : ident := 2%positive.
-Definition _step : ident := 61%positive.
-Definition _stp : ident := 55%positive.
-Definition _xddp : ident := 56%positive.
-Definition _t'1 : ident := 63%positive.
-Definition _t'2 : ident := 64%positive.
+Definition _state : ident := 55%positive.
+Definition _t'1 : ident := 61%positive.
+Definition _t'2 : ident := 62%positive.
 
-Definition f_step := {|
+Definition f_one_step := {|
   fn_return := tvoid;
   fn_callconv := cc_default;
-  fn_params := ((_stp, (tptr (Tstruct _s_state noattr))) ::
-                (_xddp,
-                 (tptr (Tfunction
-                         (Tcons (tptr (Tstruct _s_state noattr))
-                           (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
-                         tvoid
-                         {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|}))) ::
+  fn_params := ((_state, (tptr (Tstruct _s_state noattr))) ::
+                (_derivative, (tptr (Tstruct _s_state noattr))) ::
                 (_dt, tdouble) :: nil);
-  fn_vars := ((_derivatives, (Tstruct _s_state noattr)) ::
-              (__res, (Tstruct _s_state noattr)) :: nil);
+  fn_vars := nil;
   fn_temps := ((_i, tint) :: (_t'2, tdouble) :: (_t'1, tdouble) :: nil);
   fn_body :=
 (Ssequence
-  (Ssequence
-    (Scall None
-      (Etempvar _xddp (tptr (Tfunction
-                              (Tcons (tptr (Tstruct _s_state noattr))
-                                (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
-                              tvoid
-                              {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|})))
-      ((Eaddrof (Evar __res (Tstruct _s_state noattr))
-         (tptr (Tstruct _s_state noattr))) ::
-       (Etempvar _stp (tptr (Tstruct _s_state noattr))) :: nil))
-    (Sassign (Evar _derivatives (Tstruct _s_state noattr))
-      (Evar __res (Tstruct _s_state noattr))))
-  (Ssequence
-    (Sset _i (Econst_int (Int.repr 0) tint))
-    (Sloop
+  (Sset _i (Econst_int (Int.repr 0) tint))
+  (Sloop
+    (Ssequence
+      (Sifthenelse (Ebinop Olt (Etempvar _i tint)
+                     (Econst_int (Int.repr 3) tint) tint)
+        Sskip
+        Sbreak)
       (Ssequence
-        (Sifthenelse (Ebinop Olt (Etempvar _i tint)
-                       (Econst_int (Int.repr 3) tint) tint)
-          Sskip
-          Sbreak)
+        (Sset _t'1
+          (Ederef
+            (Ebinop Oadd
+              (Efield
+                (Ederef (Etempvar _state (tptr (Tstruct _s_state noattr)))
+                  (Tstruct _s_state noattr)) _item (tarray tdouble 3))
+              (Etempvar _i tint) (tptr tdouble)) tdouble))
         (Ssequence
-          (Sset _t'1
+          (Sset _t'2
             (Ederef
               (Ebinop Oadd
                 (Efield
-                  (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                    (Tstruct _s_state noattr)) _StateVector
-                  (tarray tdouble 3)) (Etempvar _i tint) (tptr tdouble))
-              tdouble))
-          (Ssequence
-            (Sset _t'2
-              (Ederef
-                (Ebinop Oadd
-                  (Efield (Evar _derivatives (Tstruct _s_state noattr))
-                    _StateVector (tarray tdouble 3)) (Etempvar _i tint)
-                  (tptr tdouble)) tdouble))
-            (Sassign
-              (Ederef
-                (Ebinop Oadd
-                  (Efield
-                    (Ederef (Etempvar _stp (tptr (Tstruct _s_state noattr)))
-                      (Tstruct _s_state noattr)) _StateVector
-                    (tarray tdouble 3)) (Etempvar _i tint) (tptr tdouble))
-                tdouble)
-              (Ebinop Oadd (Etempvar _t'1 tdouble)
-                (Ebinop Omul (Etempvar _t'2 tdouble) (Etempvar _dt tdouble)
-                  tdouble) tdouble)))))
-      (Sset _i
-        (Ebinop Oadd (Etempvar _i tint) (Econst_int (Int.repr 1) tint) tint)))))
+                  (Ederef
+                    (Etempvar _derivative (tptr (Tstruct _s_state noattr)))
+                    (Tstruct _s_state noattr)) _item (tarray tdouble 3))
+                (Etempvar _i tint) (tptr tdouble)) tdouble))
+          (Sassign
+            (Ederef
+              (Ebinop Oadd
+                (Efield
+                  (Ederef (Etempvar _state (tptr (Tstruct _s_state noattr)))
+                    (Tstruct _s_state noattr)) _item (tarray tdouble 3))
+                (Etempvar _i tint) (tptr tdouble)) tdouble)
+            (Ebinop Oadd (Etempvar _t'1 tdouble)
+              (Ebinop Omul (Etempvar _t'2 tdouble) (Etempvar _dt tdouble)
+                tdouble) tdouble)))))
+    (Sset _i
+      (Ebinop Oadd (Etempvar _i tint) (Econst_int (Int.repr 1) tint) tint))))
 |}.
 
 Definition composites : list composite_definition :=
-(Composite _s_state Struct ((_StateVector, (tarray tdouble 3)) :: nil) noattr ::
+(Composite _s_state Struct ((_item, (tarray tdouble 3)) :: nil) noattr ::
  nil).
 
 Definition global_definitions : list (ident * globdef fundef type) :=
@@ -386,10 +365,10 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
      (Tcons tint Tnil) tvoid
      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|})) ::
- (_step, Gfun(Internal f_step)) :: nil).
+ (_one_step, Gfun(Internal f_one_step)) :: nil).
 
 Definition public_idents : list ident :=
-(_step :: ___builtin_debug :: ___builtin_nop ::
+(_one_step :: ___builtin_debug :: ___builtin_nop ::
  ___builtin_write32_reversed :: ___builtin_write16_reversed ::
  ___builtin_read32_reversed :: ___builtin_read16_reversed ::
  ___builtin_fnmsub :: ___builtin_fnmadd :: ___builtin_fmsub ::
