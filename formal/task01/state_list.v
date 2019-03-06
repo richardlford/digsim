@@ -95,6 +95,7 @@ Definition _cell : ident := 107%positive.
 Definition _damping_coefficient : ident := 115%positive.
 Definition _data : ident := 37%positive.
 Definition _derivative : ident := 121%positive.
+Definition _derivatives : ident := 127%positive.
 Definition _diffeq : ident := 120%positive.
 Definition _dt : ident := 101%positive.
 Definition _exit : ident := 100%positive.
@@ -108,77 +109,196 @@ Definition _gravity : ident := 116%positive.
 Definition _i : ident := 122%positive.
 Definition _item : ident := 35%positive.
 Definition _last : ident := 41%positive.
+Definition _list : ident := 130%positive.
 Definition _main : ident := 113%positive.
+Definition _malloc : ident := 128%positive.
 Definition _mass : ident := 117%positive.
+Definition _new_state_list : ident := 125%positive.
+Definition _new_state_list_cell : ident := 129%positive.
 Definition _next : ident := 39%positive.
 Definition _one_step : ident := 123%positive.
 Definition _printf : ident := 98%positive.
 Definition _result : ident := 119%positive.
+Definition _round : ident := 124%positive.
 Definition _run_sim : ident := 99%positive.
 Definition _s_state : ident := 36%positive.
 Definition _s_state_list : ident := 42%positive.
 Definition _s_state_list_cell : ident := 38%positive.
 Definition _spring_coefficient : ident := 118%positive.
 Definition _state : ident := 103%positive.
+Definition _state_list_append : ident := 126%positive.
 Definition _states : ident := 104%positive.
 Definition _time : ident := 108%positive.
 Definition _tstop : ident := 102%positive.
 Definition _x : ident := 109%positive.
 Definition _xd : ident := 110%positive.
-Definition _t'1 : ident := 124%positive.
-Definition _t'2 : ident := 125%positive.
+Definition _t'1 : ident := 131%positive.
+Definition _t'2 : ident := 132%positive.
+Definition _t'3 : ident := 133%positive.
 
-Definition f_one_step := {|
-  fn_return := tvoid;
+Definition f_new_state_list := {|
+  fn_return := (tptr (Tstruct _s_state_list noattr));
   fn_callconv := cc_default;
-  fn_params := ((_state, (tptr (Tstruct _s_state noattr))) ::
-                (_derivative, (tptr (Tstruct _s_state noattr))) ::
-                (_dt, tdouble) :: nil);
+  fn_params := nil;
   fn_vars := nil;
-  fn_temps := ((_i, tint) :: (_t'2, tdouble) :: (_t'1, tdouble) :: nil);
+  fn_temps := ((_result, (tptr (Tstruct _s_state_list noattr))) ::
+               (_t'1, (tptr tvoid)) :: nil);
   fn_body :=
 (Ssequence
-  (Sset _i (Econst_int (Int.repr 0) tint))
-  (Sloop
+  (Ssequence
+    (Scall (Some _t'1)
+      (Evar _malloc (Tfunction (Tcons tulong Tnil) (tptr tvoid) cc_default))
+      ((Esizeof (Tstruct _s_state_list noattr) tuint) :: nil))
+    (Sset _result
+      (Ecast (Etempvar _t'1 (tptr tvoid))
+        (tptr (Tstruct _s_state_list noattr)))))
+  (Ssequence
+    (Sifthenelse (Eunop Onotbool
+                   (Etempvar _result (tptr (Tstruct _s_state_list noattr)))
+                   tint)
+      (Scall None (Evar _exit (Tfunction (Tcons tint Tnil) tvoid cc_default))
+        ((Econst_int (Int.repr 1) tint) :: nil))
+      Sskip)
     (Ssequence
-      (Sifthenelse (Ebinop Olt (Etempvar _i tint)
-                     (Econst_int (Int.repr 3) tint) tint)
-        Sskip
-        Sbreak)
+      (Sassign
+        (Efield
+          (Ederef (Etempvar _result (tptr (Tstruct _s_state_list noattr)))
+            (Tstruct _s_state_list noattr)) _first
+          (tptr (Tstruct _s_state_list_cell noattr)))
+        (Econst_int (Int.repr 0) tint))
       (Ssequence
-        (Sset _t'1
-          (Ederef
-            (Ebinop Oadd
-              (Efield
-                (Ederef (Etempvar _state (tptr (Tstruct _s_state noattr)))
-                  (Tstruct _s_state noattr)) _item (tarray tdouble 3))
-              (Etempvar _i tint) (tptr tdouble)) tdouble))
+        (Sassign
+          (Efield
+            (Ederef (Etempvar _result (tptr (Tstruct _s_state_list noattr)))
+              (Tstruct _s_state_list noattr)) _last
+            (tptr (Tstruct _s_state_list_cell noattr)))
+          (Econst_int (Int.repr 0) tint))
+        (Sreturn (Some (Etempvar _result (tptr (Tstruct _s_state_list noattr)))))))))
+|}.
+
+Definition f_new_state_list_cell := {|
+  fn_return := (tptr (Tstruct _s_state_list_cell noattr));
+  fn_callconv := cc_default;
+  fn_params := ((_data, (Tstruct _s_state noattr)) ::
+                (_next, (tptr (Tstruct _s_state_list_cell noattr))) :: nil);
+  fn_vars := ((_data, (Tstruct _s_state noattr)) :: nil);
+  fn_temps := ((_result, (tptr (Tstruct _s_state_list_cell noattr))) ::
+               (_t'1, (tptr tvoid)) :: nil);
+  fn_body :=
+(Ssequence
+  (Sassign (Evar _data (Tstruct _s_state noattr))
+    (Etempvar _data (Tstruct _s_state noattr)))
+  (Ssequence
+    (Ssequence
+      (Scall (Some _t'1)
+        (Evar _malloc (Tfunction (Tcons tulong Tnil) (tptr tvoid) cc_default))
+        ((Esizeof (Tstruct _s_state_list_cell noattr) tuint) :: nil))
+      (Sset _result
+        (Ecast (Etempvar _t'1 (tptr tvoid))
+          (tptr (Tstruct _s_state_list_cell noattr)))))
+    (Ssequence
+      (Sifthenelse (Eunop Onotbool
+                     (Etempvar _result (tptr (Tstruct _s_state_list_cell noattr)))
+                     tint)
+        (Scall None
+          (Evar _exit (Tfunction (Tcons tint Tnil) tvoid cc_default))
+          ((Econst_int (Int.repr 1) tint) :: nil))
+        Sskip)
+      (Ssequence
+        (Sassign
+          (Efield
+            (Ederef
+              (Etempvar _result (tptr (Tstruct _s_state_list_cell noattr)))
+              (Tstruct _s_state_list_cell noattr)) _data
+            (Tstruct _s_state noattr))
+          (Evar _data (Tstruct _s_state noattr)))
         (Ssequence
-          (Sset _t'2
-            (Ederef
-              (Ebinop Oadd
-                (Efield
-                  (Ederef
-                    (Etempvar _derivative (tptr (Tstruct _s_state noattr)))
-                    (Tstruct _s_state noattr)) _item (tarray tdouble 3))
-                (Etempvar _i tint) (tptr tdouble)) tdouble))
           (Sassign
-            (Ederef
-              (Ebinop Oadd
-                (Efield
-                  (Ederef (Etempvar _state (tptr (Tstruct _s_state noattr)))
-                    (Tstruct _s_state noattr)) _item (tarray tdouble 3))
-                (Etempvar _i tint) (tptr tdouble)) tdouble)
-            (Ebinop Oadd (Etempvar _t'1 tdouble)
-              (Ebinop Omul (Etempvar _t'2 tdouble) (Etempvar _dt tdouble)
-                tdouble) tdouble)))))
-    (Sset _i
-      (Ebinop Oadd (Etempvar _i tint) (Econst_int (Int.repr 1) tint) tint))))
+            (Efield
+              (Ederef
+                (Etempvar _result (tptr (Tstruct _s_state_list_cell noattr)))
+                (Tstruct _s_state_list_cell noattr)) _next
+              (tptr (Tstruct _s_state_list_cell noattr)))
+            (Etempvar _next (tptr (Tstruct _s_state_list_cell noattr))))
+          (Sreturn (Some (Etempvar _result (tptr (Tstruct _s_state_list_cell noattr))))))))))
+|}.
+
+Definition f_state_list_append := {|
+  fn_return := tvoid;
+  fn_callconv := cc_default;
+  fn_params := ((_list, (tptr (Tstruct _s_state_list noattr))) ::
+                (_item, (Tstruct _s_state noattr)) :: nil);
+  fn_vars := ((_item, (Tstruct _s_state noattr)) :: nil);
+  fn_temps := ((_cell, (tptr (Tstruct _s_state_list_cell noattr))) ::
+               (_t'1, (tptr (Tstruct _s_state_list_cell noattr))) ::
+               (_t'3, (tptr (Tstruct _s_state_list_cell noattr))) ::
+               (_t'2, (tptr (Tstruct _s_state_list_cell noattr))) :: nil);
+  fn_body :=
+(Ssequence
+  (Sassign (Evar _item (Tstruct _s_state noattr))
+    (Etempvar _item (Tstruct _s_state noattr)))
+  (Ssequence
+    (Ssequence
+      (Scall (Some _t'1)
+        (Evar _new_state_list_cell (Tfunction
+                                     (Tcons (Tstruct _s_state noattr)
+                                       (Tcons
+                                         (tptr (Tstruct _s_state_list_cell noattr))
+                                         Tnil))
+                                     (tptr (Tstruct _s_state_list_cell noattr))
+                                     cc_default))
+        ((Evar _item (Tstruct _s_state noattr)) ::
+         (Econst_int (Int.repr 0) tint) :: nil))
+      (Sset _cell (Etempvar _t'1 (tptr (Tstruct _s_state_list_cell noattr)))))
+    (Ssequence
+      (Ssequence
+        (Sset _t'2
+          (Efield
+            (Ederef (Etempvar _list (tptr (Tstruct _s_state_list noattr)))
+              (Tstruct _s_state_list noattr)) _first
+            (tptr (Tstruct _s_state_list_cell noattr))))
+        (Sifthenelse (Ebinop Oeq
+                       (Etempvar _t'2 (tptr (Tstruct _s_state_list_cell noattr)))
+                       (Ecast (Econst_int (Int.repr 0) tint) (tptr tvoid))
+                       tint)
+          (Sassign
+            (Efield
+              (Ederef (Etempvar _list (tptr (Tstruct _s_state_list noattr)))
+                (Tstruct _s_state_list noattr)) _first
+              (tptr (Tstruct _s_state_list_cell noattr)))
+            (Etempvar _cell (tptr (Tstruct _s_state_list_cell noattr))))
+          (Ssequence
+            (Sset _t'3
+              (Efield
+                (Ederef
+                  (Etempvar _list (tptr (Tstruct _s_state_list noattr)))
+                  (Tstruct _s_state_list noattr)) _last
+                (tptr (Tstruct _s_state_list_cell noattr))))
+            (Sassign
+              (Efield
+                (Ederef
+                  (Etempvar _t'3 (tptr (Tstruct _s_state_list_cell noattr)))
+                  (Tstruct _s_state_list_cell noattr)) _next
+                (tptr (Tstruct _s_state_list_cell noattr)))
+              (Etempvar _cell (tptr (Tstruct _s_state_list_cell noattr)))))))
+      (Sassign
+        (Efield
+          (Ederef (Etempvar _list (tptr (Tstruct _s_state_list noattr)))
+            (Tstruct _s_state_list noattr)) _last
+          (tptr (Tstruct _s_state_list_cell noattr)))
+        (Etempvar _cell (tptr (Tstruct _s_state_list_cell noattr)))))))
 |}.
 
 Definition composites : list composite_definition :=
 (Composite _s_state Struct ((_item, (tarray tdouble 3)) :: nil) noattr ::
- nil).
+ Composite _s_state_list_cell Struct
+   ((_data, (Tstruct _s_state noattr)) ::
+    (_next, (tptr (Tstruct _s_state_list_cell noattr))) :: nil)
+   noattr ::
+ Composite _s_state_list Struct
+   ((_first, (tptr (Tstruct _s_state_list_cell noattr))) ::
+    (_last, (tptr (Tstruct _s_state_list_cell noattr))) :: nil)
+   noattr :: nil).
 
 Definition global_definitions : list (ident * globdef fundef type) :=
 ((___builtin_ais_annot,
@@ -428,10 +548,19 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
      (Tcons tint Tnil) tvoid
      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|})) ::
- (_one_step, Gfun(Internal f_one_step)) :: nil).
+ (_malloc,
+   Gfun(External EF_malloc (Tcons tulong Tnil) (tptr tvoid) cc_default)) ::
+ (_exit,
+   Gfun(External (EF_external "exit"
+                   (mksignature (AST.Tint :: nil) None cc_default))
+     (Tcons tint Tnil) tvoid cc_default)) ::
+ (_new_state_list, Gfun(Internal f_new_state_list)) ::
+ (_new_state_list_cell, Gfun(Internal f_new_state_list_cell)) ::
+ (_state_list_append, Gfun(Internal f_state_list_append)) :: nil).
 
 Definition public_idents : list ident :=
-(_one_step :: ___builtin_debug :: ___builtin_nop ::
+(_state_list_append :: _new_state_list_cell :: _new_state_list :: _exit ::
+ _malloc :: ___builtin_debug :: ___builtin_nop ::
  ___builtin_write32_reversed :: ___builtin_write16_reversed ::
  ___builtin_read32_reversed :: ___builtin_read16_reversed ::
  ___builtin_fnmsub :: ___builtin_fnmadd :: ___builtin_fmsub ::
