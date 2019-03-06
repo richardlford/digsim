@@ -12,7 +12,7 @@
 
  *)
 
-Require Import Digsim.float_text_io.
+Require Import DigUty.float_text_io.
 From compcert Require Import Floats.
 Import Float.
 From compcert Require Import Fappli_IEEE.
