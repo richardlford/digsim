@@ -1,7 +1,6 @@
--Q /mnt/c/Users/FordRL/e/digsim-jim/formal/diguty DigUty
--R /mnt/c/Users/FordRL/e/coquelicot2/theories Coquelicot
--Q /mnt/c/Users/FordRL/e/vstgit VST
--Q /mnt/c/Users/FordRL/e/CompCert compcert
+-Q . DigUty
+-Q ../../../VST VST
+-Q ../../../CompCert compcert
 float_text_io.v
 strlib.v
 strlib_specs.v
