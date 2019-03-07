@@ -1,0 +1,7 @@
+-Q ../../../VST VST
+-Q ../../../CompCert compcert
+-Q ../diguty DigUty
+-Q . Step0
+step0.v
+verif_step0.v
+

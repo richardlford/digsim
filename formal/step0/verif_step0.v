@@ -1,6 +1,6 @@
 (* Verify simple double floating add. *)
 Require Import VST.floyd.proofauto.
-Require Import Digsim.step0.
+Require Import Step0.step0.
 Require Import compcert.lib.Floats.
 
 (* The next line is "boilerplate", always required after importing an AST. *)
