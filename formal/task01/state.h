@@ -15,19 +15,14 @@ typedef struct s_state {
   double item[StateSize];
 } State;
 
-typedef struct s_state_list_cell {
-  State data;
-  struct s_state_list_cell* next;
-} StateListCell;
-
 typedef struct s_state_list {
-    StateListCell* first;
-    StateListCell* last;
+  State data;
+  struct s_state_list* next;
 } StateList;
 
-StateList* new_state_list(void);
-StateListCell* new_state_list_cell(State data, StateListCell* next);
-void state_list_append(StateList* list, State item);
+StateList* new_state_list(State data, StateList* next);
+StateList* state_list_cons(StateList* list, State item);
+StateList* reverse_state_list(StateList* list);
   
 // Return first derivative of state components
 State diffeq(State state);

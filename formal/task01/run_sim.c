@@ -6,13 +6,13 @@
 StateList* run_sim(State state, double tstop, double dt) {
 
     // Get list to accumulate results.
-    StateList* states = new_state_list();
+    StateList* states = NULL;
 
     // Main simulation loop
     int i = 0;
     while (state.item[TimeItem] <= tstop) {
         // Record state.
-        state_list_append(states, state);
+        states = state_list_cons(states, state);
 
         // Calculate derivative from current state.
         State derivatives = diffeq(state);
@@ -24,5 +24,6 @@ StateList* run_sim(State state, double tstop, double dt) {
         i++;
         state.item[TimeItem] = round(i * dt * 1.0e6) / 1.0e6;
     }
+    states = reverse_state_list(states);
     return states;
 }

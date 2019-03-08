@@ -17,7 +17,7 @@ int main(void) {
     char filename[50] = "output.dat";
     FILE *f = fopen(filename, "w");
     if (!f) exit(2);
-    for (StateListCell *cell = states->first; cell; cell = cell->next) {
+    for (StateList* cell = states; cell; cell = cell->next) {
         double time = cell->data.item[TimeItem];
         double x = cell->data.item[PositionItem];
         double xd = cell->data.item[VelocityItem];

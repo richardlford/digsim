@@ -1,29 +1,28 @@
 #include <stddef.h>
 #include "state.h"
 
-StateList* new_state_list() {
+StateList* new_state_list(State data, StateList* next) {
   StateList* result = (StateList*)malloc(sizeof(StateList));
-  if (!result) exit(1);
-  result->first = NULL;
-  result->last = NULL;
-  return result;
-}
-
-StateListCell* new_state_list_cell(State data, StateListCell* next) {
-  StateListCell* result = (StateListCell*)malloc(sizeof(StateListCell));
   if (!result) exit(1);
   result->data = data;
   result->next = next;
   return result;
 }
 
-void state_list_append(StateList* list, State item) {
-  StateListCell* cell = new_state_list_cell(item, NULL);
-  if (list->first == NULL) {
-    list->first = cell;
-  } else {
-    list->last->next = cell;
+StateList* state_list_cons(StateList* list, State item) {
+  StateList* cell = new_state_list(item, list);
+  return cell;
+}
+
+StateList* reverse_state_list(StateList* list) {
+  StateList* v = list;
+  StateList* w = NULL;
+  while (v != NULL) {
+    StateList* t = v->next;
+    v->next = w;
+    w = v;
+    v = t;
   }
-  list->last = cell;
+  return w;
 }
 
