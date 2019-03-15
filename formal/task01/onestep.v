@@ -3,7 +3,7 @@ From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clight
 Local Open Scope Z_scope.
 
 Module Info.
-  Definition version := "3.5"%string.
+  Definition version := "3.4"%string.
   Definition build_number := ""%string.
   Definition build_tag := ""%string.
   Definition arch := "x86"%string.
@@ -99,7 +99,6 @@ Definition __next : ident := 2%positive.
 Definition __offset : ident := 27%positive.
 Definition __old_offset : ident := 22%positive.
 Definition __pos : ident := 5%positive.
-Definition __res : ident := 111%positive.
 Definition __sbuf : ident := 4%positive.
 Definition __shortbuf : ident := 25%positive.
 Definition __unused2 : ident := 34%positive.
@@ -108,6 +107,7 @@ Definition _cell : ident := 104%positive.
 Definition _damping_coefficient : ident := 112%positive.
 Definition _data : ident := 37%positive.
 Definition _derivative : ident := 118%positive.
+Definition _derivatives_out : ident := 111%positive.
 Definition _diffeq : ident := 117%positive.
 Definition _dt : ident := 98%positive.
 Definition _exit : ident := 97%positive.

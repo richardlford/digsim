@@ -3,7 +3,7 @@ From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clight
 Local Open Scope Z_scope.
 
 Module Info.
-  Definition version := "3.5"%string.
+  Definition version := "3.4"%string.
   Definition build_number := ""%string.
   Definition build_tag := ""%string.
   Definition arch := "x86"%string.
@@ -99,16 +99,20 @@ Definition __next : ident := 2%positive.
 Definition __offset : ident := 27%positive.
 Definition __old_offset : ident := 22%positive.
 Definition __pos : ident := 5%positive.
-Definition __res : ident := 111%positive.
 Definition __sbuf : ident := 4%positive.
 Definition __shortbuf : ident := 25%positive.
 Definition __unused2 : ident := 34%positive.
 Definition __vtable_offset : ident := 24%positive.
 Definition _cell : ident := 104%positive.
+Definition _clone_state : ident := 129%positive.
+Definition _copy_state : ident := 128%positive.
 Definition _damping_coefficient : ident := 112%positive.
 Definition _data : ident := 37%positive.
+Definition _data_copy : ident := 130%positive.
 Definition _derivative : ident := 118%positive.
 Definition _derivatives : ident := 124%positive.
+Definition _derivatives_out : ident := 111%positive.
+Definition _dest : ident := 126%positive.
 Definition _diffeq : ident := 117%positive.
 Definition _dt : ident := 98%positive.
 Definition _exit : ident := 97%positive.
@@ -120,11 +124,11 @@ Definition _fprintf : ident := 94%positive.
 Definition _gravity : ident := 113%positive.
 Definition _i : ident := 119%positive.
 Definition _item : ident := 35%positive.
-Definition _list : ident := 127%positive.
+Definition _list : ident := 132%positive.
 Definition _main : ident := 110%positive.
 Definition _malloc : ident := 125%positive.
 Definition _mass : ident := 114%positive.
-Definition _new_state_list : ident := 126%positive.
+Definition _new_state_list : ident := 131%positive.
 Definition _next : ident := 39%positive.
 Definition _one_step : ident := 120%positive.
 Definition _printf : ident := 95%positive.
@@ -135,37 +139,111 @@ Definition _run_sim : ident := 96%positive.
 Definition _s_state : ident := 36%positive.
 Definition _s_state_list : ident := 38%positive.
 Definition _spring_coefficient : ident := 115%positive.
+Definition _src : ident := 127%positive.
 Definition _state : ident := 100%positive.
 Definition _state_list_cons : ident := 122%positive.
 Definition _states : ident := 101%positive.
-Definition _t : ident := 130%positive.
+Definition _t : ident := 135%positive.
 Definition _time : ident := 105%positive.
 Definition _tstop : ident := 99%positive.
-Definition _v : ident := 128%positive.
-Definition _w : ident := 129%positive.
+Definition _v : ident := 133%positive.
+Definition _w : ident := 134%positive.
 Definition _x : ident := 106%positive.
 Definition _xd : ident := 107%positive.
-Definition _t'1 : ident := 131%positive.
+Definition _t'1 : ident := 136%positive.
+Definition _t'2 : ident := 137%positive.
+
+Definition f_copy_state := {|
+  fn_return := tvoid;
+  fn_callconv := cc_default;
+  fn_params := ((_dest, (tptr (Tstruct _s_state noattr))) ::
+                (_src, (tptr (Tstruct _s_state noattr))) :: nil);
+  fn_vars := nil;
+  fn_temps := ((_i, tint) :: (_t'1, tdouble) :: nil);
+  fn_body :=
+(Ssequence
+  (Sset _i (Econst_int (Int.repr 0) tint))
+  (Swhile
+    (Ebinop Olt (Etempvar _i tint) (Econst_int (Int.repr 3) tint) tint)
+    (Ssequence
+      (Ssequence
+        (Sset _t'1
+          (Ederef
+            (Ebinop Oadd
+              (Efield
+                (Ederef (Etempvar _src (tptr (Tstruct _s_state noattr)))
+                  (Tstruct _s_state noattr)) _item (tarray tdouble 3))
+              (Etempvar _i tint) (tptr tdouble)) tdouble))
+        (Sassign
+          (Ederef
+            (Ebinop Oadd
+              (Efield
+                (Ederef (Etempvar _dest (tptr (Tstruct _s_state noattr)))
+                  (Tstruct _s_state noattr)) _item (tarray tdouble 3))
+              (Etempvar _i tint) (tptr tdouble)) tdouble)
+          (Etempvar _t'1 tdouble)))
+      (Sset _i
+        (Ebinop Oadd (Etempvar _i tint) (Econst_int (Int.repr 1) tint) tint)))))
+|}.
+
+Definition f_clone_state := {|
+  fn_return := (tptr (Tstruct _s_state noattr));
+  fn_callconv := cc_default;
+  fn_params := ((_data, (tptr (Tstruct _s_state noattr))) :: nil);
+  fn_vars := nil;
+  fn_temps := ((_result, (tptr (Tstruct _s_state noattr))) ::
+               (_t'1, (tptr tvoid)) :: nil);
+  fn_body :=
+(Ssequence
+  (Ssequence
+    (Scall (Some _t'1)
+      (Evar _malloc (Tfunction (Tcons tulong Tnil) (tptr tvoid) cc_default))
+      ((Esizeof (Tstruct _s_state noattr) tulong) :: nil))
+    (Sset _result
+      (Ecast (Etempvar _t'1 (tptr tvoid)) (tptr (Tstruct _s_state noattr)))))
+  (Ssequence
+    (Sifthenelse (Eunop Onotbool
+                   (Etempvar _result (tptr (Tstruct _s_state noattr))) tint)
+      (Scall None (Evar _exit (Tfunction (Tcons tint Tnil) tvoid cc_default))
+        ((Econst_int (Int.repr 1) tint) :: nil))
+      Sskip)
+    (Ssequence
+      (Scall None
+        (Evar _copy_state (Tfunction
+                            (Tcons (tptr (Tstruct _s_state noattr))
+                              (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
+                            tvoid cc_default))
+        ((Etempvar _result (tptr (Tstruct _s_state noattr))) ::
+         (Etempvar _data (tptr (Tstruct _s_state noattr))) :: nil))
+      (Sreturn (Some (Etempvar _result (tptr (Tstruct _s_state noattr))))))))
+|}.
 
 Definition f_new_state_list := {|
   fn_return := (tptr (Tstruct _s_state_list noattr));
   fn_callconv := cc_default;
-  fn_params := ((_data, (Tstruct _s_state noattr)) ::
+  fn_params := ((_data, (tptr (Tstruct _s_state noattr))) ::
                 (_next, (tptr (Tstruct _s_state_list noattr))) :: nil);
-  fn_vars := ((_data, (Tstruct _s_state noattr)) :: nil);
-  fn_temps := ((_result, (tptr (Tstruct _s_state_list noattr))) ::
-               (_t'1, (tptr tvoid)) :: nil);
+  fn_vars := nil;
+  fn_temps := ((_data_copy, (tptr (Tstruct _s_state noattr))) ::
+               (_result, (tptr (Tstruct _s_state_list noattr))) ::
+               (_t'2, (tptr tvoid)) ::
+               (_t'1, (tptr (Tstruct _s_state noattr))) :: nil);
   fn_body :=
 (Ssequence
-  (Sassign (Evar _data (Tstruct _s_state noattr))
-    (Etempvar _data (Tstruct _s_state noattr)))
+  (Ssequence
+    (Scall (Some _t'1)
+      (Evar _clone_state (Tfunction
+                           (Tcons (tptr (Tstruct _s_state noattr)) Tnil)
+                           (tptr (Tstruct _s_state noattr)) cc_default))
+      ((Etempvar _data (tptr (Tstruct _s_state noattr))) :: nil))
+    (Sset _data_copy (Etempvar _t'1 (tptr (Tstruct _s_state noattr)))))
   (Ssequence
     (Ssequence
-      (Scall (Some _t'1)
+      (Scall (Some _t'2)
         (Evar _malloc (Tfunction (Tcons tulong Tnil) (tptr tvoid) cc_default))
         ((Esizeof (Tstruct _s_state_list noattr) tulong) :: nil))
       (Sset _result
-        (Ecast (Etempvar _t'1 (tptr tvoid))
+        (Ecast (Etempvar _t'2 (tptr tvoid))
           (tptr (Tstruct _s_state_list noattr)))))
     (Ssequence
       (Sifthenelse (Eunop Onotbool
@@ -180,8 +258,8 @@ Definition f_new_state_list := {|
           (Efield
             (Ederef (Etempvar _result (tptr (Tstruct _s_state_list noattr)))
               (Tstruct _s_state_list noattr)) _data
-            (Tstruct _s_state noattr))
-          (Evar _data (Tstruct _s_state noattr)))
+            (tptr (Tstruct _s_state noattr)))
+          (Etempvar _data_copy (tptr (Tstruct _s_state noattr))))
         (Ssequence
           (Sassign
             (Efield
@@ -197,28 +275,24 @@ Definition f_state_list_cons := {|
   fn_return := (tptr (Tstruct _s_state_list noattr));
   fn_callconv := cc_default;
   fn_params := ((_list, (tptr (Tstruct _s_state_list noattr))) ::
-                (_item, (Tstruct _s_state noattr)) :: nil);
-  fn_vars := ((_item, (Tstruct _s_state noattr)) :: nil);
+                (_item, (tptr (Tstruct _s_state noattr))) :: nil);
+  fn_vars := nil;
   fn_temps := ((_cell, (tptr (Tstruct _s_state_list noattr))) ::
                (_t'1, (tptr (Tstruct _s_state_list noattr))) :: nil);
   fn_body :=
 (Ssequence
-  (Sassign (Evar _item (Tstruct _s_state noattr))
-    (Etempvar _item (Tstruct _s_state noattr)))
   (Ssequence
-    (Ssequence
-      (Scall (Some _t'1)
-        (Evar _new_state_list (Tfunction
-                                (Tcons (Tstruct _s_state noattr)
-                                  (Tcons
-                                    (tptr (Tstruct _s_state_list noattr))
-                                    Tnil))
-                                (tptr (Tstruct _s_state_list noattr))
-                                cc_default))
-        ((Evar _item (Tstruct _s_state noattr)) ::
-         (Etempvar _list (tptr (Tstruct _s_state_list noattr))) :: nil))
-      (Sset _cell (Etempvar _t'1 (tptr (Tstruct _s_state_list noattr)))))
-    (Sreturn (Some (Etempvar _cell (tptr (Tstruct _s_state_list noattr)))))))
+    (Scall (Some _t'1)
+      (Evar _new_state_list (Tfunction
+                              (Tcons (tptr (Tstruct _s_state noattr))
+                                (Tcons (tptr (Tstruct _s_state_list noattr))
+                                  Tnil))
+                              (tptr (Tstruct _s_state_list noattr))
+                              cc_default))
+      ((Etempvar _item (tptr (Tstruct _s_state noattr))) ::
+       (Etempvar _list (tptr (Tstruct _s_state_list noattr))) :: nil))
+    (Sset _cell (Etempvar _t'1 (tptr (Tstruct _s_state_list noattr)))))
+  (Sreturn (Some (Etempvar _cell (tptr (Tstruct _s_state_list noattr))))))
 |}.
 
 Definition f_reverse_state_list := {|
@@ -260,7 +334,7 @@ Definition f_reverse_state_list := {|
 Definition composites : list composite_definition :=
 (Composite _s_state Struct ((_item, (tarray tdouble 3)) :: nil) noattr ::
  Composite _s_state_list Struct
-   ((_data, (Tstruct _s_state noattr)) ::
+   ((_data, (tptr (Tstruct _s_state noattr))) ::
     (_next, (tptr (Tstruct _s_state_list noattr))) :: nil)
    noattr :: nil).
 
@@ -521,31 +595,33 @@ Definition global_definitions : list (ident * globdef fundef type) :=
    Gfun(External (EF_external "exit"
                    (mksignature (AST.Tint :: nil) None cc_default))
      (Tcons tint Tnil) tvoid cc_default)) ::
+ (_copy_state, Gfun(Internal f_copy_state)) ::
+ (_clone_state, Gfun(Internal f_clone_state)) ::
  (_new_state_list, Gfun(Internal f_new_state_list)) ::
  (_state_list_cons, Gfun(Internal f_state_list_cons)) ::
  (_reverse_state_list, Gfun(Internal f_reverse_state_list)) :: nil).
 
 Definition public_idents : list ident :=
-(_reverse_state_list :: _state_list_cons :: _new_state_list :: _exit ::
- _malloc :: ___builtin_debug :: ___builtin_nop ::
- ___builtin_write32_reversed :: ___builtin_write16_reversed ::
- ___builtin_read32_reversed :: ___builtin_read16_reversed ::
- ___builtin_fnmsub :: ___builtin_fnmadd :: ___builtin_fmsub ::
- ___builtin_fmadd :: ___builtin_fmin :: ___builtin_fmax ::
- ___builtin_ctzll :: ___builtin_ctzl :: ___builtin_ctz :: ___builtin_clzll ::
- ___builtin_clzl :: ___builtin_clz :: ___builtin_bswap64 ::
- ___compcert_i64_umulh :: ___compcert_i64_smulh :: ___compcert_i64_sar ::
- ___compcert_i64_shr :: ___compcert_i64_shl :: ___compcert_i64_umod ::
- ___compcert_i64_smod :: ___compcert_i64_udiv :: ___compcert_i64_sdiv ::
- ___compcert_i64_utof :: ___compcert_i64_stof :: ___compcert_i64_utod ::
- ___compcert_i64_stod :: ___compcert_i64_dtou :: ___compcert_i64_dtos ::
- ___compcert_va_composite :: ___compcert_va_float64 ::
- ___compcert_va_int64 :: ___compcert_va_int32 :: ___builtin_va_end ::
- ___builtin_va_copy :: ___builtin_va_arg :: ___builtin_va_start ::
- ___builtin_membar :: ___builtin_annot_intval :: ___builtin_annot ::
- ___builtin_memcpy_aligned :: ___builtin_fsqrt :: ___builtin_fabs ::
- ___builtin_bswap16 :: ___builtin_bswap32 :: ___builtin_bswap ::
- ___builtin_ais_annot :: nil).
+(_reverse_state_list :: _state_list_cons :: _new_state_list ::
+ _clone_state :: _copy_state :: _exit :: _malloc :: ___builtin_debug ::
+ ___builtin_nop :: ___builtin_write32_reversed ::
+ ___builtin_write16_reversed :: ___builtin_read32_reversed ::
+ ___builtin_read16_reversed :: ___builtin_fnmsub :: ___builtin_fnmadd ::
+ ___builtin_fmsub :: ___builtin_fmadd :: ___builtin_fmin ::
+ ___builtin_fmax :: ___builtin_ctzll :: ___builtin_ctzl :: ___builtin_ctz ::
+ ___builtin_clzll :: ___builtin_clzl :: ___builtin_clz ::
+ ___builtin_bswap64 :: ___compcert_i64_umulh :: ___compcert_i64_smulh ::
+ ___compcert_i64_sar :: ___compcert_i64_shr :: ___compcert_i64_shl ::
+ ___compcert_i64_umod :: ___compcert_i64_smod :: ___compcert_i64_udiv ::
+ ___compcert_i64_sdiv :: ___compcert_i64_utof :: ___compcert_i64_stof ::
+ ___compcert_i64_utod :: ___compcert_i64_stod :: ___compcert_i64_dtou ::
+ ___compcert_i64_dtos :: ___compcert_va_composite ::
+ ___compcert_va_float64 :: ___compcert_va_int64 :: ___compcert_va_int32 ::
+ ___builtin_va_end :: ___builtin_va_copy :: ___builtin_va_arg ::
+ ___builtin_va_start :: ___builtin_membar :: ___builtin_annot_intval ::
+ ___builtin_annot :: ___builtin_memcpy_aligned :: ___builtin_fsqrt ::
+ ___builtin_fabs :: ___builtin_bswap16 :: ___builtin_bswap32 ::
+ ___builtin_bswap :: ___builtin_ais_annot :: nil).
 
 Definition prog : Clight.program := 
   mkprogram composites global_definitions public_idents _main Logic.I.

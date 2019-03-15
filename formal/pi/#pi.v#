@@ -11,7 +11,7 @@ Module Info.
   Definition abi := "standard"%string.
   Definition bitsize := 64.
   Definition big_endian := false.
-  Definition source_file := "../digsim-jim/formal/dadd/dadd.c"%string.
+  Definition source_file := "pi.c"%string.
   Definition normalized := true.
 End Info.
 
@@ -67,21 +67,20 @@ Definition ___compcert_va_composite : ident := 18%positive.
 Definition ___compcert_va_float64 : ident := 17%positive.
 Definition ___compcert_va_int32 : ident := 15%positive.
 Definition ___compcert_va_int64 : ident := 16%positive.
-Definition _a : ident := 53%positive.
-Definition _b : ident := 54%positive.
-Definition _c : ident := 55%positive.
-Definition _dadd : ident := 56%positive.
-Definition _main : ident := 57%positive.
+Definition _c : ident := 53%positive.
+Definition _main : ident := 55%positive.
+Definition _pi : ident := 54%positive.
 
-Definition f_dadd := {|
+Definition f_pi := {|
   fn_return := tdouble;
   fn_callconv := cc_default;
-  fn_params := ((_a, tdouble) :: (_b, tdouble) :: nil);
+  fn_params := nil;
   fn_vars := nil;
   fn_temps := ((_c, tdouble) :: nil);
   fn_body :=
 (Ssequence
-  (Sset _c (Ebinop Oadd (Etempvar _a tdouble) (Etempvar _b tdouble) tdouble))
+  (Sset _c
+    (Econst_float (Float.of_bits (Int64.repr 4614256656552045848)) tdouble))
   (Sreturn (Some (Etempvar _c tdouble))))
 |}.
 
@@ -339,28 +338,27 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|}))
      (Tcons tint Tnil) tvoid
      {|cc_vararg:=true; cc_unproto:=false; cc_structret:=false|})) ::
- (_dadd, Gfun(Internal f_dadd)) :: nil).
+ (_pi, Gfun(Internal f_pi)) :: nil).
 
 Definition public_idents : list ident :=
-(_dadd :: ___builtin_debug :: ___builtin_nop ::
- ___builtin_write32_reversed :: ___builtin_write16_reversed ::
- ___builtin_read32_reversed :: ___builtin_read16_reversed ::
- ___builtin_fnmsub :: ___builtin_fnmadd :: ___builtin_fmsub ::
- ___builtin_fmadd :: ___builtin_fmin :: ___builtin_fmax ::
- ___builtin_ctzll :: ___builtin_ctzl :: ___builtin_ctz :: ___builtin_clzll ::
- ___builtin_clzl :: ___builtin_clz :: ___builtin_bswap64 ::
- ___compcert_i64_umulh :: ___compcert_i64_smulh :: ___compcert_i64_sar ::
- ___compcert_i64_shr :: ___compcert_i64_shl :: ___compcert_i64_umod ::
- ___compcert_i64_smod :: ___compcert_i64_udiv :: ___compcert_i64_sdiv ::
- ___compcert_i64_utof :: ___compcert_i64_stof :: ___compcert_i64_utod ::
- ___compcert_i64_stod :: ___compcert_i64_dtou :: ___compcert_i64_dtos ::
- ___compcert_va_composite :: ___compcert_va_float64 ::
- ___compcert_va_int64 :: ___compcert_va_int32 :: ___builtin_va_end ::
- ___builtin_va_copy :: ___builtin_va_arg :: ___builtin_va_start ::
- ___builtin_membar :: ___builtin_annot_intval :: ___builtin_annot ::
- ___builtin_memcpy_aligned :: ___builtin_fsqrt :: ___builtin_fabs ::
- ___builtin_bswap16 :: ___builtin_bswap32 :: ___builtin_bswap ::
- ___builtin_ais_annot :: nil).
+(_pi :: ___builtin_debug :: ___builtin_nop :: ___builtin_write32_reversed ::
+ ___builtin_write16_reversed :: ___builtin_read32_reversed ::
+ ___builtin_read16_reversed :: ___builtin_fnmsub :: ___builtin_fnmadd ::
+ ___builtin_fmsub :: ___builtin_fmadd :: ___builtin_fmin ::
+ ___builtin_fmax :: ___builtin_ctzll :: ___builtin_ctzl :: ___builtin_ctz ::
+ ___builtin_clzll :: ___builtin_clzl :: ___builtin_clz ::
+ ___builtin_bswap64 :: ___compcert_i64_umulh :: ___compcert_i64_smulh ::
+ ___compcert_i64_sar :: ___compcert_i64_shr :: ___compcert_i64_shl ::
+ ___compcert_i64_umod :: ___compcert_i64_smod :: ___compcert_i64_udiv ::
+ ___compcert_i64_sdiv :: ___compcert_i64_utof :: ___compcert_i64_stof ::
+ ___compcert_i64_utod :: ___compcert_i64_stod :: ___compcert_i64_dtou ::
+ ___compcert_i64_dtos :: ___compcert_va_composite ::
+ ___compcert_va_float64 :: ___compcert_va_int64 :: ___compcert_va_int32 ::
+ ___builtin_va_end :: ___builtin_va_copy :: ___builtin_va_arg ::
+ ___builtin_va_start :: ___builtin_membar :: ___builtin_annot_intval ::
+ ___builtin_annot :: ___builtin_memcpy_aligned :: ___builtin_fsqrt ::
+ ___builtin_fabs :: ___builtin_bswap16 :: ___builtin_bswap32 ::
+ ___builtin_bswap :: ___builtin_ais_annot :: nil).
 
 Definition prog : Clight.program := 
   mkprogram composites global_definitions public_idents _main Logic.I.

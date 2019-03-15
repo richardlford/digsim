@@ -24,6 +24,8 @@
 From compcert Require Import Floats.
 Import Float.
 From compcert Require Import Fappli_IEEE.
+From compcert Require Import Fappli_IEEE_extra.
+
 From compcert Require Import Integers.
 Require Import Coq.Lists.List.
 Require Import BinNums.
@@ -32,6 +34,7 @@ Require Import Strings.String.
 Require Import Strings.Ascii.
 Require Import Coq.ZArith.Znat.
 Require Import Recdef.
+Require Import DigUty.Monad.
 
 (** Pretty printing
  *)
@@ -40,24 +43,6 @@ Open Scope bool_scope.
 Open Scope string_scope.
 Definition nl := String "010"%char EmptyString.
 Close Scope char_scope.
-
-(* Version 8.8 has concat but earlier versions don't so include it
-   for compatibility.
- *)
-
-(** *** Concatenating lists of strings *)
-
-(** [concat sep sl] concatenates the list of strings [sl], inserting
-    the separator string [sep] between each. *)
-
-Fixpoint concat (sep : string) (ls : list string) :=
-  match ls with
-  | nil => EmptyString
-  | cons x nil => x
-  | cons x xs => x ++ sep ++ concat sep xs
-  end.
-
-
 
 Module FloatIO.
   (* Convert Coq integer to float *)
@@ -97,6 +82,157 @@ Module Details.
   
 Definition precision_of_float := 53%Z.
 Definition log10of2scaled3 := 301.
+
+Record FloatParts : Set :=
+  {
+    mantissaSign: bool;
+    intPart: string;
+    fracPart: string;
+    expPart: string
+  }.
+
+Fixpoint strToUintHelper (s: string) : option Decimal.uint :=
+  match s with
+  | EmptyString => Some Decimal.Nil
+  | String x x0 =>
+    lower <- strToUintHelper x0;
+      match x with
+      | "0"%char => Some (Decimal.D0 lower)
+      | "1"%char => Some (Decimal.D1 lower)
+      | "2"%char => Some (Decimal.D2 lower)
+      | "3"%char => Some (Decimal.D3 lower)
+      | "4"%char => Some (Decimal.D4 lower)
+      | "5"%char => Some (Decimal.D5 lower)
+      | "6"%char => Some (Decimal.D6 lower)
+      | "7"%char => Some (Decimal.D7 lower)
+      | "8"%char => Some (Decimal.D8 lower)
+      | "9"%char => Some (Decimal.D9 lower)
+      | _ => None
+      end
+    end.
+
+
+Definition strToUint (s: string) : option Decimal.uint :=
+  x <- strToUintHelper s;
+  Some (Decimal.unorm x).
+
+(*
+Compute strToUint "001234".
+Compute strToUint "".
+Compute strToUint "0".
+Compute strToUint "-3".
+*)
+
+Definition strToIntHelper (s: string) : option Decimal.int :=
+  match s with
+  | EmptyString => Some (Decimal.Pos Decimal.zero)
+  | String x x0 =>
+    let (sign, digits) := 
+        match x with
+        | "+"%char => (false, x0)
+        | "-"%char => (true, x0)
+        | _ => (false, s)
+        end in
+    uintVal <- strToUint digits;
+      Some (if sign then Decimal.Neg uintVal else Decimal.Pos uintVal)
+  end.
+
+Definition strToInt (s: string) : option Decimal.int :=
+  x <- strToIntHelper s;
+  Some (Decimal.norm x).
+
+(*
+Compute strToInt "001234".
+Compute strToInt "-001234".
+Compute strToInt "+001234".
+Compute strToInt "".
+Compute strToInt "+".
+Compute strToInt "-".
+Compute strToInt "0".
+Compute strToInt "-0".
+Compute strToInt "-3".
+*)
+
+Definition strToZ (s: string) : option Z :=
+  x <- strToInt s;
+    Some (Z.of_int x).
+
+(*
+Compute strToZ "001234".
+Compute strToZ "-001234".
+Compute strToZ "+001234".
+Compute strToZ "".
+Compute strToZ "+".
+Compute strToZ "-".
+Compute strToZ "0".
+Compute strToZ "-0".
+Compute strToZ "-3".
+
+Compute String.index 0 "E" "123456E". 
+*)
+
+
+Definition splitAtExponent (s: string) : (string * string) :=
+  let maybeEpos :=
+  match String.index 0 "E" s with
+  | Some epos => Some epos
+  | None => match String.index 0 "e" s with
+           | Some epos => Some epos
+           | None => None
+           end
+  end in
+  match maybeEpos with
+  | Some epos => (substring 0 epos s, substring (S epos) (String.length s - epos - 1) s)
+  | None => (s, EmptyString)
+  end.
+
+(*
+Compute splitAtExponent "123E456".
+Compute splitAtExponent "123E-456".
+Compute splitAtExponent "123456".
+*)
+
+Definition splitAtPoint (s: string) : (string * string) :=
+  match String.index 0 "." s with
+  | Some dpos => (substring 0 dpos s, substring (S dpos) (String.length s - dpos - 1) s)
+  | None => (s, EmptyString)
+  end.
+
+(*
+Compute splitAtPoint "123.456".
+Compute splitAtPoint "123.-456".
+Compute splitAtPoint "123456".
+*)
+
+Definition decomposeFloatString  (s: string): (string * string * string) :=
+  let (frac, exp) := splitAtExponent s in
+  let (intPart, fracPart) := splitAtPoint frac in
+  (intPart, fracPart, exp).
+
+(* Compute decomposeFloatString "-123.456e-12". *)
+
+Definition strToFloatHelper (s: string) : option (Z * Z) :=
+  let '(intPart, fracPart, exp) := decomposeFloatString s in
+  let mantstring := intPart ++ fracPart in
+  zmant <- (strToZ mantstring);
+    zexp <- (strToZ exp);
+    (let adjustedZexp := zexp - Z.of_nat (String.length fracPart) in
+     ret (zmant, adjustedZexp)).
+
+(* Compute strToFloatHelper "-123.456e-12". *)
+
+Definition strToFloat (s: string) : option float :=
+  match strToFloatHelper s with
+  | Some (zmant, adjustedZexp) =>
+    ret match zmant with
+        | Z0 => Float.zero
+        | Zpos x => from_parsed 10 x adjustedZexp
+        | Zneg x => neg (from_parsed 10 x adjustedZexp)
+        end
+  | None => None
+  end.
+
+(* Compute strToFloat "-123.456e-12". *)
 
 (* Compute approximate scaling exponent of 10, f, needed to
    get a number with given binary exponent, e, in the range
@@ -229,5 +365,6 @@ Definition Z_to_string_base10 := Details.Z_to_string_base10.
 Definition pad_to_width := Details.pad_to_width.
 Definition float_to_string := Details.float_to_string.
 Definition float_list_to_string := Details.float_list_to_string.
+Definition strToFloat := FloatIO.Details.strToFloat.
 
 End FloatIO.

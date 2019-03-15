@@ -3,7 +3,7 @@ From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clight
 Local Open Scope Z_scope.
 
 Module Info.
-  Definition version := "3.5"%string.
+  Definition version := "3.4"%string.
   Definition build_number := ""%string.
   Definition build_tag := ""%string.
   Definition arch := "x86"%string.
@@ -99,7 +99,6 @@ Definition __next : ident := 2%positive.
 Definition __offset : ident := 27%positive.
 Definition __old_offset : ident := 22%positive.
 Definition __pos : ident := 5%positive.
-Definition __res : ident := 111%positive.
 Definition __sbuf : ident := 4%positive.
 Definition __shortbuf : ident := 25%positive.
 Definition __unused2 : ident := 34%positive.
@@ -109,6 +108,7 @@ Definition _damping_coefficient : ident := 112%positive.
 Definition _data : ident := 37%positive.
 Definition _derivative : ident := 118%positive.
 Definition _derivatives : ident := 124%positive.
+Definition _derivatives_out : ident := 111%positive.
 Definition _diffeq : ident := 117%positive.
 Definition _dt : ident := 98%positive.
 Definition _exit : ident := 97%positive.
@@ -147,11 +147,9 @@ Definition _t'4 : ident := 128%positive.
 Definition f_run_sim := {|
   fn_return := (tptr (Tstruct _s_state_list noattr));
   fn_callconv := cc_default;
-  fn_params := ((_state, (Tstruct _s_state noattr)) :: (_tstop, tdouble) ::
-                (_dt, tdouble) :: nil);
-  fn_vars := ((_state, (Tstruct _s_state noattr)) ::
-              (_derivatives, (Tstruct _s_state noattr)) ::
-              (__res, (Tstruct _s_state noattr)) :: nil);
+  fn_params := ((_state, (tptr (Tstruct _s_state noattr))) ::
+                (_tstop, tdouble) :: (_dt, tdouble) :: nil);
+  fn_vars := ((_derivatives, (Tstruct _s_state noattr)) :: nil);
   fn_temps := ((_states, (tptr (Tstruct _s_state_list noattr))) ::
                (_i, tint) :: (_t'3, (tptr (Tstruct _s_state_list noattr))) ::
                (_t'2, tdouble) ::
@@ -159,110 +157,106 @@ Definition f_run_sim := {|
                (_t'4, tdouble) :: nil);
   fn_body :=
 (Ssequence
-  (Sassign (Evar _state (Tstruct _s_state noattr))
-    (Etempvar _state (Tstruct _s_state noattr)))
+  (Sset _states (Ecast (Econst_int (Int.repr 0) tint) (tptr tvoid)))
   (Ssequence
-    (Sset _states (Ecast (Econst_int (Int.repr 0) tint) (tptr tvoid)))
+    (Sset _i (Econst_int (Int.repr 0) tint))
     (Ssequence
-      (Sset _i (Econst_int (Int.repr 0) tint))
-      (Ssequence
-        (Sloop
-          (Ssequence
-            (Ssequence
-              (Sset _t'4
-                (Ederef
-                  (Ebinop Oadd
-                    (Efield (Evar _state (Tstruct _s_state noattr)) _item
-                      (tarray tdouble 3)) (Econst_int (Int.repr 0) tint)
-                    (tptr tdouble)) tdouble))
-              (Sifthenelse (Ebinop Ole (Etempvar _t'4 tdouble)
-                             (Etempvar _tstop tdouble) tint)
-                Sskip
-                Sbreak))
-            (Ssequence
-              (Ssequence
-                (Scall (Some _t'1)
-                  (Evar _state_list_cons (Tfunction
-                                           (Tcons
-                                             (tptr (Tstruct _s_state_list noattr))
-                                             (Tcons (Tstruct _s_state noattr)
-                                               Tnil))
-                                           (tptr (Tstruct _s_state_list noattr))
-                                           cc_default))
-                  ((Etempvar _states (tptr (Tstruct _s_state_list noattr))) ::
-                   (Evar _state (Tstruct _s_state noattr)) :: nil))
-                (Sset _states
-                  (Etempvar _t'1 (tptr (Tstruct _s_state_list noattr)))))
-              (Ssequence
-                (Ssequence
-                  (Scall None
-                    (Evar _diffeq (Tfunction
-                                    (Tcons (tptr (Tstruct _s_state noattr))
-                                      (Tcons (Tstruct _s_state noattr) Tnil))
-                                    tvoid
-                                    {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|}))
-                    ((Eaddrof (Evar __res (Tstruct _s_state noattr))
-                       (tptr (Tstruct _s_state noattr))) ::
-                     (Evar _state (Tstruct _s_state noattr)) :: nil))
-                  (Sassign (Evar _derivatives (Tstruct _s_state noattr))
-                    (Evar __res (Tstruct _s_state noattr))))
-                (Ssequence
-                  (Scall None
-                    (Evar _one_step (Tfunction
-                                      (Tcons (tptr (Tstruct _s_state noattr))
-                                        (Tcons
-                                          (tptr (Tstruct _s_state noattr))
-                                          (Tcons tdouble Tnil))) tvoid
-                                      cc_default))
-                    ((Eaddrof (Evar _state (Tstruct _s_state noattr))
-                       (tptr (Tstruct _s_state noattr))) ::
-                     (Eaddrof (Evar _derivatives (Tstruct _s_state noattr))
-                       (tptr (Tstruct _s_state noattr))) ::
-                     (Etempvar _dt tdouble) :: nil))
-                  (Ssequence
-                    (Sset _i
-                      (Ebinop Oadd (Etempvar _i tint)
-                        (Econst_int (Int.repr 1) tint) tint))
-                    (Ssequence
-                      (Scall (Some _t'2)
-                        (Evar _round (Tfunction (Tcons tdouble Tnil) tdouble
-                                       cc_default))
-                        ((Ebinop Omul
-                           (Ebinop Omul (Etempvar _i tint)
-                             (Etempvar _dt tdouble) tdouble)
-                           (Econst_float (Float.of_bits (Int64.repr 4696837146684686336)) tdouble)
-                           tdouble) :: nil))
-                      (Sassign
-                        (Ederef
-                          (Ebinop Oadd
-                            (Efield (Evar _state (Tstruct _s_state noattr))
-                              _item (tarray tdouble 3))
-                            (Econst_int (Int.repr 0) tint) (tptr tdouble))
-                          tdouble)
-                        (Ebinop Odiv (Etempvar _t'2 tdouble)
-                          (Econst_float (Float.of_bits (Int64.repr 4696837146684686336)) tdouble)
-                          tdouble))))))))
-          Sskip)
+      (Sloop
         (Ssequence
           (Ssequence
-            (Scall (Some _t'3)
-              (Evar _reverse_state_list (Tfunction
-                                          (Tcons
-                                            (tptr (Tstruct _s_state_list noattr))
-                                            Tnil)
+            (Sset _t'4
+              (Ederef
+                (Ebinop Oadd
+                  (Efield
+                    (Ederef
+                      (Etempvar _state (tptr (Tstruct _s_state noattr)))
+                      (Tstruct _s_state noattr)) _item (tarray tdouble 3))
+                  (Econst_int (Int.repr 0) tint) (tptr tdouble)) tdouble))
+            (Sifthenelse (Ebinop Ole (Etempvar _t'4 tdouble)
+                           (Etempvar _tstop tdouble) tint)
+              Sskip
+              Sbreak))
+          (Ssequence
+            (Ssequence
+              (Scall (Some _t'1)
+                (Evar _state_list_cons (Tfunction
+                                         (Tcons
+                                           (tptr (Tstruct _s_state_list noattr))
+                                           (Tcons
+                                             (tptr (Tstruct _s_state noattr))
+                                             Tnil))
+                                         (tptr (Tstruct _s_state_list noattr))
+                                         cc_default))
+                ((Etempvar _states (tptr (Tstruct _s_state_list noattr))) ::
+                 (Etempvar _state (tptr (Tstruct _s_state noattr))) :: nil))
+              (Sset _states
+                (Etempvar _t'1 (tptr (Tstruct _s_state_list noattr)))))
+            (Ssequence
+              (Scall None
+                (Evar _diffeq (Tfunction
+                                (Tcons (tptr (Tstruct _s_state noattr))
+                                  (Tcons (tptr (Tstruct _s_state noattr))
+                                    Tnil)) tvoid cc_default))
+                ((Etempvar _state (tptr (Tstruct _s_state noattr))) ::
+                 (Eaddrof (Evar _derivatives (Tstruct _s_state noattr))
+                   (tptr (Tstruct _s_state noattr))) :: nil))
+              (Ssequence
+                (Scall None
+                  (Evar _one_step (Tfunction
+                                    (Tcons (tptr (Tstruct _s_state noattr))
+                                      (Tcons (tptr (Tstruct _s_state noattr))
+                                        (Tcons tdouble Tnil))) tvoid
+                                    cc_default))
+                  ((Etempvar _state (tptr (Tstruct _s_state noattr))) ::
+                   (Eaddrof (Evar _derivatives (Tstruct _s_state noattr))
+                     (tptr (Tstruct _s_state noattr))) ::
+                   (Etempvar _dt tdouble) :: nil))
+                (Ssequence
+                  (Sset _i
+                    (Ebinop Oadd (Etempvar _i tint)
+                      (Econst_int (Int.repr 1) tint) tint))
+                  (Ssequence
+                    (Scall (Some _t'2)
+                      (Evar _round (Tfunction (Tcons tdouble Tnil) tdouble
+                                     cc_default))
+                      ((Ebinop Omul
+                         (Ebinop Omul (Etempvar _i tint)
+                           (Etempvar _dt tdouble) tdouble)
+                         (Econst_float (Float.of_bits (Int64.repr 4696837146684686336)) tdouble)
+                         tdouble) :: nil))
+                    (Sassign
+                      (Ederef
+                        (Ebinop Oadd
+                          (Efield
+                            (Ederef
+                              (Etempvar _state (tptr (Tstruct _s_state noattr)))
+                              (Tstruct _s_state noattr)) _item
+                            (tarray tdouble 3))
+                          (Econst_int (Int.repr 0) tint) (tptr tdouble))
+                        tdouble)
+                      (Ebinop Odiv (Etempvar _t'2 tdouble)
+                        (Econst_float (Float.of_bits (Int64.repr 4696837146684686336)) tdouble)
+                        tdouble))))))))
+        Sskip)
+      (Ssequence
+        (Ssequence
+          (Scall (Some _t'3)
+            (Evar _reverse_state_list (Tfunction
+                                        (Tcons
                                           (tptr (Tstruct _s_state_list noattr))
-                                          cc_default))
-              ((Etempvar _states (tptr (Tstruct _s_state_list noattr))) ::
-               nil))
-            (Sset _states
-              (Etempvar _t'3 (tptr (Tstruct _s_state_list noattr)))))
-          (Sreturn (Some (Etempvar _states (tptr (Tstruct _s_state_list noattr))))))))))
+                                          Tnil)
+                                        (tptr (Tstruct _s_state_list noattr))
+                                        cc_default))
+            ((Etempvar _states (tptr (Tstruct _s_state_list noattr))) :: nil))
+          (Sset _states
+            (Etempvar _t'3 (tptr (Tstruct _s_state_list noattr)))))
+        (Sreturn (Some (Etempvar _states (tptr (Tstruct _s_state_list noattr)))))))))
 |}.
 
 Definition composites : list composite_definition :=
 (Composite _s_state Struct ((_item, (tarray tdouble 3)) :: nil) noattr ::
  Composite _s_state_list Struct
-   ((_data, (Tstruct _s_state noattr)) ::
+   ((_data, (tptr (Tstruct _s_state noattr))) ::
     (_next, (tptr (Tstruct _s_state_list noattr))) :: nil)
    noattr :: nil).
 
@@ -526,7 +520,7 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                    (mksignature (AST.Tlong :: AST.Tlong :: nil)
                      (Some AST.Tlong) cc_default))
      (Tcons (tptr (Tstruct _s_state_list noattr))
-       (Tcons (Tstruct _s_state noattr) Tnil))
+       (Tcons (tptr (Tstruct _s_state noattr)) Tnil))
      (tptr (Tstruct _s_state_list noattr)) cc_default)) ::
  (_reverse_state_list,
    Gfun(External (EF_external "reverse_state_list"
@@ -537,10 +531,9 @@ Definition global_definitions : list (ident * globdef fundef type) :=
  (_diffeq,
    Gfun(External (EF_external "diffeq"
                    (mksignature (AST.Tlong :: AST.Tlong :: nil) None
-                     {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|}))
+                     cc_default))
      (Tcons (tptr (Tstruct _s_state noattr))
-       (Tcons (Tstruct _s_state noattr) Tnil)) tvoid
-     {|cc_vararg:=false; cc_unproto:=false; cc_structret:=true|})) ::
+       (Tcons (tptr (Tstruct _s_state noattr)) Tnil)) tvoid cc_default)) ::
  (_one_step,
    Gfun(External (EF_external "one_step"
                    (mksignature (AST.Tlong :: AST.Tlong :: AST.Tfloat :: nil)

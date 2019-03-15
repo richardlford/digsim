@@ -3,7 +3,7 @@ From compcert Require Import Coqlib Integers Floats AST Ctypes Cop Clight Clight
 Local Open Scope Z_scope.
 
 Module Info.
-  Definition version := "3.5"%string.
+  Definition version := "3.4"%string.
   Definition build_number := ""%string.
   Definition build_tag := ""%string.
   Definition arch := "x86"%string.
@@ -163,6 +163,7 @@ Definition f_main := {|
                (_states, (tptr (Tstruct _s_state_list noattr))) ::
                (_f, (tptr (Tstruct __IO_FILE noattr))) ::
                (_cell, (tptr (Tstruct _s_state_list noattr))) ::
+               (_data, (tptr (Tstruct _s_state noattr))) ::
                (_time, tdouble) :: (_x, tdouble) :: (_xd, tdouble) ::
                (_t'2, (tptr (Tstruct __IO_FILE noattr))) ::
                (_t'1, (tptr (Tstruct _s_state_list noattr))) :: nil);
@@ -202,11 +203,12 @@ Definition f_main := {|
               (Ssequence
                 (Scall (Some _t'1)
                   (Evar _run_sim (Tfunction
-                                   (Tcons (Tstruct _s_state noattr)
+                                   (Tcons (tptr (Tstruct _s_state noattr))
                                      (Tcons tdouble (Tcons tdouble Tnil)))
                                    (tptr (Tstruct _s_state_list noattr))
                                    cc_default))
-                  ((Evar _state (Tstruct _s_state noattr)) ::
+                  ((Eaddrof (Evar _state (Tstruct _s_state noattr))
+                     (tptr (Tstruct _s_state noattr))) ::
                    (Etempvar _tstop tdouble) :: (Etempvar _dt tdouble) ::
                    nil))
                 (Sset _states
@@ -676,15 +678,20 @@ Definition f_main := {|
                                                                     Sskip
                                                                     Sbreak)
                                                                     (Ssequence
-                                                                    (Sset _time
-                                                                    (Ederef
-                                                                    (Ebinop Oadd
-                                                                    (Efield
+                                                                    (Sset _data
                                                                     (Efield
                                                                     (Ederef
                                                                     (Etempvar _cell (tptr (Tstruct _s_state_list noattr)))
                                                                     (Tstruct _s_state_list noattr))
                                                                     _data
+                                                                    (tptr (Tstruct _s_state noattr))))
+                                                                    (Ssequence
+                                                                    (Sset _time
+                                                                    (Ederef
+                                                                    (Ebinop Oadd
+                                                                    (Efield
+                                                                    (Ederef
+                                                                    (Etempvar _data (tptr (Tstruct _s_state noattr)))
                                                                     (Tstruct _s_state noattr))
                                                                     _item
                                                                     (tarray tdouble 3))
@@ -696,11 +703,8 @@ Definition f_main := {|
                                                                     (Ederef
                                                                     (Ebinop Oadd
                                                                     (Efield
-                                                                    (Efield
                                                                     (Ederef
-                                                                    (Etempvar _cell (tptr (Tstruct _s_state_list noattr)))
-                                                                    (Tstruct _s_state_list noattr))
-                                                                    _data
+                                                                    (Etempvar _data (tptr (Tstruct _s_state noattr)))
                                                                     (Tstruct _s_state noattr))
                                                                     _item
                                                                     (tarray tdouble 3))
@@ -712,11 +716,8 @@ Definition f_main := {|
                                                                     (Ederef
                                                                     (Ebinop Oadd
                                                                     (Efield
-                                                                    (Efield
                                                                     (Ederef
-                                                                    (Etempvar _cell (tptr (Tstruct _s_state_list noattr)))
-                                                                    (Tstruct _s_state_list noattr))
-                                                                    _data
+                                                                    (Etempvar _data (tptr (Tstruct _s_state noattr)))
                                                                     (Tstruct _s_state noattr))
                                                                     _item
                                                                     (tarray tdouble 3))
@@ -752,7 +753,7 @@ Definition f_main := {|
                                                                     (Etempvar _time tdouble) ::
                                                                     (Etempvar _x tdouble) ::
                                                                     (Etempvar _xd tdouble) ::
-                                                                    nil)))))))
+                                                                    nil))))))))
                                                                     (Sset _cell
                                                                     (Efield
                                                                     (Ederef
@@ -798,7 +799,7 @@ Definition composites : list composite_definition :=
    noattr ::
  Composite _s_state Struct ((_item, (tarray tdouble 3)) :: nil) noattr ::
  Composite _s_state_list Struct
-   ((_data, (Tstruct _s_state noattr)) ::
+   ((_data, (tptr (Tstruct _s_state noattr))) ::
     (_next, (tptr (Tstruct _s_state_list noattr))) :: nil)
    noattr :: nil).
 
@@ -1084,7 +1085,8 @@ Definition global_definitions : list (ident * globdef fundef type) :=
                    (mksignature
                      (AST.Tlong :: AST.Tfloat :: AST.Tfloat :: nil)
                      (Some AST.Tlong) cc_default))
-     (Tcons (Tstruct _s_state noattr) (Tcons tdouble (Tcons tdouble Tnil)))
+     (Tcons (tptr (Tstruct _s_state noattr))
+       (Tcons tdouble (Tcons tdouble Tnil)))
      (tptr (Tstruct _s_state_list noattr)) cc_default)) ::
  (_exit,
    Gfun(External (EF_external "exit"
