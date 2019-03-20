@@ -1,0 +1,5 @@
+load_printer "/mnt/c/Users/FordRL/e/digsim-jim/formal/diguty/extraction/_build/my_printers.cma"
+install_printer My_printers.my_print_z
+install_printer My_printers.my_print_float
+install_printer My_printers.my_print_char_list
+

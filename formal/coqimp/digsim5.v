@@ -260,7 +260,7 @@ Definition driver_defaults_str :=
 Definition driver_defaults :=
   Eval compute in StringKeyValToFloatKeyVal driver_defaults_str.
 
-Compute PrintFloatKeyVals driver_defaults.
+(* Compute PrintFloatKeyVals driver_defaults. *)
 
 Definition model_default_values_str :=
   [
@@ -280,7 +280,7 @@ Definition model_default_values_str :=
 Definition model_default_values :=
   Eval compute in StringKeyValToFloatKeyVal model_default_values_str.
 
-Compute PrintFloatKeyVals model_default_values.
+(* Compute PrintFloatKeyVals model_default_values. *)
 
 Definition state0 := Eval compute in
       let driverState := UpdateFloatSvTree driver_defaults emptyFloatPTree in
@@ -295,7 +295,7 @@ Definition svToFloatStr0 (sv: StateVar) :=
   | None => "None"
   end.
 
-Compute svToFloatStr0 svGRAVITY.
+(* Compute svToFloatStr0 svGRAVITY. *)
 
 (* Takes a long time.
 Lemma state0Complete:
@@ -317,7 +317,7 @@ Definition svGetFloat (sv: StateVar) (tree : FloatSvTree) :=
   | None => 0%D
   end.
 
-Compute PTree.elements state0.
+(* Compute PTree.elements state0. *)
 
 
 (* Give StateVar given its positive id, or if not a valid id,
@@ -339,7 +339,7 @@ Fixpoint PrintFloatStateElements (elist: list (positive * float)) : list (StateV
 Definition PrintFloatState (state: FloatSvTree) :=
   PrintFloatStateElements (PTree.elements state).
 
-Compute PrintFloatState state0.
+(* Compute PrintFloatState state0. *)
 
 (*
 Compute float_to_string 8 4 (svGetFloat svGRAVITY state0).
@@ -733,15 +733,64 @@ Definition run_sim (sim: Sim) :=
   let dtmin := svGetFloat svDT_MIN vars in
   let tstop := svGetFloat svT_STOP vars in
   let max_steps_float := (tstop / dtmin)%D in
-  let steps := ZofFloat max_steps_float in
+  (*  let steps := ZofFloat max_steps_float in *)
+  let steps := 10%Z in
   run_sim_loop steps sim.
 
-Definition main :=
+Definition simin :=
   let sim1 := default_sim in
   let sim2 := init_sim sim1 in
   let sim3 := set_var svCOEFF_OF_REST (strToFloat' "0.88") sim2 in
   let sim4 := set_var svGRAVITY (strToFloat' "9.88") sim3 in
-  let sim5 := run_sim sim4 in
+  sim4.
+
+Definition simin' := Eval compute in simin.
+Print simin'.
+
+(* Events with interpreted floats *)
+Record Event' :=
+  mkEvent'
+    {
+      time' : string;
+      func' : EventFuncId
+    }.
+
+(* Sim with interpreted floats *)
+Record Sim' :=
+  mkSim'
+    {
+      vars' : list (StateVar * string);
+      solkeys' : list StateVar;         (* Keys of fields in Solution. *)
+      solution' : list (list string);   (* Simulation detail results. *)
+      sim_events' : list Event';        (* User events. *)
+      log' : list string;                (* Text logging for debugging or information. *)
+      flags' : Flags                     (* control flags *)
+    }.
+
+Definition PrintEvent (ev: Event) : Event' :=
+  {| time' := f2s ev.(time); func' := ev.(func); |}.
+
+Compute map PrintEvent simin'.(sim_events).
+
+Definition PrintSim (sim: Sim) : Sim' :=
+  {|
+    vars' := map (fun kv : (positive * float) =>
+                    let (key, fval) := kv in (posToStateVar' key, f2s fval)) (PTree.elements sim.(vars));
+    solkeys' := sim.(solkeys);
+    solution' := sim.(solution);
+    sim_events' := map PrintEvent sim.(sim_events);
+    log' := sim.(log);
+    flags' := sim.(flags);
+  |}.
+
+Compute PrintSim simin'.
+
+Definition difeq1 := differential_equations simin'.
+Definition difeq1' := Eval compute in difeq1.
+Compute PrintSim difeq1'.
+Compute PrintSim simin'.
+
+let sim5 := run_sim sim4 in
   sim5.
 
-Compute main.
+Definition result := Eval compute in main.

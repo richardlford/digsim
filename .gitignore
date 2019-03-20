@@ -14,3 +14,6 @@
 .coqdeps.d
 CoqMakefile*
 cmake-build-*
+_build
+extraction
+sep_extraction

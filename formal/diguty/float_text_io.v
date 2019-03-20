@@ -12,7 +12,7 @@
    - Z_to_float (z: Z)                                         Convert Coq integer to float
    - fraction_to_float (m d: Z)                                Convert fraction m*(10^(-d)) to float.
    - nat_power_of_float (x: float) (n: nat)                    x^n
-   - Z_to_string_base10 (num : Z) (min_digits: nat) : string   Convert Z to string with min_digits.
+   - Z_to_string_base10 (min_digits: nat) (num : Z) : string   Convert Z to string with min_digits.
    - pad_to_width (width: nat) (s: string)                     Pad string with leading blanks up to width
    - float_to_string (width fdigs: nat) (x: float)             Convert float to string like Ew.(fdigs-1)
    - float_list_to_string (width fdigs: nat) (add_new_line: bool) (al : list float)
@@ -262,7 +262,7 @@ Fixpoint repeat_string (n: nat) (c: string) : string :=
   end.
 
 (* Helper function when computing the digits of an integer base 10. *)
-Fixpoint Z_to_string_base10_aux (num : Z) (min_digits fuel: nat) : string :=
+Fixpoint Z_to_string_base10_aux (min_digits fuel: nat) (num : Z) : string :=
   if (num <? 0) then
     "Require non-negative num."
   else
@@ -270,18 +270,18 @@ Fixpoint Z_to_string_base10_aux (num : Z) (min_digits fuel: nat) : string :=
     | O => "out of fuel"
     | S x => match num with
             | 0 => repeat_string min_digits "0"
-            | _ => (Z_to_string_base10_aux (num / 10) (pred min_digits) x) ++ digits (num mod 10)
+            | _ => (Z_to_string_base10_aux (pred min_digits) x (num / 10)) ++ digits (num mod 10)
             end
     end.
 
-Definition Z_to_string_base10 (num : Z) (min_digits: nat) : string :=
+Definition Z_to_string_base10 (min_digits: nat) (num : Z) : string :=
   if num <? 0 then
-    "-" ++ Z_to_string_base10_aux (-num) min_digits 100
+    "-" ++ Z_to_string_base10_aux min_digits 100 (-num)
   else
     if (num =? 0)%Z then
       repeat_string min_digits "0"
     else
-      Z_to_string_base10_aux num min_digits 100.
+      Z_to_string_base10_aux min_digits 100 num.
 
 (* Convert float to Z scaled by 10**fdigs. *)
 Definition scaled_float_to_Z (x : float) (fdigs: Z) :=
@@ -309,7 +309,7 @@ Definition float_to_string_unsigned (x: float) (fdigs: nat) :=
     let digs_after_dec := pred fdigs in
     let scale := scale_exp (Z.of_nat fdigs) e in
     let scaled := scaled_float_to_Z x scale in
-    let b10 := Z_to_string_base10 scaled 1 in
+    let b10 := Z_to_string_base10 1 scaled in
     let lb10 := length b10 in
     let scale' :=
         if (lb10 <? fdigs)%nat then
@@ -320,13 +320,13 @@ Definition float_to_string_unsigned (x: float) (fdigs: nat) :=
     let b10' :=
         if (lb10 <? fdigs)%nat then
           let scaled' := scaled_float_to_Z x scale' in
-          Z_to_string_base10 scaled' fdigs
+          Z_to_string_base10 fdigs scaled'
         else
           b10
             in
     let d10 := insert_decimal b10' digs_after_dec in
     let true_exp := (Z.of_nat fdigs) - scale' - 1 in
-    let exp_string := Z_to_string_base10 true_exp 1 in
+    let exp_string := Z_to_string_base10 1 true_exp in
     d10 ++ "e" ++ exp_string
   | _ => ""
   end.
@@ -360,11 +360,37 @@ Fixpoint float_list_to_string (width fdigs: nat) (add_new_line: bool) (al : list
 
 End Details.
 
+(*+ Float scope notations *)
+(* D for double float *)
+Bind Scope D_scope with float.
+Delimit Scope D_scope with D.
+
+Infix "+" := Float.add : D_scope.
+Notation "- x" := (Float.neg x) : D_scope.
+Infix "-" := Float.sub : D_scope.
+Infix "*" := Float.mul : D_scope.
+Infix "/" := Float.div : D_scope.
+Infix "?=" := Float.compare (at level 70, no associativity) : D_scope.
+
+Infix "=?" := (Float.cmp Ceq) (at level 70, no associativity) : D_scope.
+Infix "<=?" := (Float.cmp Cle) (at level 70, no associativity) : D_scope.
+Infix "<?" := (Float.cmp Clt) (at level 70, no associativity) : D_scope.
+Infix ">=?" := (Float.cmp Cge) (at level 70, no associativity) : D_scope.
+Infix ">?" := (Float.cmp Cgt) (at level 70, no associativity) : D_scope.
+Notation "0" := Float.zero : D_scope.
+
 (* Export items from the details module that the user will want. *)
 Definition Z_to_string_base10 := Details.Z_to_string_base10.
 Definition pad_to_width := Details.pad_to_width.
 Definition float_to_string := Details.float_to_string.
 Definition float_list_to_string := Details.float_list_to_string.
 Definition strToFloat := FloatIO.Details.strToFloat.
+
+(* Variant of strToFloat when we know the string is valid *)
+Definition strToFloat' (s: string) : float :=
+  match strToFloat s with
+  | Some x => x
+  | None => 0%D
+  end.
 
 End FloatIO.

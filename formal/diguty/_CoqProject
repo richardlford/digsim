@@ -3,6 +3,8 @@
 -Q ../../../CompCert compcert
 Monad.v
 float_text_io.v
+debug_printers.v
 strlib.v
 strlib_specs.v
 verif_strlib.v
+extract.v
