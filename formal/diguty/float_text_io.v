@@ -360,6 +360,8 @@ Fixpoint float_list_to_string (width fdigs: nat) (add_new_line: bool) (al : list
 
 End Details.
 
+Module DScopeNotations.
+
 (*+ Float scope notations *)
 (* D for double float *)
 Bind Scope D_scope with float.
@@ -378,6 +380,9 @@ Infix "<?" := (Float.cmp Clt) (at level 70, no associativity) : D_scope.
 Infix ">=?" := (Float.cmp Cge) (at level 70, no associativity) : D_scope.
 Infix ">?" := (Float.cmp Cgt) (at level 70, no associativity) : D_scope.
 Notation "0" := Float.zero : D_scope.
+End DScopeNotations.
+
+Import DScopeNotations.
 
 (* Export items from the details module that the user will want. *)
 Definition Z_to_string_base10 := Details.Z_to_string_base10.
@@ -392,5 +397,21 @@ Definition strToFloat' (s: string) : float :=
   | Some x => x
   | None => 0%D
   end.
+
+Definition ZofFloat (f: float) :=
+  match Fappli_IEEE_extra.ZofB 53 1024 f with
+  | Some z => z
+  | None => 0%Z
+  end.
+
+(* Give this long name to avoid conflict with other definitions *)
+Definition fhalf_in_floatio := (* Eval compute in *) strToFloat' "0.5".
+
+Definition round (f: float) : float :=
+  let z := ZofFloat (f + fhalf_in_floatio) in
+  Z_to_float z.
+
+Definition sqrt (arg: float) : float :=
+  Fappli_IEEE_bits.b64_sqrt mode_NE arg.
 
 End FloatIO.

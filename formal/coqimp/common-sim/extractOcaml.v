@@ -1,7 +1,10 @@
-Require Import DigUty.float_text_io.
-Import FloatIO.
+Require Export Task.driver3.
 Require Import DigUty.debug_printers.
 Import DebugIO.
+
+Extraction Language OCaml.
+(* Unset Extraction Optimize. *)
+(* Unset Extraction AutoInline. *)
 
 (* Standard lib *)
 Require Import ExtrOcamlBasic.
@@ -14,6 +17,12 @@ Extract Inlined Constant Coqlib.proj_sumbool => "(fun x -> x)".
 Extract Inlined Constant Datatypes.fst => "fst".
 Extract Inlined Constant Datatypes.snd => "snd".
 
+(* Decidable *)
+
+Extraction Inline DecidableClass.Decidable_witness DecidableClass.decide
+   Decidableplus.Decidable_and Decidableplus.Decidable_or
+   Decidableplus.Decidable_not Decidableplus.Decidable_implies.
+
 (* Avoid name clashes *)
 Extraction Blacklist List String Int.
 
@@ -25,8 +34,8 @@ Extract Inlined Constant Fappli_IEEE.round_mode => "fun _ -> assert false".
 Extract Inlined Constant Fcalc_bracket.inbetween_loc => "fun _ -> assert false".
 (* Go! *)
 
-Cd "extraction".
-Separate Extraction Z_to_float nat_power_of_float Z_to_string_base10 pad_to_width float_to_string
-           strToFloat strToFloat' print_float print_Z.
+Cd "extraction_ml".
+
+Separate Extraction main print_Z svToStr posToStateVar'.
 
 Cd "..".
