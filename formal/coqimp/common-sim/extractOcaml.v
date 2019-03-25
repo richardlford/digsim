@@ -1,6 +1,7 @@
 Require Export Task.driver3.
 Require Import DigUty.debug_printers.
 Import DebugIO.
+Import Maps.
 
 Extraction Language OCaml.
 (* Unset Extraction Optimize. *)
@@ -36,6 +37,6 @@ Extract Inlined Constant Fcalc_bracket.inbetween_loc => "fun _ -> assert false".
 
 Cd "extraction_ml".
 
-Separate Extraction main print_Z svToStr posToStateVar'.
+Separate Extraction main print_Z svToStr posToStateVar' PTree.elements.
 
 Cd "..".

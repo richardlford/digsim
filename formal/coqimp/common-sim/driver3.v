@@ -181,11 +181,7 @@ Definition sim_in (_ : unit) :=
   let sim1log := log_sim "sim_in:sim1" sim1 in
   let sim2 := init_sim sim1log in
   let sim2log := log_sim "sim_in:sim2" sim2 in
-  let sim3 := set_var SvCOEFF_OF_REST (strToFloat' "0.80") sim2log in
-  let sim3log := log_sim "sim_in:sim3" sim3 in
-  let sim4 := set_var SvGRAVITY (strToFloat' "9.88") sim3log in
-  let sim4log := log_sim "sim_in:sim4" sim4 in
-  sim4log.
+  sim2log.
 
 Definition main (_ : unit) :=
   let sim1 := (sim_in tt) in
