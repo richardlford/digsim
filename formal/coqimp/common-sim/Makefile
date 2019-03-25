@@ -1,4 +1,4 @@
-all: build_coq_and_extract extraction_ml/digsim_driver.byte extraction_ml/my_printer.cma
+all: build_coq_and_extract extraction_ml/digsim_driver.byte extraction_ml/my_printers.cma
 
 extraction_ml/digsim_driver.byte: build_coq_and_extract
 	(cd extraction_ml; ocamlbuild -r -tag 'debug' digsim_driver.byte)

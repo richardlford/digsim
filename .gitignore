@@ -16,4 +16,10 @@ CoqMakefile*
 cmake-build-*
 _build
 extraction_*
-
+formal/coqimp/task05/.ocamldebug
+formal/coqimp/task05/digsim_driver.ml
+formal/coqimp/task05/driver1.v
+formal/coqimp/task05/driver2.v
+formal/coqimp/task05/driver3.v
+formal/coqimp/task05/extractOcaml.v
+formal/coqimp/task05/my_printers.ml
