@@ -34,10 +34,17 @@ let print_row row =
   ignore (map (fun v -> printf "%s\t" (cl2s v)) row);
   printf "@]@,";;
 
+let file_row (ch: out_channel) row =
+  ignore (map (fun v -> output_string ch (cl2s v); output_char ch '\t') row);
+  output_char ch '\n';;
+
 let print_solution sim =
   printf "@[<v 2>{solution@,";
   ignore (map (fun row -> print_row row) sim.solution);
   printf "},@]@,";;
+
+let file_solution (ch: out_channel) sim =
+  ignore (map (fun row -> file_row ch row) sim.solution);;
 
 let print_event ev =
   printf "@[{Event@,";
@@ -83,10 +90,16 @@ let print_sim sim =
   print_flags sim;
   printf "@]}";;
 
+let file_sim sim =
+  let ch = open_out "output.dat" in
+  file_solution ch sim;
+  close_out ch;;
+
 let test =
   print_newline();
   let sim = main () in
   print_sim sim;
+  file_sim sim;
   print_newline();
   print_endline "This is a test";;
 
