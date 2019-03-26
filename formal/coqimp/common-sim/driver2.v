@@ -299,12 +299,25 @@ Definition set_var (key: stateVar) (val: float) (sim: simTy) :=
   let result_log := log_sim "set_var:result" result_sim in
   result_log.
 
+Fixpoint union_vars (sim: simTy) (updates: list (stateVar * float)) :=
+  match updates with
+  | nil => sim
+  | cons (sv, fval) remaining =>
+    let sim1 := set_var sv fval sim in
+    union_vars sim remaining
+  end.
 
 (*
   An Event function takes the event and the simulation state as inputs and
   returns a pair consisting of the updated simulation state and an
   optional float which, if present, is the time at which the event should
-  be rescheduled.
+  be rescheduled. If the optional float is not present, then then
+  event is not rescheduled, which, with the current event processing 
+  algorithm, means that its time is unchanged, and it will continue
+  to fire, since the condition for firing is that
+  eventtime < currenttime + dtmin. In other words, the default for
+  an event is for it to persist and it is only inhibited by scheduling
+  it to some future time.
 *)
 Definition event_function_signature := eventTy -> simTy -> (simTy * option float).
 
