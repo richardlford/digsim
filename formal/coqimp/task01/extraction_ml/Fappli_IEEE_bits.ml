@@ -1,16 +1,12 @@
 open BinInt
 open BinNums
-open Datatypes
 open Fappli_IEEE
-open Fcore_Zaux
 open Zbool
 
 (** val join_bits : coq_Z -> coq_Z -> bool -> coq_Z -> coq_Z -> coq_Z **)
 
 let join_bits mw ew s m e =
-  Z.add
-    (Z.shiftl (Z.add (if s then Z.pow (Zpos (Coq_xO Coq_xH)) ew else Z0) e)
-      mw) m
+  Z.add (Z.shiftl (Z.add (if s then Z.pow (Zpos (Coq_xO Coq_xH)) ew else Z0) e) mw) m
 
 (** val split_bits : coq_Z -> coq_Z -> coq_Z -> (bool * coq_Z) * coq_Z **)
 
@@ -28,12 +24,8 @@ let bits_of_binary_float mw ew =
   (fun x ->
   match x with
   | B754_zero sx -> join_bits mw ew sx Z0 Z0
-  | B754_infinity sx ->
-    join_bits mw ew sx Z0
-      (Z.sub (Z.pow (Zpos (Coq_xO Coq_xH)) ew) (Zpos Coq_xH))
-  | B754_nan (sx, n) ->
-    join_bits mw ew sx (Zpos n)
-      (Z.sub (Z.pow (Zpos (Coq_xO Coq_xH)) ew) (Zpos Coq_xH))
+  | B754_infinity sx -> join_bits mw ew sx Z0 (Z.sub (Z.pow (Zpos (Coq_xO Coq_xH)) ew) (Zpos Coq_xH))
+  | B754_nan (sx, n) -> join_bits mw ew sx (Zpos n) (Z.sub (Z.pow (Zpos (Coq_xO Coq_xH)) ew) (Zpos Coq_xH))
   | B754_finite (sx, mx, ex) ->
     let m = Z.sub (Zpos mx) (Z.pow (Zpos (Coq_xO Coq_xH)) mw) in
     if Z.leb Z0 m
@@ -54,56 +46,31 @@ let binary_float_of_bits_aux mw ew =
         | Z0 -> F754_zero sx
         | Zpos px -> F754_finite (sx, px, emin)
         | Zneg _ -> F754_nan (false, Coq_xH))
-  else if coq_Zeq_bool ex
-            (Z.sub (Z.pow (Zpos (Coq_xO Coq_xH)) ew) (Zpos Coq_xH))
+  else if coq_Zeq_bool ex (Z.sub (Z.pow (Zpos (Coq_xO Coq_xH)) ew) (Zpos Coq_xH))
        then (match mx with
              | Z0 -> F754_infinity sx
              | Zpos plx -> F754_nan (sx, plx)
              | Zneg _ -> F754_nan (false, Coq_xH))
        else (match Z.add mx (Z.pow (Zpos (Coq_xO Coq_xH)) mw) with
-             | Zpos px ->
-               F754_finite (sx, px, (Z.sub (Z.add ex emin) (Zpos Coq_xH)))
+             | Zpos px -> F754_finite (sx, px, (Z.sub (Z.add ex emin) (Zpos Coq_xH)))
              | _ -> F754_nan (false, Coq_xH)))
 
 (** val binary_float_of_bits : coq_Z -> coq_Z -> coq_Z -> binary_float **)
 
 let binary_float_of_bits mw ew x =
   let emax = Z.pow (Zpos (Coq_xO Coq_xH)) (Z.sub ew (Zpos Coq_xH)) in
-  let prec = Z.add mw (Zpos Coq_xH) in
-  coq_FF2B prec emax (binary_float_of_bits_aux mw ew x)
+  let prec = Z.add mw (Zpos Coq_xH) in coq_FF2B prec emax (binary_float_of_bits_aux mw ew x)
 
 type binary64 = binary_float
-
-(** val default_nan_pl64 : bool * nan_pl **)
-
-let default_nan_pl64 =
-  (false,
-    (iter_nat (fun x -> Coq_xO x) (S (S (S (S (S (S (S (S (S (S (S (S (S (S
-      (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S
-      (S (S (S (S (S (S (S (S (S (S (S (S (S
-      O))))))))))))))))))))))))))))))))))))))))))))))))))) Coq_xH))
-
-(** val unop_nan_pl64 : binary64 -> bool * nan_pl **)
-
-let unop_nan_pl64 = function
-| B754_nan (s, pl) -> (s, pl)
-| _ -> default_nan_pl64
-
-(** val b64_sqrt : mode -> binary_float -> binary_float **)
-
-let b64_sqrt =
-  coq_Bsqrt (Zpos (Coq_xI (Coq_xO (Coq_xI (Coq_xO (Coq_xI Coq_xH)))))) (Zpos
-    (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO
-    (Coq_xO Coq_xH))))))))))) unop_nan_pl64
 
 (** val b64_of_bits : coq_Z -> binary64 **)
 
 let b64_of_bits =
-  binary_float_of_bits (Zpos (Coq_xO (Coq_xO (Coq_xI (Coq_xO (Coq_xI
-    Coq_xH)))))) (Zpos (Coq_xI (Coq_xI (Coq_xO Coq_xH))))
+  binary_float_of_bits (Zpos (Coq_xO (Coq_xO (Coq_xI (Coq_xO (Coq_xI Coq_xH)))))) (Zpos (Coq_xI (Coq_xI (Coq_xO
+    Coq_xH))))
 
 (** val bits_of_b64 : binary64 -> coq_Z **)
 
 let bits_of_b64 =
-  bits_of_binary_float (Zpos (Coq_xO (Coq_xO (Coq_xI (Coq_xO (Coq_xI
-    Coq_xH)))))) (Zpos (Coq_xI (Coq_xI (Coq_xO Coq_xH))))
+  bits_of_binary_float (Zpos (Coq_xO (Coq_xO (Coq_xI (Coq_xO (Coq_xI Coq_xH)))))) (Zpos (Coq_xI (Coq_xI (Coq_xO
+    Coq_xH))))

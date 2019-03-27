@@ -164,4 +164,14 @@ module Float =
     coq_Bparse (Zpos (Coq_xI (Coq_xO (Coq_xI (Coq_xO (Coq_xI Coq_xH))))))
       (Zpos (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO (Coq_xO
       (Coq_xO (Coq_xO Coq_xH))))))))))) base intPart expPart
+
+  (** val to_bits : float -> Int64.int **)
+
+  let to_bits f =
+    Int64.repr (bits_of_b64 f)
+
+  (** val of_bits : Int64.int -> float **)
+
+  let of_bits b =
+    b64_of_bits (Int64.unsigned b)
  end
