@@ -32,3 +32,5 @@ val driver_defaults_str : (stateVar * char list) list
 val model_default_values_str : (stateVar * char list) list
 
 val modelOutputs : stateVar list
+
+val modelPairs : (stateVar * stateVar) list

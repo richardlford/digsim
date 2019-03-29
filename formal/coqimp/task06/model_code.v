@@ -1,5 +1,5 @@
 Require Export Task.driver2.
-
+Require Export Task.trig.
 Import ListNotations.
 Import FloatIO.
 Import DebugIO.
@@ -53,9 +53,6 @@ Definition init_sim (sim: simTy) :=
   let sim2 := sim1[[sim_events ::= (fun others => z_terminate_sim_event::others)]] in
   sim2.
 
-Definition sin (f: float) := f.
-Definition cos (f: float) := f.
-
 Definition differential_equations (sim: simTy) : simTy :=
   let vars := sim.(vars) in
   let x := svGetFloat SvX vars in
@@ -66,8 +63,8 @@ Definition differential_equations (sim: simTy) : simTy :=
 
   (* Begin math model *)
   (* Calculate velocities *)
-  let xd := velocity * cos(theta) in
-  let zd := -velocity * sin(theta) in
+  let xd := velocity * CoqTrig.cos(theta) in
+  let zd := -velocity * CoqTrig.sin(theta) in
   (* Calculate true LOS rate *)
   let q_s := (z * xd - x * zd) / (x * x + z * z) in
   (* Calculate measured LOS rate *)

@@ -157,8 +157,7 @@ let advance_model sim =
   in
   let vars0 = sim_log.vars in
   let dt = svGetFloat SvDT vars0 in
-  let pairs = (SvX, SvXD) :: ((SvXD, SvXDD) :: []) in
-  let sim2 = advance_states pairs dt sim_log in
+  let sim2 = advance_states modelPairs dt sim_log in
   let sim2log =
     log_sim
       ('a'::('d'::('v'::('a'::('n'::('c'::('e'::('_'::('m'::('o'::('d'::('e'::('l'::(':'::('s'::('i'::('m'::('2'::[]))))))))))))))))))

@@ -304,7 +304,7 @@ Fixpoint union_vars (sim: simTy) (updates: list (stateVar * float)) :=
   | nil => sim
   | cons (sv, fval) remaining =>
     let sim1 := set_var sv fval sim in
-    union_vars sim remaining
+    union_vars sim1 remaining
   end.
 
 (*

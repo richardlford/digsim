@@ -110,3 +110,6 @@ Definition model_default_values_str :=
   ].
 
 Definition modelOutputs : list stateVar := [SvT; SvX; SvZ;SvTHETA; SvXD; SvZD; SvQ_S].
+
+Definition modelPairs : list (stateVar * stateVar) :=
+  [(SvX, SvXD); (SvZ, SvZD); (SvTHETA, SvTHETA_DOT)].

@@ -162,3 +162,8 @@ let model_default_values_str =
 
 let modelOutputs =
   SvT :: (SvX :: (SvZ :: (SvTHETA :: (SvXD :: (SvZD :: (SvQ_S :: []))))))
+
+(** val modelPairs : (stateVar * stateVar) list **)
+
+let modelPairs =
+  (SvX, SvXD) :: ((SvZ, SvZD) :: ((SvTHETA, SvTHETA_DOT) :: []))

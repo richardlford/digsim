@@ -18,8 +18,4 @@ val model_handlers : (char list * event_function_signature) list
 
 val init_sim : simTy -> simTy
 
-val sin : float -> float
-
-val cos : float -> float
-
 val differential_equations : simTy -> simTy

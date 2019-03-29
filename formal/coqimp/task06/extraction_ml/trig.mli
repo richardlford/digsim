@@ -1,0 +1,4 @@
+
+module CoqTrig :
+ sig
+ end

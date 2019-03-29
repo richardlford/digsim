@@ -87,16 +87,6 @@ let init_sim sim =
     e.solution; sim_events = (f e.sim_events); log = e.log; flags =
     e.flags }) (fun others -> z_terminate_sim_event :: others) sim1
 
-(** val sin : float -> float **)
-
-let sin f =
-  f
-
-(** val cos : float -> float **)
-
-let cos f =
-  f
-
 (** val differential_equations : simTy -> simTy **)
 
 let differential_equations sim =
@@ -106,8 +96,8 @@ let differential_equations sim =
   let theta = svGetFloat SvTHETA vars0 in
   let velocity = svGetFloat SvVELOCITY vars0 in
   let guidance_gain = svGetFloat SvGUIDANCE_GAIN vars0 in
-  let xd = Float.mul velocity (cos theta) in
-  let zd = Float.mul (Float.neg velocity) (sin theta) in
+  let xd = Float.mul velocity (Coq_trig.coq_cos theta) in
+  let zd = Float.mul (Float.neg velocity) (Coq_trig.coq_sin theta) in
   let q_s =
     Float.div (Float.sub (Float.mul z xd) (Float.mul x zd))
       (Float.add (Float.mul x x) (Float.mul z z))

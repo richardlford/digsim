@@ -1,6 +1,10 @@
-load_printer "/mnt/c/Users/FordRL/e/digsim-jim/formal/coqimp/task05/extraction_ml/_build/my_printers.cma"
+load_printer "./_build/my_printers.cma"
 install_printer My_printers.my_print_z
 install_printer My_printers.my_print_p
 install_printer My_printers.my_print_float
 install_printer My_printers.my_print_char_list
-break @ "digsim_driver" 87
+install_printer My_printers.print_svtree
+install_printer My_printers.print_event
+install_printer My_printers.print_log_entry
+install_printer My_printers.print_sim
+break @ "digsim_driver" 102

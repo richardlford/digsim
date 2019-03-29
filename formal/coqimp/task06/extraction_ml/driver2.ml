@@ -234,7 +234,9 @@ let set_var key0 val0 sim =
 
 let rec union_vars sim = function
 | [] -> sim
-| _ :: remaining -> union_vars sim remaining
+| p :: remaining ->
+  let (sv, fval) = p in
+  let sim1 = set_var sv fval sim in union_vars sim1 remaining
 
 type event_function_signature = eventTy -> simTy -> simTy * float option
 
