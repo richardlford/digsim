@@ -9,12 +9,18 @@ extraction_ml/my_printers.cma: build_coq_and_extract
 build_coq_and_extract: CoqMakefile extraction_ml
 	make -f CoqMakefile
 
-Symlinks = digsim_driver.ml driver1.v driver2.v driver3.v extractHaskell.v extractOcaml.v my_printers.ml .ocamldebug trig.v
+Symlinks = build.sh debug_printers.v digsim_driver.ml driver_requires.v driver_run.v driver_state.v \
+           extract_haskell.v extract_ocaml.v extr_ocaml_int64_conv.v extract_ocaml_trig.v \
+           float_text_io.v monad.v my_printers.ml plot.sh trig.v
+
 CoqMakefile: _CoqProject
 	for f in $(Symlinks); do \
 	  ln -s ../common-sim/$$f . ;\
 	done; \
 	coq_makefile -f _CoqProject -o CoqMakefile
+
+_CoqProject:
+	ln -s ../common-sim/_CoqProject
 
 extraction_ml:
 	mkdir extraction_ml

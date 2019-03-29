@@ -1,1 +1,0 @@
-../common-sim/trig.v

@@ -28,12 +28,12 @@ Module RecordSetNotations'.
 End RecordSetNotations'.
 Import RecordSetNotations'.
 
-Require Export DigUty.float_text_io.
+Require Export Task.float_text_io.
 Import FloatIO.
-Require Export DigUty.debug_printers.
+Require Export Task.debug_printers.
 Import DebugIO.
 
-Require Export DigUty.Monad.
+Require Export Task.Monad.
 
 From compcert Require Export Floats.
 Import Float.

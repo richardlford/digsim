@@ -29,3 +29,4 @@ formal/coqimp/task05/driver2.v
 formal/coqimp/task05/driver3.v
 formal/coqimp/task05/extractOcaml.v
 formal/coqimp/task05/my_printers.ml
+extraction_*
