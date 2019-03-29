@@ -1,4 +1,4 @@
-Require Export Task.driver1.
+Require Export Task.driver_requires.
 Import ListNotations.
 
   
@@ -78,3 +78,5 @@ Definition model_default_values_str :=
 
 Definition modelOutputs : list stateVar := [SvT; SvX; SvXD].
 
+Definition modelPairs : list (stateVar * stateVar) :=
+  [(SvX, SvXD); (SvXD, SvXDD)].
