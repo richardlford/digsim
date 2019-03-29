@@ -1,6 +1,6 @@
 open BinNums
 open Fappli_IEEE
-open ExtrOcamlInt64Conv
+open Extr_ocaml_int64_conv
 open BinInt
 
 let ocaml_float_of_coq_float (cqfloat: binary_float) =

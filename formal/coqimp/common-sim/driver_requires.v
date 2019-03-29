@@ -33,7 +33,7 @@ Import FloatIO.
 Require Export Task.debug_printers.
 Import DebugIO.
 
-Require Export Task.Monad.
+Require Export Task.monad.
 
 From compcert Require Export Floats.
 Import Float.

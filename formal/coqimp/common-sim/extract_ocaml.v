@@ -1,7 +1,7 @@
-Require Export Task.driver3.
-Require Import DigUty.debug_printers.
+Require Export Task.driver_run.
+Require Import Task.debug_printers.
 Require Import Task.trig.
-Require Import Task.extractOcamlTrig.
+Require Import Task.extract_ocaml_trig.
 Import DebugIO.
 Import Maps.
 
@@ -12,7 +12,7 @@ Extraction Language OCaml.
 (* Standard lib *)
 Require Import ExtrOcamlBasic.
 Require Import ExtrOcamlString.
-Require Import DigUty.ExtrOcamlInt64Conv.
+Require Import Task.extr_ocaml_int64_conv.
 
 (* Coqlib *)
 Extract Inlined Constant Coqlib.proj_sumbool => "(fun x -> x)".
