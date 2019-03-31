@@ -57,16 +57,6 @@ Definition svStrList :=
     (SvMass, "Mass")
   ].
 
-Definition driver_defaults_str :=
-  [
-            (SvT,        "0.0");
-            (SvT_STOP,   "0.0");
-            (SvDT,       "0.005");
-            (SvDT_MAX,   "0.005");
-            (SvDT_MIN,   "0.005");
-            (SvDT_PRINT, "0.01")
-  ].
-
 Definition model_default_values_str :=
   [
     (SvT,             "0.0");

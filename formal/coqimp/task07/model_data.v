@@ -72,16 +72,6 @@ Definition svStrList :=
     (SvTHETA_DOT_B, "THETA_DOT_B")
   ].
 
-Definition driver_defaults_str :=
-  [
-            (SvT,        "0.0");
-            (SvT_STOP,   "0.0");
-            (SvDT,       "0.005");
-            (SvDT_MAX,   "0.005");
-            (SvDT_MIN,   "0.005");
-            (SvDT_PRINT, "0.01")
-  ].
-
 (* This has same keys as driver defaults, but has model over-rides *)
 Definition model_driver_defaults_values_str :=
   [

@@ -10,9 +10,7 @@ From compcert Require Import Decidableplus.
 
 Instance Decidable_eq_sv : forall (x y: stateVar), Decidable (eq x y) := Decidable_eq state_var_eq.
 
-(* For diagnostic purposes we want to map from the positive id for a
-   stateVar to the stateVar. 
- *)
+(*+ Map from the positive id for a stateVar to the stateVar. *)
 Definition posToStateVarTreeType := PTree.t stateVar.
 Definition emptyPosToStateVarTree := PTree.empty stateVar.
 
@@ -26,15 +24,12 @@ Fixpoint updatePosToStateVarTree (svIdStrList: list (stateVar * string))
   end.
 
 Definition posToStateVarTree :=
-  (* Eval compute in *) updatePosToStateVarTree svStrList emptyPosToStateVarTree.
+  updatePosToStateVarTree svStrList emptyPosToStateVarTree.
 
+(* Map a positive to the corresonding stateVar *)
 Definition posToStateVar (p: positive) := PTree.get p posToStateVarTree.
 
-(*
-Compute PTree.elements posToStateVarTree.
-Compute posToStateVar 3.
-*)
-
+(*+ Maps with stateVar as domain *)
 Module SvIndex <: Maps.INDEXED_TYPE.
   Definition t := stateVar.
   Definition index := svIndex.
@@ -50,6 +45,7 @@ End SvIndex.
 
 Module SvTree := Maps.ITree(SvIndex).
 
+(*+ Map from stateVar to stateVar name as string *)
 Definition stringSvTreeTy := SvTree.t string.
 Definition emptyStringPTree := SvTree.empty string.
 
@@ -62,7 +58,7 @@ Fixpoint updateStringSvTree (valList: list (stateVar * string)) (intree: stringS
   end.
 
 Definition svToStringTree :=
-  (* Eval compute in *) updateStringSvTree svStrList emptyStringPTree.
+  updateStringSvTree svStrList emptyStringPTree.
 
 Definition svToStrOpt (sv: stateVar) : option string :=
   SvTree.get sv svToStringTree.
@@ -85,6 +81,7 @@ Definition svToStr (sv: stateVar) : string :=
   | None => ""
   end.
 
+(*+ Map from stateVar to float, for simulation variables *)
 Definition floatSvTreeTy := SvTree.t float.
 Definition emptyFloatPTree := SvTree.empty float.
 
@@ -120,27 +117,31 @@ Fixpoint printFloatKeyVals (kvl: list (stateVar * float)) :=
     (sv, print_float fval) :: printFloatKeyVals tl
   end.
 
-Definition driver_defaults (_ : unit) :=
-  (* Eval compute in *) stringKeyValToFloatKeyVal driver_defaults_str.
 
-(* Compute printFloatKeyVals driver_defaults. *)
+(*+ Defaults *)
+Definition driver_defaults_str :=
+  [
+            (SvT,        "0.0");
+            (SvT_STOP,   "0.0");
+            (SvDT,       "0.005");
+            (SvDT_MAX,   "0.005");
+            (SvDT_MIN,   "0.005");
+            (SvDT_PRINT, "0.01")
+  ].
+
+(* Compute default for variables commonly used in driver. *)
+Definition driver_defaults (_ : unit) :=
+  stringKeyValToFloatKeyVal driver_defaults_str.
+
 
 Definition model_default_values (_ : unit) :=
-  (* Eval compute in *) stringKeyValToFloatKeyVal model_default_values_str.
+  stringKeyValToFloatKeyVal model_default_values_str.
 
-(* Compute printFloatKeyVals model_default_values. *)
-
+(* Variable state after applying driver defaults and then model defaults
+   that are not specific to auto subsystem (if not modularized). *)
 Definition state0 (_ : unit) := (* Eval compute in *)
       let driverState := updateFloatSvTree (driver_defaults tt) emptyFloatPTree in
       updateFloatSvTree (model_default_values tt) driverState.
-
-Definition svToFloat0 (sv: stateVar) := SvTree.get sv (state0 tt).
-
-Definition svToFloatStr0 (sv: stateVar) :=
-  match svToFloat0 sv with
-  | Some x => print_float x
-  | None => "None"
-  end.
 
 (* This takes a long time to prove, so during development comment it out. 
 
@@ -188,6 +189,7 @@ Definition printFloatState (state: floatSvTreeTy) :=
 
 (* Compute printFloatState (state0 ()). *)
 
+(*+ Simulation data structures *)
 Record flagsTy :=
   mkFlags
     {
@@ -196,6 +198,7 @@ Record flagsTy :=
       evaluate_xd : bool     (* Flag to determine of xd needs to reevaluated. *)
     }.
 
+(* These Settable instances allow us to do partial update of records easily *)
 Instance etaFlags  : Settable _ := 
   mkSettable (constructor mkFlags
                           <*> stop_simulation
@@ -252,16 +255,18 @@ Instance etaSim  : Settable _ :=
                           <*> flags
              )%set.
 
+(*+ Utilitys for simulation structures *)
 Definition printFloatSvTreeTy (vars: floatSvTreeTy) :=
   printFloatStateElements (PTree.elements vars).
 
-Fixpoint logEvents (evs: list eventTy) : list (string * string) :=
+(* Convert list of events to readable form *)
+Fixpoint printEvents (evs: list eventTy) : list (string * string) :=
   match evs with
   | nil => nil
   | cons ev evtl =>
     let caption := ev.(key) in
     let time_str := print_float ev.(time) in
-    (caption, time_str) :: logEvents evtl
+    (caption, time_str) :: printEvents evtl
   end.
 
 (* Use this version if you want a log 
@@ -269,7 +274,7 @@ Definition log_sim (caption: string) (sim: simTy) : simTy :=
   let le := {|
         le_caption := caption;
         le_vars := printFloatSvTreeTy sim.(vars);
-        le_events := logEvents sim.(sim_events)
+        le_events := printEvents sim.(sim_events)
       |} in
   let result_sim := sim[[log ::= (fun oldlog => le :: oldlog)]] in
   result_sim.
@@ -307,6 +312,10 @@ Fixpoint union_vars (sim: simTy) (updates: list (stateVar * float)) :=
     union_vars sim1 remaining
   end.
 
+Fixpoint union_vars_str (sim: simTy) (updates: list (stateVar * string)) :=
+  union_vars sim (stringKeyValToFloatKeyVal updates).
+
+(*+ Common event functions and utilities *)
 (*
   An Event function takes the event and the simulation state as inputs and
   returns a pair consisting of the updated simulation state and an
@@ -358,24 +367,16 @@ Definition append_solution_event_func  : event_function_signature :=
   let new_t := t + dt_print in
   (sim1log, Some new_t).
 
-Definition terminate_sim_event_func  : event_function_signature :=
-  fun (this: eventTy) (sim: simTy) =>
-  let simlog := log_sim "terminate_sim_event_func: sim" sim in
-  (simlog, None).
-
-
 Definition driver_default_events :=
   [
     {| key := "t_ge_tstop_event"; time := 0%D |};
-    {| key := "append_log_event"; time := 0%D |};
-    {| key := "terminate_sim_event"; time := 0%D |}
+    {| key := "append_log_event"; time := 0%D |}
   ].
 
 Definition driver_default_handlers : list (string * event_function_signature) :=
   [
     ("t_ge_tstop_event", t_ge_tstop_event_func);
-    ("append_log_event", append_solution_event_func);
-    ("terminate_sim_event", terminate_sim_event_func)
+    ("append_log_event", append_solution_event_func)
   ].
 
 Definition default_sim :=
@@ -387,8 +388,6 @@ Definition default_sim :=
     log := nil;
     flags := default_flags;
   |}.
-
-Definition default_sim_log:= log_sim "default_sim" default_sim.
 
 Fixpoint handle_event (handlers: list (string * event_function_signature))
          (this: eventTy) (sim: simTy) :=
@@ -418,11 +417,11 @@ Fixpoint schedule_event (evs: list eventTy) (evkey: string) (new_time: float) :=
   end.
 
 (* pi matching Haskell Prelude Double *)
-Definition pi := (* Eval compute in *) strToFloat' "3.141592653589793238".
+Definition pi := strToFloat' "3.141592653589793238".
 
 (* small floating point constant *)
-Definition small := (* Eval compute in *) strToFloat' "0.000001".
+Definition small := strToFloat' "0.000001".
 
 (* comparison floating point constant *)
-Definition epsilon := (* Eval compute in *) strToFloat' "0.0000000001".
+Definition epsilon := strToFloat' "0.0000000001".
 
