@@ -30,7 +30,6 @@ Definition log_miss (sim: simTy) : simTy :=
 
 Definition z_terminate_sim_event_func  : event_function_signature :=
   fun (this: eventTy) (sim: simTy) =>
-    let simlog := log_sim "terminate_sim_event_func: sim" sim in
     let vars := sim.(vars) in
     let z := svGetFloat SvZ vars in
     let result_sim :=

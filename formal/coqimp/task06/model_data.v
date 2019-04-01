@@ -1,7 +1,9 @@
 Require Export Task.driver_requires.
 Import ListNotations.
+Import FloatIO.
+Import DScopeNotations.
+Open Scope D_scope.
 
-  
 (* Inductive type used to name state variables. *)
 Inductive stateVar : Set := 
 | SvT
@@ -76,27 +78,27 @@ Definition svStrList :=
     (SvDT_PRINT, "DT_PRINT")
   ].
 
-Definition model_default_values_str :=
+Definition model_default_values (_: unit) :=
   [
-    (SvT,             "0.0");
-    (SvX,             "-500.0");
-    (SvXD,            "0.0");
-    (SvXDD,           "0.0");
-    (SvZ,             "-100.0");
-    (SvZD,            "0.0");
-    (SvTHETA,         "0.0");
-    (SvTHETA_DOT,     "0.0");
-    (SvTHETA_DOT_CMD, "0.0");
-    (SvQ_S,           "0.0");
-    (SvQ_S_MEAS,      "0.0");
-    (SvVELOCITY,      "100.0");
-    (SvGUIDANCE_GAIN, "3.0");
-    (SvTHETA_IC_DG,   "0.0");
-    (SvT_STOP,        "10.0");
-    (SvDT,            "0.005");
-    (SvDT_MAX,        "0.005");
-    (SvDT_MIN,        "0.005");
-    (SvDT_PRINT,      "0.01")
+    (SvT,             "0.0"#D);
+    (SvX,             "-500.0"#D);
+    (SvXD,            "0.0"#D);
+    (SvXDD,           "0.0"#D);
+    (SvZ,             "-100.0"#D);
+    (SvZD,            "0.0"#D);
+    (SvTHETA,         "0.0"#D);
+    (SvTHETA_DOT,     "0.0"#D);
+    (SvTHETA_DOT_CMD, "0.0"#D);
+    (SvQ_S,           "0.0"#D);
+    (SvQ_S_MEAS,      "0.0"#D);
+    (SvVELOCITY,      "100.0"#D);
+    (SvGUIDANCE_GAIN, "3.0"#D);
+    (SvTHETA_IC_DG,   "0.0"#D);
+    (SvT_STOP,        "10.0"#D);
+    (SvDT,            "0.005"#D);
+    (SvDT_MAX,        "0.005"#D);
+    (SvDT_MIN,        "0.005"#D);
+    (SvDT_PRINT,      "0.01"#D)
   ].
 
 Definition modelOutputs : list stateVar := [SvT; SvX; SvZ;SvTHETA; SvXD; SvZD; SvQ_S].

@@ -1,7 +1,9 @@
 Require Export Task.driver_requires.
 Import ListNotations.
+Import FloatIO.
+Import DScopeNotations.
+Open Scope D_scope.
 
-  
 (* Inductive type used to name state variables. *)
 Inductive stateVar : Set := 
 | SvT
@@ -73,39 +75,39 @@ Definition svStrList :=
   ].
 
 (* This has same keys as driver defaults, but has model over-rides *)
-Definition model_driver_defaults_values_str :=
+Definition model_driver_defaults_values :=
   [
-            (SvT,        "0.0");
-            (SvT_STOP,   "10.0");
-            (SvDT,       "0.005");
-            (SvDT_MAX,   "0.005");
-            (SvDT_MIN,   "0.005");
-            (SvDT_PRINT, "0.01")
+            (SvT,        "0.0"#D);
+            (SvT_STOP,   "10.0"#D);
+            (SvDT,       "0.005"#D);
+            (SvDT_MAX,   "0.005"#D);
+            (SvDT_MIN,   "0.005"#D);
+            (SvDT_PRINT, "0.01"#D)
   ].
 
-Definition kinematics_default_data_str :=
+Definition kinematics_default_data :=
   [
-            (SvVELOCITY, "100.0");
-            (SvTHETA_B,  "0.0");
-            (SvX_BI_I,   "-500.0");
-            (SvZ_BI_I,   "-100.0")
+            (SvVELOCITY, "100.0"#D);
+            (SvTHETA_B,  "0.0"#D);
+            (SvX_BI_I,   "-500.0"#D);
+            (SvZ_BI_I,   "-100.0"#D)
   ].
 
-Definition seeker_default_data_str : list (stateVar * string) := [].
+Definition seeker_default_data : list (stateVar * float) := [].
 
-Definition flight_computer_default_data_str :=
+Definition flight_computer_default_data :=
   [
-            (SvGUIDANCE_GAIN, "3.0")
+            (SvGUIDANCE_GAIN, "3.0"#D)
   ].
 
-Definition airframe_response_default_data_str : list (stateVar * string) := [].
+Definition airframe_response_default_data : list (stateVar * float) := [].
 
-Definition model_default_values_str :=
-  model_driver_defaults_values_str ++
-  kinematics_default_data_str ++
-  seeker_default_data_str ++
-  flight_computer_default_data_str ++
-  airframe_response_default_data_str.
+Definition model_default_values (_: unit) :=
+  model_driver_defaults_values ++
+  kinematics_default_data ++
+  seeker_default_data ++
+  flight_computer_default_data ++
+  airframe_response_default_data.
 
 Definition modelOutputs : list stateVar :=
   [SvT; SvX_BI_I; SvZ_BI_I; SvXD_BI_I; SvZD_BI_I; SvTHETA_B; SvQ_S].
