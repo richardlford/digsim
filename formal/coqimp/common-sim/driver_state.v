@@ -93,23 +93,6 @@ Fixpoint updateFloatSvTree (valList: list (stateVar * float)) (intree: floatSvTr
     updateFloatSvTree vltail tree1
   end.
 
-(* Take state variable string pairs and convert to 
-   state variable float pairs, by converting each
-   string into a float. If the string cannot be converted,
-   then skip it.
- *)
-
-Fixpoint stringKeyValToFloatKeyVal (kvl: list (stateVar * string)) : list (stateVar * float) :=
-  match kvl with
-  | nil => nil
-  | cons (sv, str) tl =>
-    let tailkvs := stringKeyValToFloatKeyVal tl in
-    match strToFloat str with
-    | Some fval => (sv, fval) :: tailkvs
-    | None => tailkvs
-    end
-  end.
-
 Fixpoint printFloatKeyVals (kvl: list (stateVar * float)) :=
   match kvl with
   | nil => nil
@@ -119,23 +102,15 @@ Fixpoint printFloatKeyVals (kvl: list (stateVar * float)) :=
 
 
 (*+ Defaults *)
-Definition driver_defaults_str :=
-  [
-            (SvT,        "0.0");
-            (SvT_STOP,   "0.0");
-            (SvDT,       "0.005");
-            (SvDT_MAX,   "0.005");
-            (SvDT_MIN,   "0.005");
-            (SvDT_PRINT, "0.01")
-  ].
-
-(* Compute default for variables commonly used in driver. *)
 Definition driver_defaults (_ : unit) :=
-  stringKeyValToFloatKeyVal driver_defaults_str.
-
-
-Definition model_default_values (_ : unit) :=
-  stringKeyValToFloatKeyVal model_default_values_str.
+  [
+            (SvT,        "0.0"#D);
+            (SvT_STOP,   "0.0"#D);
+            (SvDT,       "0.005"#D);
+            (SvDT_MAX,   "0.005"#D);
+            (SvDT_MIN,   "0.005"#D);
+            (SvDT_PRINT, "0.01"#D)
+  ].
 
 (* Variable state after applying driver defaults and then model defaults
    that are not specific to auto subsystem (if not modularized). *)
@@ -312,9 +287,6 @@ Fixpoint union_vars (sim: simTy) (updates: list (stateVar * float)) :=
     union_vars sim1 remaining
   end.
 
-Fixpoint union_vars_str (sim: simTy) (updates: list (stateVar * string)) :=
-  union_vars sim (stringKeyValToFloatKeyVal updates).
-
 (*+ Common event functions and utilities *)
 (*
   An Event function takes the event and the simulation state as inputs and
@@ -417,11 +389,11 @@ Fixpoint schedule_event (evs: list eventTy) (evkey: string) (new_time: float) :=
   end.
 
 (* pi matching Haskell Prelude Double *)
-Definition pi := strToFloat' "3.141592653589793238".
+Definition pi := "3.141592653589793238"#D.
 
 (* small floating point constant *)
-Definition small := strToFloat' "0.000001".
+Definition small := "0.000001#D".
 
 (* comparison floating point constant *)
-Definition epsilon := strToFloat' "0.0000000001".
+Definition epsilon := "0.0000000001"#D.
 

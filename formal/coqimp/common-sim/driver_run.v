@@ -6,16 +6,14 @@ Import ListNotations.
 Import RecordSetNotations'.
 Open Scope D_scope.
 
-Definition tenTo6 := (* Eval compute in *) strToFloat' "1.e6".
-
 Definition process_one_event (ev: eventTy) (sim: simTy) :=
   let vars := sim.(vars) in
   let t := svGetFloat SvT vars in
   let dt_min := svGetFloat SvDT_MIN vars in
   let dt_max := svGetFloat SvDT_MAX vars in
   let et := ev.(time) in
-  let etdelta := round ((et - t) * tenTo6) in
-  let minrnd := round (dt_min * tenTo6) in
+  let etdelta := round ((et - t) * "1.e6"#D) in
+  let minrnd := round (dt_min * "1.e6"#D) in
   if (etdelta <? minrnd) then
     let (sim2, new_time_opt) := handle_event model_handlers ev sim in
     match new_time_opt with
@@ -90,7 +88,7 @@ Definition advance_model (sim: simTy) : simTy :=
   let vars' := sim2.(vars) in
   let t := svGetFloat SvT vars' in
   let new_t := t + dt in
-  let rounded_new_t := round (new_t * tenTo6)/tenTo6 in
+  let rounded_new_t := round (new_t * "1.e6"#D)/"1.e6"#D in
   set_var SvT rounded_new_t sim2.
 
 Definition oneStep (sim: simTy) : simTy :=

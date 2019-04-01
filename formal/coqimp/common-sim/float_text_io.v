@@ -221,15 +221,18 @@ Definition strToFloatHelper (s: string) : option (Z * Z) :=
 
 (* Compute strToFloatHelper "-123.456e-12". *)
 
-Definition strToFloat (s: string) : option float :=
+Definition my_nanpl := snd Fappli_IEEE_bits.default_nan_pl64.
+Definition my_nan : float := @B754_nan _ _ false my_nanpl.
+
+Definition strToFloat (s: string) : float :=
   match strToFloatHelper s with
   | Some (zmant, adjustedZexp) =>
-    ret match zmant with
-        | Z0 => Float.zero
-        | Zpos x => from_parsed 10 x adjustedZexp
-        | Zneg x => neg (from_parsed 10 x adjustedZexp)
-        end
-  | None => None
+    match zmant with
+    | Z0 => Float.zero
+    | Zpos x => from_parsed 10 x adjustedZexp
+    | Zneg x => neg (from_parsed 10 x adjustedZexp)
+    end
+  | None => my_nan
   end.
 
 (* Compute strToFloat "-123.456e-12". *)
@@ -380,6 +383,7 @@ Infix "<?" := (Float.cmp Clt) (at level 70, no associativity) : D_scope.
 Infix ">=?" := (Float.cmp Cge) (at level 70, no associativity) : D_scope.
 Infix ">?" := (Float.cmp Cgt) (at level 70, no associativity) : D_scope.
 Notation "0" := Float.zero : D_scope.
+Notation "float_string #D" := (Details.strToFloat float_string) (at level 10) : D_scope.
 End DScopeNotations.
 
 Import DScopeNotations.
@@ -391,24 +395,15 @@ Definition float_to_string := Details.float_to_string.
 Definition float_list_to_string := Details.float_list_to_string.
 Definition strToFloat := FloatIO.Details.strToFloat.
 
-(* Variant of strToFloat when we know the string is valid *)
-Definition strToFloat' (s: string) : float :=
-  match strToFloat s with
-  | Some x => x
-  | None => 0%D
-  end.
-
 Definition ZofFloat (f: float) :=
   match Fappli_IEEE_extra.ZofB 53 1024 f with
   | Some z => z
   | None => 0%Z
   end.
 
-(* Give this long name to avoid conflict with other definitions *)
-Definition fhalf_in_floatio := (* Eval compute in *) strToFloat' "0.5".
 
 Definition round (f: float) : float :=
-  let z := ZofFloat (f + fhalf_in_floatio) in
+  let z := ZofFloat (f + "0.5"#D)%D in
   Z_to_float z.
 
 Definition sqrt (arg: float) : float :=

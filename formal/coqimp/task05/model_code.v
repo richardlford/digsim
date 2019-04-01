@@ -7,16 +7,9 @@ Import DScopeNotations.
 Import RecordSetNotations'.
 Open Scope D_scope.
 
-(* Constants needed by the model *)
-Definition fhalf := (* Eval compute in *) strToFloat' "0.5".
-Definition fone := (* Eval compute in *) strToFloat' "1.0".
-Definition ftwo := (* Eval compute in *) strToFloat' "2.0".
-Definition f99 := (* Eval compute in *) strToFloat' "99.0".
-
-
 Definition bounceEvent :=
   {| key := "flip_xd_at_bounce_event";
-     time := f99
+     time := "99.0"#D
   |}.
 
 Definition flip_xd_at_bounce_event_func (this: eventTy) (sim: simTy) : (simTy * option float) :=
@@ -30,7 +23,7 @@ Definition flip_xd_at_bounce_event_func (this: eventTy) (sim: simTy) : (simTy * 
   let sim2 := set_vars sim' vars' in
   let result_sim := sim2[[flags := new_flags]] in
   let result_log := log_sim "flip_xd_at_bounce_event_func" result_sim in
-  (result_log, Some f99).
+  (result_log, Some ("99.0"#D)).
 
 Definition model_handlers :=
   ("flip_xd_at_bounce_event", flip_xd_at_bounce_event_func) :: driver_default_handlers.
@@ -55,17 +48,17 @@ Definition differential_equations (sim: simTy) : simTy :=
   let xdd := -gravity in
   let sim1 := set_var SvXDD xdd sim_log in
   let sim1log := log_sim "differential_equations:sim1" sim1 in
-  let est_max := x + xd * dt_max + fhalf * xdd * dt_max * dt_max in
-  let dt_impact := t_stop + fone in
+  let est_max := x + xd * dt_max + "0.5"#D * xdd * dt_max * dt_max in
+  let dt_impact := t_stop + "1.0"#D in
   let dt_impact2 :=
       if (est_max <=? 0%D) then
-        let est_min := x + xd * dt_min + fhalf * xdd * dt_min * dt_min in
+        let est_min := x + xd * dt_min + "0.5"#D * xdd * dt_min * dt_min in
         if (est_min <=? 0%D) then
             0%D
         else
-            let dt_impact3 := (-xd - sqrt(xd * xd - ftwo * x * xdd)) / (ftwo * x) in
+            let dt_impact3 := (-xd - sqrt(xd * xd - "2.0"#D * x * xdd)) / ("2.0"#D * x) in
             if (dt_min - dt_impact3 >? epsilon) then
-              (-xd + sqrt(xd * xd - ftwo * x * xdd)) / (ftwo * x)
+              (-xd + sqrt(xd * xd - "2.0"#D * x * xdd)) / ("2.0"#D * x)
             else
               dt_impact3
       else

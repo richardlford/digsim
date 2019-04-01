@@ -1,6 +1,8 @@
 Require Export Task.driver_requires.
 Import ListNotations.
-
+Import FloatIO.
+Import DScopeNotations.
+Open Scope D_scope.
   
 (* Inductive type used to name state variables. *)
 Inductive stateVar : Set := 
@@ -57,21 +59,21 @@ Definition svStrList :=
     (SvMass, "Mass")
   ].
 
-Definition model_default_values_str :=
+Definition model_default_values (_: unit) :=
   [
-    (SvT,             "0.0");
-    (SvX,             "0.0");
-    (SvXD,            "0.0");
-    (SvXDD,           "0.0");
-    (SvT_STOP,        "2.5");
-    (SvDT,            "0.01");
-    (SvDT_MAX,        "0.005");
-    (SvDT_MIN,        "0.001");
-    (SvDT_PRINT,      "0.01");
-    (SvDampingCoefficient, "8.88");
-    (SvSpringCoefficient, "39.47");
-    (SvGRAVITY,       "9.88");
-    (SvMass,          "1.0")
+    (SvT,             "0.0"#D);
+    (SvX,             "0.0"#D);
+    (SvXD,            "0.0"#D);
+    (SvXDD,           "0.0"#D);
+    (SvT_STOP,        "2.5"#D);
+    (SvDT,            "0.01"#D);
+    (SvDT_MAX,        "0.005"#D);
+    (SvDT_MIN,        "0.001"#D);
+    (SvDT_PRINT,      "0.01"#D);
+    (SvDampingCoefficient, "8.88"#D);
+    (SvSpringCoefficient, "39.47"#D);
+    (SvGRAVITY,       "9.88"#D);
+    (SvMass,          "1.0"#D)
   ].
 
 Definition modelOutputs : list stateVar := [SvT; SvX; SvXD].
