@@ -25,7 +25,7 @@ Definition log_miss (sim: simTy) : simTy :=
        ("r_miss", print_float r_miss);
        ("dt_miss", print_float dt_miss)] in
   let miss_entry := {| le_caption := "log_miss"; le_vars := miss_vars; le_events := [] |} in
-  let result_sim := sim[[log ::= (fun oldlog => miss_entry :: oldlog)]] in
+  let result_sim := sim[[log_entries ::= (fun oldlog => miss_entry :: oldlog)]] in
   result_sim.
 
 Definition z_terminate_sim_event_func  : event_function_signature :=

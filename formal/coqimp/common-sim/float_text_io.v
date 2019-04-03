@@ -286,6 +286,34 @@ Definition Z_to_string_base10 (min_digits: nat) (num : Z) : string :=
     else
       Z_to_string_base10_aux min_digits 100 num.
 
+(* Like Z_to_string_base10 but always print sign *)
+Definition Z_to_signed_string_base10 (min_digits: nat) (num : Z) : string :=
+  if num >=? 0 then
+    "+" ++ Z_to_string_base10 min_digits num
+  else Z_to_string_base10 min_digits num.
+
+(* Helper function when computing the digits of an integer base 16. *)
+Fixpoint Z_to_string_base16_aux (min_digits fuel: nat) (num : Z) : string :=
+  if (num <? 0) then
+    "Require non-negative num."
+  else
+    match fuel with
+    | O => "out of fuel"
+    | S x => match num with
+            | 0 => repeat_string min_digits "0"
+            | _ => (Z_to_string_base16_aux (pred min_digits) x (num / 16)) ++ digits (num mod 16)
+            end
+    end.
+
+Definition Z_to_string_base16 (min_digits: nat) (num : Z) : string :=
+  if num <? 0 then
+    "-" ++ Z_to_string_base16_aux min_digits 100 (-num)
+  else
+    if (num =? 0)%Z then
+      repeat_string min_digits "0"
+    else
+      Z_to_string_base16_aux min_digits 100 num.
+
 (* Convert float to Z scaled by 10**fdigs. *)
 Definition scaled_float_to_Z (x : float) (fdigs: Z) :=
   match to_long (mul x (from_parsed 10 1 fdigs)) with
@@ -329,19 +357,24 @@ Definition float_to_string_unsigned (x: float) (fdigs: nat) :=
             in
     let d10 := insert_decimal b10' digs_after_dec in
     let true_exp := (Z.of_nat fdigs) - scale' - 1 in
-    let exp_string := Z_to_string_base10 1 true_exp in
+    let exp_string := Z_to_signed_string_base10 2 true_exp in
     d10 ++ "e" ++ exp_string
   | _ => ""
   end.
 
+Definition zero_to_string_unpadded (fdigs: nat) := 
+  let digs_after_dec := pred fdigs in
+  let frac := repeat_string digs_after_dec "0" in
+  "0." ++ frac ++ "e+00".
+
 Definition float_to_string_unpadded (x: float) (fdigs: nat) :=
   match x with
-  | B754_zero false => "0.0"
-  | B754_zero true => "-0.0"
+  | B754_zero false => "" ++ zero_to_string_unpadded fdigs
+  | B754_zero true => "-" ++ zero_to_string_unpadded fdigs
   | B754_infinity false => "inf"
   | B754_infinity true => "-inf"
-  | B754_nan false _ => "nan"
-  | B754_nan true _ => "-nan"
+  | B754_nan false pl => "nan" ++ (Z_to_string_base16 14 (Zpos (proj1_sig pl)))
+  | B754_nan true pl => "-nan" ++ (Z_to_string_base16 14 (Zpos (proj1_sig pl)))
   | B754_finite false m e _ => float_to_string_unsigned x fdigs
   | B754_finite true m e _ => "-" ++ float_to_string_unsigned (abs x) fdigs
   end.

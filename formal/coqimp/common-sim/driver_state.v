@@ -137,7 +137,7 @@ Qed.
 Definition svGetFloat (sv: stateVar) (tree : floatSvTreeTy) :=
   match SvTree.get sv tree with
   | Some x => x
-  | None => 0%D
+  | None => Details.my_nan
   end.
 
 (* Compute PTree.elements (state0 ()). *)
@@ -216,7 +216,7 @@ Record simTy :=
       solkeys : list stateVar;           (* Keys of fields in Solution. *)
       solution : list (list string);     (* Simulation detail results. *)
       sim_events : list eventTy;         (* User events. *)
-      log : list logEntryTy;             (* Text logging for debugging or information. *)
+      log_entries : list logEntryTy;             (* Text logging for debugging or information. *)
       flags : flagsTy                    (* control flags *)
     }.
 
@@ -226,7 +226,7 @@ Instance etaSim  : Settable _ :=
                           <*> solkeys
                           <*> solution
                           <*> sim_events
-                          <*> log
+                          <*> log_entries
                           <*> flags
              )%set.
 
@@ -251,7 +251,7 @@ Definition log_sim (caption: string) (sim: simTy) : simTy :=
         le_vars := printFloatSvTreeTy sim.(vars);
         le_events := printEvents sim.(sim_events)
       |} in
-  let result_sim := sim[[log ::= (fun oldlog => le :: oldlog)]] in
+  let result_sim := sim[[log_entries ::= (fun oldlog => le :: oldlog)]] in
   result_sim.
 
  *)
@@ -357,7 +357,7 @@ Definition default_sim :=
     solkeys := modelOutputs;
     solution := nil;
     sim_events := driver_default_events;
-    log := nil;
+    log_entries := nil;
     flags := default_flags;
   |}.
 
@@ -388,12 +388,4 @@ Fixpoint schedule_event (evs: list eventTy) (evkey: string) (new_time: float) :=
     ev' :: schedule_event evtl evkey new_time
   end.
 
-(* pi matching Haskell Prelude Double *)
-Definition pi := "3.141592653589793238"#D.
-
-(* small floating point constant *)
-Definition small := "0.000001#D".
-
-(* comparison floating point constant *)
-Definition epsilon := "0.0000000001"#D.
 

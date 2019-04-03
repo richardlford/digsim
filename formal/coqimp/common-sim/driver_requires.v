@@ -54,3 +54,15 @@ From compcert Require Export Maps.
 Require Export Zwf.
 From compcert Require Export Coqlib.
 
+(*+ Handy Constants *)
+Import DScopeNotations.
+Open Scope D_scope.
+
+(* pi matching Haskell Prelude Double *)
+Definition pi := "3.141592653589793238"#D.
+
+(* small floating point constant *)
+Definition small := "0.000001"#D.
+
+(* comparison floating point constant *)
+Definition epsilon := "0.0000000001"#D.

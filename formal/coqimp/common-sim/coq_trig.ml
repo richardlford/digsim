@@ -10,17 +10,7 @@ let ocaml_float_of_coq_float (cqfloat: binary_float) =
 
 let coq_float_of_ocaml_float (mlfloat: Float.t) =
   let int64bits: int64 = Int64.bits_of_float mlfloat in
-  let zbits: coq_Z = z_of_int64 int64bits in
-  let uzbits: coq_Z =
-    if (Z.ltb zbits Z0) then
-      let z2 = (Zpos (Coq_xO Coq_xH)) in
-      let z6 = (Zpos (Coq_xO (Coq_xI Coq_xH))) in
-      let z64 = (Z.pow z2 z6) in
-      let z2to64 = (Z.pow z2 z64) in
-      (Z.add zbits z2to64)
-    else
-      zbits
-  in
+  let uzbits: coq_Z = z_of_uint64 int64bits in
   Fappli_IEEE_bits.b64_of_bits uzbits
 
 let coq_fun (mlfun: Float.t -> Float.t) (coqarg: binary_float) =
@@ -50,7 +40,7 @@ let coq_atan = coq_fun Float.atan
 let coq_atan2 = coq_fun2 Float.atan2
 let coq_hypot = coq_fun2 Float.hypot
 let coq_cosh = coq_fun Float.cosh
-let coq_sinh = coq_fun Float.sinh
+let coq_sinh = coq_fun Float.sinh 
 let coq_tanh = coq_fun Float.tanh
 let coq_ceil = coq_fun Float.ceil
 let coq_floor = coq_fun Float.floor

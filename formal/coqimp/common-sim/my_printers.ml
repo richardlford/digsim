@@ -12,16 +12,23 @@ open BinNums
 let cl2s cl = String.init (List.length cl) (fun i -> (List.nth cl i));;
 let f2s fval = cl2s (print_float fval);;
 let print_sv sv = cl2s (svToStr sv);;
-
+let vars_per_line = 4;;
 let print_svtree tree =
   printf "@[SvFloatTree@,";
   let kvpairs = PTree.elements tree in
-   ignore (map (fun (pos, fval) ->
-      let sv = posToStateVar' pos in
-      let svstring = print_sv sv in
-      let fstr = f2s fval in
-      printf "@[<h>(%s ->@ %s)@ @]" svstring fstr)
-    kvpairs);
+  let kvstringpairs =
+    map (fun (pos, fval) -> 
+        let sv = posToStateVar' pos in
+        let svstring = print_sv sv in
+        let fstr = f2s fval in
+        (svstring, fstr)) kvpairs in
+  let sortedkvs = List.sort (fun (x1, y1) (x2, y2) -> compare x1 x2) kvstringpairs in
+  printf "@[<h>";
+  iteri (fun i (svstring, fstr) ->
+      printf "(%-20s, %14s) " svstring fstr;
+      if i mod vars_per_line = (vars_per_line - 1) then
+        printf "@]@,@[<h>")
+    sortedkvs;
   printf "@]@,";;
 
 let print_vars sim =
@@ -66,9 +73,9 @@ let print_log_entry le =
   printf "}@]";
   printf "},@]@,";;
 
-let print_log sim =
+let print_log_entries sim =
   printf "@[<v 2>{Log@,";
-  ignore (map (fun log_entry -> print_log_entry log_entry) sim.log);
+  ignore (map (fun log_entry -> print_log_entry log_entry) sim.log_entries);
   printf "}@]@,";;
 
 let print_flags sim =
@@ -76,15 +83,34 @@ let print_flags sim =
   printf "@[<h>{flags: stop_simulation=%B, end_of_run=%B, evaluate_xd=%B}@]"
     fl.stop_simulation fl.end_of_run fl.evaluate_xd;;
 
+let file_svtree (ch: out_channel) tree =
+  let kvpairs = PTree.elements tree in
+  let kvstringpairs =
+    map (fun (pos, fval) -> 
+        let sv = posToStateVar' pos in
+        let svstring = print_sv sv in
+        let fstr = f2s fval in
+        (svstring, fstr)) kvpairs in
+  let sortedkvs = List.sort (fun (x1, y1) (x2, y2) -> compare x1 x2) kvstringpairs in
+  iteri (fun i (svstring, fstr) ->
+      Printf.fprintf ch "(%-20s, %14s)\n" svstring fstr)
+    sortedkvs;;
+
+let file_vars sim =
+  let ch = open_out "vars.dat" in
+  file_svtree ch sim.vars;
+  close_out ch;;
+
 let print_sim sim =
   printf "@[<v 2>{simTY@\n";
   print_vars sim;
   print_solkeys sim;
   print_solution sim;
   print_events sim;
-  print_log sim;
+  print_log_entries sim;
   print_flags sim;
-  printf "@]}";;
+  printf "@]}";
+  file_vars sim;;
 
 let my_print_z z = Format.print_string (cl2s (print_Z z));;
 
@@ -93,6 +119,8 @@ let my_print_p p = my_print_z (Zpos p);;
 let my_print_float x = Format.print_string (cl2s (print_float x));;
 
 let my_print_char_list (cl: char list) = Format.print_string (cl2s cl);;
+
+
 (*
 #install_printer my_print_z;;
 #install_printer my_print_p;;

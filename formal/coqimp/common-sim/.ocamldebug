@@ -7,4 +7,4 @@ install_printer My_printers.print_svtree
 install_printer My_printers.print_event
 install_printer My_printers.print_log_entry
 install_printer My_printers.print_sim
-break @ "digsim_driver" 102
+break @ "digsim_driver" 26

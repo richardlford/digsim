@@ -135,6 +135,6 @@ Definition main (_ : unit) :=
   let sim1 := init_sim default_sim in
   let sim2 := run_sim sim1 in
   let sim3 := sim2[[solution ::= (fun sol => rev sol)]] in
-  sim3[[log ::= (fun lg => rev lg)]].
+  sim3[[log_entries ::= (fun lg => rev lg)]].
 
 
