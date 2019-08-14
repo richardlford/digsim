@@ -1,4 +1,4 @@
--Q ../../../../CompCert compcert
+-R ../../../../CompCert compcert
 -Q ../../../../coq-record-update/src RecordUpdate
 -Q . Task
 monad.v

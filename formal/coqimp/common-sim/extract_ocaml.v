@@ -31,11 +31,12 @@ Extraction Inline DecidableClass.Decidable_witness DecidableClass.decide
 Extraction Blacklist List String Int Int64.
 
 (* Cutting the dependency to R. *)
-Extract Inlined Constant Fcore_defs.F2R => "fun _ -> assert false".
+(* Extract Inlined Constant Fcore_defs.F2R => "fun _ -> assert false".
 Extract Inlined Constant Fappli_IEEE.FF2R => "fun _ -> assert false".
 Extract Inlined Constant Fappli_IEEE.B2R => "fun _ -> assert false".
 Extract Inlined Constant Fappli_IEEE.round_mode => "fun _ -> assert false".
 Extract Inlined Constant Fcalc_bracket.inbetween_loc => "fun _ -> assert false".
+*)
 (* Go! *)
 
 Cd "extraction_ml".

@@ -1,17 +1,17 @@
 open BinNums
-open Fappli_IEEE
+open Binary
 open Extr_ocaml_int64_conv
 open BinInt
 
 let ocaml_float_of_coq_float (cqfloat: binary_float) =
-  let zbits: coq_Z = Fappli_IEEE_bits.bits_of_b64 cqfloat in
+  let zbits: coq_Z = Bits.bits_of_b64 cqfloat in
   let int64bits: int64 = int64_of_z zbits in
   Int64.float_of_bits int64bits
 
 let coq_float_of_ocaml_float (mlfloat: Float.t) =
   let int64bits: int64 = Int64.bits_of_float mlfloat in
   let uzbits: coq_Z = z_of_uint64 int64bits in
-  Fappli_IEEE_bits.b64_of_bits uzbits
+  Bits.b64_of_bits uzbits
 
 let coq_fun (mlfun: Float.t -> Float.t) (coqarg: binary_float) =
   let mlarg = ocaml_float_of_coq_float coqarg in

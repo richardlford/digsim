@@ -6,7 +6,6 @@ open DebugIO
 open Maps
 open List
 open Extr_ocaml_int64_conv
-open Fappli_IEEE
 open BinNums
 
 let cl2s cl = String.init (List.length cl) (fun i -> (List.nth cl i));;

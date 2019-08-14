@@ -175,11 +175,7 @@ Record flagsTy :=
 
 (* These Settable instances allow us to do partial update of records easily *)
 Instance etaFlags  : Settable _ := 
-  mkSettable (constructor mkFlags
-                          <*> stop_simulation
-                          <*> end_of_run
-                          <*> evaluate_xd
-             )%set.
+  settable! mkFlags <stop_simulation; end_of_run; evaluate_xd >.
 
 Record eventTy :=
   mkEvent
@@ -188,11 +184,8 @@ Record eventTy :=
       time : float;
     }.
 
-Instance etaEvent : Settable eventTy := 
-  mkSettable (constructor mkEvent
-                          <*> key
-                          <*> time
-             )%set.
+Instance etaEvent : Settable eventTy :=
+  settable! mkEvent <key;time >.
 
 Record logEntryTy :=
   mkLogEntry
@@ -203,11 +196,7 @@ Record logEntryTy :=
     }.
 
 Instance etaLogEntry : Settable _ :=
-  mkSettable (constructor mkLogEntry
-                          <*> le_caption
-                          <*> le_vars
-                          <*> le_events
-             )%set.
+  settable! mkLogEntry <le_caption;le_vars;le_events>.
 
 Record simTy :=
   mkSim
@@ -221,14 +210,7 @@ Record simTy :=
     }.
 
 Instance etaSim  : Settable _ := 
-  mkSettable (constructor mkSim
-                          <*> vars
-                          <*> solkeys
-                          <*> solution
-                          <*> sim_events
-                          <*> log_entries
-                          <*> flags
-             )%set.
+  settable! mkSim <vars;solkeys;solution;sim_events;log_entries;flags>.
 
 (*+ Utilitys for simulation structures *)
 Definition printFloatSvTreeTy (vars: floatSvTreeTy) :=

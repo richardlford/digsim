@@ -37,7 +37,10 @@ Require Export Task.monad.
 
 From compcert Require Export Floats.
 Import Float.
-From compcert Require Export Fappli_IEEE.
+From compcert Require Import IEEE754.Bits.
+From compcert Require Import IEEE754_extra.
+From compcert Require Import IEEE754.Binary.
+
 From compcert Require Export Integers.
 Require Export Coq.Lists.List.
 

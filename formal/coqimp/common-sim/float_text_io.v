@@ -23,8 +23,9 @@
  *)
 From compcert Require Import Floats.
 Import Float.
-From compcert Require Import Fappli_IEEE.
-From compcert Require Import Fappli_IEEE_extra.
+From compcert Require Import IEEE754.Bits.
+From compcert Require Import IEEE754_extra.
+From compcert Require Import IEEE754.Binary.
 
 From compcert Require Import Integers.
 Require Import Coq.Lists.List.
@@ -221,8 +222,8 @@ Definition strToFloatHelper (s: string) : option (Z * Z) :=
 
 (* Compute strToFloatHelper "-123.456e-12". *)
 
-Definition my_nanpl := snd Fappli_IEEE_bits.default_nan_pl64.
-Definition my_nan : float := @B754_nan _ _ false my_nanpl.
+Definition my_nanpl := IEEE754.Bits.default_nan_pl64.
+Definition my_nan : float := proj1_sig my_nanpl.
 
 Definition strToFloat (s: string) : float :=
   match strToFloatHelper s with
@@ -333,7 +334,8 @@ Definition insert_decimal(s: string) (fdigs: nat) :=
    number of digits of precision. Other floats return
    empty string as they are covered by the 
    floatToStringUnpadded function below.
-*)
+ *)
+
 Definition float_to_string_unsigned (x: float) (fdigs: nat) :=
   match x with
   | B754_finite false m e _ =>
@@ -373,8 +375,8 @@ Definition float_to_string_unpadded (x: float) (fdigs: nat) :=
   | B754_zero true => "-" ++ zero_to_string_unpadded fdigs
   | B754_infinity false => "inf"
   | B754_infinity true => "-inf"
-  | B754_nan false pl => "nan" ++ (Z_to_string_base16 14 (Zpos (proj1_sig pl)))
-  | B754_nan true pl => "-nan" ++ (Z_to_string_base16 14 (Zpos (proj1_sig pl)))
+  | B754_nan false pl _ => "nan" ++ (Z_to_string_base16 14 (Zpos pl))
+  | B754_nan true pl _ => "-nan" ++ (Z_to_string_base16 14 (Zpos pl))
   | B754_finite false m e _ => float_to_string_unsigned x fdigs
   | B754_finite true m e _ => "-" ++ float_to_string_unsigned (abs x) fdigs
   end.
@@ -427,9 +429,8 @@ Definition pad_to_width := Details.pad_to_width.
 Definition float_to_string := Details.float_to_string.
 Definition float_list_to_string := Details.float_list_to_string.
 Definition strToFloat := FloatIO.Details.strToFloat.
-
 Definition ZofFloat (f: float) :=
-  match Fappli_IEEE_extra.ZofB 53 1024 f with
+  match IEEE754_extra.ZofB 53 1024 f with
   | Some z => z
   | None => 0%Z
   end.
@@ -438,8 +439,8 @@ Definition ZofFloat (f: float) :=
 Definition round (f: float) : float :=
   let z := ZofFloat (f + "0.5"#D)%D in
   Z_to_float z.
-
+Search b64_sqrt.
 Definition sqrt (arg: float) : float :=
-  Fappli_IEEE_bits.b64_sqrt mode_NE arg.
+  IEEE754.Bits.b64_sqrt mode_NE arg.
 
 End FloatIO.
