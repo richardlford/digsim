@@ -52,14 +52,14 @@ Fixpoint int64_of_pos p :=
   | xI p => int64_succ (int64_twice (int64_of_pos p))
  end.
 
-Fixpoint int64_of_z z :=
+Definition int64_of_z z :=
  match z with
   | Z0 => int64_zero
   | Zpos p => int64_of_pos p
   | Zneg p => int64_opp (int64_of_pos p)
  end.
 
-Fixpoint int64_of_n n :=
+Definition int64_of_n n :=
  match n with
   | N0 => int64_zero
   | Npos p => int64_of_pos p
