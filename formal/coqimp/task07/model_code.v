@@ -3,11 +3,10 @@ Require Export Task.trig.
 Import ListNotations.
 Import FloatIO.
 Import DebugIO.
-Import DScopeNotations.
-Import RecordSetNotations'.
-Open Scope D_scope.
+Import RecordSetNotations.
+Open Scope float.
 
-Definition z_terminate_sim_event := {| key := "z_terminate_sim_event"; time := 0%D |}.
+Definition z_terminate_sim_event := {| key := "z_terminate_sim_event"; time := 0.0 |}.
 
 Definition sq (f: float) := f * f.
 
@@ -25,7 +24,7 @@ Definition log_miss (sim: simTy) : simTy :=
        ("r_miss", print_float r_miss);
        ("dt_miss", print_float dt_miss)] in
   let miss_entry := {| le_caption := "log_miss"; le_vars := miss_vars; le_events := [] |} in
-  let result_sim := sim[[log_entries ::= (fun oldlog => miss_entry :: oldlog)]] in
+  let result_sim := sim<|log_entries ::= (fun oldlog => miss_entry :: oldlog)|> in
   result_sim.
 
 Definition z_terminate_sim_event_func  : event_function_signature :=
@@ -33,10 +32,10 @@ Definition z_terminate_sim_event_func  : event_function_signature :=
     let vars := sim.(vars) in
     let z := svGetFloat SvZ_BI_I vars in
     let result_sim :=
-        if (z >=? 0%D) then
+        if (0.0 <= z) then
           let sim1 := log_miss sim in
-          let flags2 := sim1.(flags)[[end_of_run := true]] in
-          let sim2 := sim1[[flags := flags2]] in
+          let flags2 := sim1.(flags)<|end_of_run := true|> in
+          let sim2 := sim1<|flags := flags2|> in
           sim2
         else
           sim
@@ -59,7 +58,7 @@ Definition init_sim (sim: simTy) :=
   let sim2 := seeker_init sim1 in
   let sim3 := flight_computer_init sim2 in
   let sim4 := airframe_response_init sim3 in
-  let sim5 := sim4[[sim_events ::= (fun others => z_terminate_sim_event::others)]] in
+  let sim5 := sim4<|sim_events ::= (fun others => z_terminate_sim_event::others)|> in
   sim5.
 
 Definition kinematics (sim: simTy) : simTy :=

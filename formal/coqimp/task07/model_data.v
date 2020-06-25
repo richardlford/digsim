@@ -1,8 +1,7 @@
 Require Export Task.driver_requires.
 Import ListNotations.
 Import FloatIO.
-Import DScopeNotations.
-Open Scope D_scope.
+Open Scope float.
 
 (* Inductive type used to name state variables. *)
 Inductive stateVar : Set := 
@@ -77,27 +76,27 @@ Definition svStrList :=
 (* This has same keys as driver defaults, but has model over-rides *)
 Definition model_driver_defaults_values :=
   [
-            (SvT,        "0.0"#D);
-            (SvT_STOP,   "10.0"#D);
-            (SvDT,       "0.005"#D);
-            (SvDT_MAX,   "0.005"#D);
-            (SvDT_MIN,   "0.005"#D);
-            (SvDT_PRINT, "0.01"#D)
+            (SvT,        0.0);
+            (SvT_STOP,   10.0);
+            (SvDT,       0.005);
+            (SvDT_MAX,   0.005);
+            (SvDT_MIN,   0.005);
+            (SvDT_PRINT, 0.01)
   ].
 
 Definition kinematics_default_data :=
   [
-            (SvVELOCITY, "100.0"#D);
-            (SvTHETA_B,  "0.0"#D);
-            (SvX_BI_I,   "-500.0"#D);
-            (SvZ_BI_I,   "-100.0"#D)
+            (SvVELOCITY, 100.0);
+            (SvTHETA_B,  0.0);
+            (SvX_BI_I,   -500.0);
+            (SvZ_BI_I,   -100.0)
   ].
 
 Definition seeker_default_data : list (stateVar * float) := [].
 
 Definition flight_computer_default_data :=
   [
-            (SvGUIDANCE_GAIN, "3.0"#D)
+            (SvGUIDANCE_GAIN, 3.0)
   ].
 
 Definition airframe_response_default_data : list (stateVar * float) := [].
