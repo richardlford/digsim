@@ -12,7 +12,7 @@
 
 Beware: NaNs have a sign and a payload, while they should be
 indistinguishable from Coq's perspective. *)
-type t
+type t = float
 
 (** Test functions for special values to avoid calling [classify] *)
 val is_nan : t -> bool

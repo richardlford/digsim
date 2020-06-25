@@ -1,24 +1,17 @@
-open BinNums
-open Binary
-open Extr_ocaml_int64_conv
-open BinInt
 
-let ocaml_float_of_coq_float (cqfloat: binary_float) =
-  let zbits: coq_Z = Bits.bits_of_b64 cqfloat in
-  let int64bits: int64 = int64_of_z zbits in
-  Int64.float_of_bits int64bits
+
+let ocaml_float_of_coq_float (cqfloat: Float64.t) =
+  (cqfloat : Float.t)
 
 let coq_float_of_ocaml_float (mlfloat: Float.t) =
-  let int64bits: int64 = Int64.bits_of_float mlfloat in
-  let uzbits: coq_Z = z_of_uint64 int64bits in
-  Bits.b64_of_bits uzbits
+  (mlfloat : Float64.t)
 
-let coq_fun (mlfun: Float.t -> Float.t) (coqarg: binary_float) =
+let coq_fun (mlfun: Float.t -> Float.t) (coqarg: Float64.t) =
   let mlarg = ocaml_float_of_coq_float coqarg in
   let mlresult = mlfun mlarg in
   coq_float_of_ocaml_float mlresult
 
-let coq_fun2 (mlfun: Float.t -> Float.t -> Float.t) (coqarg1: binary_float) (coqarg2: binary_float) =
+let coq_fun2 (mlfun: Float.t -> Float.t -> Float.t) (coqarg1: Float64.t) (coqarg2: Float64.t) =
   let mlarg1 = ocaml_float_of_coq_float coqarg1 in
   let mlarg2 = ocaml_float_of_coq_float coqarg2 in
   let mlresult = mlfun mlarg1 mlarg2 in
@@ -44,4 +37,4 @@ let coq_sinh = coq_fun Float.sinh
 let coq_tanh = coq_fun Float.tanh
 let coq_ceil = coq_fun Float.ceil
 let coq_floor = coq_fun Float.floor
-let coq_copysign = coq_fun2 Float.copysign
+(* let coq_copysign = coq_fun2 Float.copysign *)

@@ -4,8 +4,7 @@
    later be extracted to OCaml or Haskell functions.
  *)
 
-From compcert Require Import Floats.
-Import Float.
+Require Import Coq.Floats.Floats. (* Coq primitive floats *)
 
 Module CoqTrig.
 Parameter pow : float -> float -> float.
