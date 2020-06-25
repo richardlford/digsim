@@ -17,7 +17,8 @@ build_coq_and_extract: CoqMakefile extraction_ml
 Symlinks = build.sh coq_trig.ml debug_printers.v digsim_driver.ml \
            driver_requires.v driver_run.v driver_state.v \
            extract_haskell.v extract_ocaml_trig.v extract_ocaml.v extr_ocaml_int64_conv.v \
-           float_text_io.v monad.v my_printers.ml plot.sh trig.v
+           float_text_io.v monad.v my_printers.ml plot.sh trig.v \
+           float64.ml float64.mli uint63.mli uint63.ml
 
 CoqMakefile: _CoqProject
 	for f in $(Symlinks); do \
@@ -29,9 +30,9 @@ _CoqProject:
 	ln -s ../common-sim/_CoqProject .
 extraction_ml:
 	mkdir extraction_ml
-	(cd extraction_ml; ln -s ../*.ml .; ln -s ../.ocamldebug .ocamldebug)
+	(cd extraction_ml; ln -s ../*.ml* .; ln -s ../.ocamldebug .ocamldebug)
 
 clean:
-	rm -f *.vo *.glob *~ .*.aux CoqMakefile CoqMakefile.conf .coqdeps.d $(Symlinks) _CoqProject
+	rm -f *.vo *.vos *.vok *.glob *~ .*.aux CoqMakefile CoqMakefile.conf .coqdeps.d $(Symlinks) _CoqProject .CoqMakefile.d
 	rm -rf extraction_*
 

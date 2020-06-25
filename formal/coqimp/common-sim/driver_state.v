@@ -1,10 +1,8 @@
 Require Export Task.model_data.
 Import FloatIO.
 Import DebugIO.
-Import DScopeNotations.
 Import ListNotations.
-Import RecordSetNotations'.
-Open Scope D_scope.
+Import RecordSetNotations.
 
 From compcert Require Import Decidableplus.
 
@@ -104,12 +102,12 @@ Fixpoint printFloatKeyVals (kvl: list (stateVar * float)) :=
 (*+ Defaults *)
 Definition driver_defaults (_ : unit) :=
   [
-            (SvT,        "0.0"#D);
-            (SvT_STOP,   "0.0"#D);
-            (SvDT,       "0.005"#D);
-            (SvDT_MAX,   "0.005"#D);
-            (SvDT_MIN,   "0.005"#D);
-            (SvDT_PRINT, "0.01"#D)
+            (SvT,        0.0);
+            (SvT_STOP,   0.0);
+            (SvDT,       0.005);
+            (SvDT_MAX,   0.005);
+            (SvDT_MIN,   0.005);
+            (SvDT_PRINT, 0.01)
   ].
 
 (* Variable state after applying driver defaults and then model defaults
@@ -137,7 +135,7 @@ Qed.
 Definition svGetFloat (sv: stateVar) (tree : floatSvTreeTy) :=
   match SvTree.get sv tree with
   | Some x => x
-  | None => Details.my_nan
+  | None => nan
   end.
 
 (* Compute PTree.elements (state0 ()). *)
@@ -233,7 +231,7 @@ Definition log_sim (caption: string) (sim: simTy) : simTy :=
         le_vars := printFloatSvTreeTy sim.(vars);
         le_events := printEvents sim.(sim_events)
       |} in
-  let result_sim := sim[[log_entries ::= (fun oldlog => le :: oldlog)]] in
+  let result_sim := sim[[log_entries ::= (fun oldlog => le :: oldlog)|> in
   result_sim.
 
  *)
@@ -251,13 +249,13 @@ Definition default_flags :=
 Definition set_vars (sim: simTy) (new_vars : floatSvTreeTy) :=
   let sim' := log_sim "set_vars:sim" sim in
   let new_vars' := printFloatSvTreeTy new_vars in
-  let result_sim := sim[[vars := new_vars]] in
+  let result_sim := sim<|vars := new_vars|> in
   let result_sim' := log_sim "set_vars: result" result_sim in
   result_sim'.
 
 Definition set_var (key: stateVar) (val: float) (sim: simTy) :=
   let sim_log := log_sim "set_var:sim" sim in
-  let result_sim := sim_log[[vars := SvTree.set key val sim.(vars)]] in
+  let result_sim := sim_log<|vars := SvTree.set key val sim.(vars)|> in
   let result_log := log_sim "set_var:result" result_sim in
   result_log.
 
@@ -290,9 +288,9 @@ Definition t_ge_tstop_event_func : event_function_signature :=
   let vars := sim1.(vars) in
   let t := svGetFloat SvT vars in
   let t_stop := svGetFloat SvT_STOP vars in
-  let stop_sim := t >=? t_stop in
-  let new_flags := sim1.(flags)[[stop_simulation := stop_sim]] in
-  let result_sim := sim1[[flags := new_flags]] in
+  let stop_sim := t_stop <= t in
+  let new_flags := sim1.(flags)<|stop_simulation := stop_sim|> in
+  let result_sim := sim1<|flags := new_flags|> in
   let result_log := log_sim "t_ge_tstop_event_func: result_sim" result_sim in
   (result_log, None).
 
@@ -307,7 +305,7 @@ Fixpoint make_solution_row_helper (vars: floatSvTreeTy) (keys: list stateVar) : 
 
 Definition make_solution_row (sim: simTy) :=
   let row := make_solution_row_helper sim.(vars) sim.(solkeys) in
-  let result_sim := sim[[solution ::= (fun old => row :: old)]] in
+  let result_sim := sim<|solution ::= (fun old => row :: old)|> in
   let result_log := log_sim "make_solution_row: result" result_sim in
   result_log.
 
@@ -323,8 +321,8 @@ Definition append_solution_event_func  : event_function_signature :=
 
 Definition driver_default_events :=
   [
-    {| key := "t_ge_tstop_event"; time := 0%D |};
-    {| key := "append_log_event"; time := 0%D |}
+    {| key := "t_ge_tstop_event"; time := 0.0 |};
+    {| key := "append_log_event"; time := 0.0 |}
   ].
 
 Definition driver_default_handlers : list (string * event_function_signature) :=
@@ -363,7 +361,7 @@ Fixpoint schedule_event (evs: list eventTy) (evkey: string) (new_time: float) :=
   | cons ev evtl =>
     let ev' :=
         if (ev.(key) =? evkey)%string then
-          ev[[time := new_time]]
+          ev<|time := new_time|>
         else
           ev
     in

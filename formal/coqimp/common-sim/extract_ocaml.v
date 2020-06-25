@@ -12,7 +12,10 @@ Extraction Language OCaml.
 (* Standard lib *)
 Require Import ExtrOcamlBasic.
 Require Import ExtrOcamlString.
+Require Import ExtrOCamlFloats.
+Require Import ExtrOCamlInt63.
 Require Import Task.extr_ocaml_int64_conv.
+
 
 (* Coqlib *)
 Extract Inlined Constant Coqlib.proj_sumbool => "(fun x -> x)".
@@ -44,7 +47,6 @@ Cd "extraction_ml".
 Separate Extraction main print_Z svToStr posToStateVar' PTree.elements
          int64_of_nat int64_of_pos int64_of_z int64_of_n
          nat_of_int64 pos_of_int64 z_of_int64 z_of_uint64 n_of_int64
-         Float.to_bits Float.of_bits
          CoqTrig.pow CoqTrig.sqrt CoqTrig.exp CoqTrig.log CoqTrig.log10
          CoqTrig.expm1 CoqTrig.log1p CoqTrig.cos CoqTrig.sin CoqTrig.tan
          CoqTrig.acos CoqTrig.asin CoqTrig.atan CoqTrig.atan2 CoqTrig.hypot

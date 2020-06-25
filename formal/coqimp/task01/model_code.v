@@ -3,9 +3,7 @@ Require Export Task.driver_state.
 Import ListNotations.
 Import FloatIO.
 Import DebugIO.
-Import DScopeNotations.
-Import RecordSetNotations'.
-Open Scope D_scope.
+Import RecordSetNotations.
 
 Definition model_handlers := driver_default_handlers.
 

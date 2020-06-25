@@ -1,23 +1,21 @@
 Require Export Task.model_code.
 Import FloatIO.
 Import DebugIO.
-Import DScopeNotations.
 Import ListNotations.
-Import RecordSetNotations'.
-Open Scope D_scope.
-
+Import RecordSetNotations.
+Open Scope float.
 Definition process_one_event (ev: eventTy) (sim: simTy) :=
   let vars := sim.(vars) in
   let t := svGetFloat SvT vars in
   let dt_min := svGetFloat SvDT_MIN vars in
   let dt_max := svGetFloat SvDT_MAX vars in
   let et := ev.(time) in
-  let etdelta := round ((et - t) * "1.e6"#D) in
-  let minrnd := round (dt_min * "1.e6"#D) in
-  if (etdelta <? minrnd) then
+  let etdelta := round ((et - t) * 1.0e6) in
+  let minrnd := round (dt_min * 1.0e6) in
+  if (etdelta < minrnd) then
     let (sim2, new_time_opt) := handle_event model_handlers ev sim in
     match new_time_opt with
-    | Some new_time => (ev[[time := new_time]], sim2)
+    | Some new_time => (ev<|time := new_time|>, sim2)
     | None => (ev, sim2)
     end
   else
@@ -38,7 +36,7 @@ Fixpoint min_event_time (evs: list eventTy) (min_so_far: float) : float :=
   | cons ev evtl =>
     let et := ev.(time) in
     let new_min :=
-        if (et >? 0%D) && (et <? min_so_far) then
+        if (0.0 < et) && (et < min_so_far) then
           et
         else
           min_so_far
@@ -60,13 +58,13 @@ Definition process_events (sim: simTy) : simTy :=
     let min_time := min_event_time evs' min_time0 in
     let time_to_next_event := min_time - t in
     let new_dt :=
-        if (time_to_next_event >? 0%D) && ((dt_max - time_to_next_event) >? epsilon) then
+        if (0 < time_to_next_event) && (epsilon < (dt_max - time_to_next_event)) then
           time_to_next_event
         else 
           dt_max
     in
     let sim3 := set_var SvDT new_dt sim1 in
-    sim3[[sim_events := evs']]
+    sim3<|sim_events := evs'|>
   end.
 
 Fixpoint advance_states (pairs: list (stateVar * stateVar)) (dt: float) (sim: simTy) : simTy :=
@@ -88,7 +86,7 @@ Definition advance_model (sim: simTy) : simTy :=
   let vars' := sim2.(vars) in
   let t := svGetFloat SvT vars' in
   let new_t := t + dt in
-  let rounded_new_t := round (new_t * "1.e6"#D)/"1.e6"#D in
+  let rounded_new_t := round (new_t * 1.0e6)/1.0e6 in
   set_var SvT rounded_new_t sim2.
 
 Definition oneStep (sim: simTy) : simTy :=
@@ -98,8 +96,8 @@ Definition oneStep (sim: simTy) : simTy :=
       if sim2.(flags).(evaluate_xd) then
         let sim4 := differential_equations sim2 in
         let flags4 := sim4.(flags) in
-        let flags4' := flags4[[evaluate_xd := false]] in
-        sim4[[flags := flags4']]
+        let flags4' := flags4<|evaluate_xd := false|> in
+        sim4<|flags := flags4'|>
       else
         sim2 in
   advance_model sim3.
@@ -107,6 +105,14 @@ Definition oneStep (sim: simTy) : simTy :=
 Require Import Zwf.
 From compcert Require Import Coqlib.
 
+Definition maybeOneStep (sim: simTy) :=
+  let f := sim.(flags) in
+    if f.(end_of_run) || f.(stop_simulation)
+    then sim
+    else
+      oneStep sim.
+
+(*
 Function run_sim_loop (steps: Z) (sim: simTy) { wf (Zwf 0%Z) steps } :=
   if zle 0%Z steps
   then
@@ -122,19 +128,31 @@ Proof.
   intros; red; omega.
   apply Zwf_well_founded.
 Qed.
+ *)
 
 Definition run_sim (sim: simTy) :=
   let vars := sim.(vars) in
   let dtmin := svGetFloat SvDT_MIN vars in
   let tstop := svGetFloat SvT_STOP vars in
-  let max_steps_float := (tstop / dtmin)%D in
+  let max_steps_float := (tstop / dtmin)%float in
   let steps := ZofFloat max_steps_float in
-  run_sim_loop steps sim.
+  (* Now instead of this:
+
+     run_sim_loop steps sim.
+
+     we are using Z.iter. 
+     This enables Compute to get the result
+     whereas using run_sim_loop above
+     does not reduce, but requires extraction to
+     Ocaml or Haskell.
+  *)
+  Z.iter steps maybeOneStep sim.
+
 
 Definition main (_ : unit) :=
   let sim1 := init_sim default_sim in
   let sim2 := run_sim sim1 in
-  let sim3 := sim2[[solution ::= (fun sol => rev sol)]] in
-  sim3[[log_entries ::= (fun lg => rev lg)]].
+  let sim3 := sim2<|solution ::= (fun sol => rev sol)|> in
+  sim3<|log_entries ::= (fun lg => rev lg)|>.
 
-
+(* Eval native_compute in (main tt).(solution). *)

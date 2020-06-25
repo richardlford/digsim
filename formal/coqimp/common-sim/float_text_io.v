@@ -1,7 +1,7 @@
 (** FloatIO
 
-   Coqsim_io provides conversion operations between Coq strings
-   and the Coq/Compcert data types used in simulation.
+   float_text_io provides conversion operations between Coq strings
+   Coq primitive float. 
 
    The definitions meant for external use are:
 
@@ -10,7 +10,6 @@
    The other definitions are in module FloatIO.
 
    - Z_to_float (z: Z)                                         Convert Coq integer to float
-   - fraction_to_float (m d: Z)                                Convert fraction m*(10^(-d)) to float.
    - nat_power_of_float (x: float) (n: nat)                    x^n
    - Z_to_string_base10 (min_digits: nat) (num : Z) : string   Convert Z to string with min_digits.
    - pad_to_width (width: nat) (s: string)                     Pad string with leading blanks up to width
@@ -21,13 +20,9 @@
                                                                add_new_line is true, append a new line
                                                                at the end.
  *)
-From compcert Require Import Floats.
-Import Float.
-From compcert Require Import IEEE754.Bits.
-From compcert Require Import IEEE754_extra.
-From compcert Require Import IEEE754.Binary.
+(* Check Decimal.decimal. *)
+Require Import Coq.Floats.Floats. (* Coq primitive floats *)
 
-From compcert Require Import Integers.
 Require Import Coq.Lists.List.
 Require Import BinNums.
 Require Import Coq.QArith.QArith_base.
@@ -45,37 +40,21 @@ Open Scope string_scope.
 Definition nl := String "010"%char EmptyString.
 Close Scope char_scope.
 
+(* Compute SF2Prim (Prim2SF 1.5). *)
+
 Module FloatIO.
+Check float.
   (* Convert Coq integer to float *)
   Definition Z_to_float (z: Z) :=
     match z with
-    | Z0 => Float.zero
-    | Zpos x => from_parsed 10 x 0
-    | Zneg x => neg (from_parsed 10 x 0)
+    | Z0 => 0.0%float
+    | Zpos x => SF2Prim (S754_finite false x 0)
+    | Zneg x => SF2Prim (S754_finite true x 0)
     end.
-
-  (* Convert a decimal fraction to float.
-     First parameter, m, is an integer with all the
-     significant digits. The second
-     parameter, d, is the number of digits that
-     should follow the decimal point.
-     The resulting values is
-
-     m * (10^(-d)).
-     
-   *)
-  Definition fraction_to_float (m d: Z) :=
-    match m with
-    | Z0 => Float.zero
-    | Zpos x => from_parsed 10 x (-d)
-    | Zneg x => neg (from_parsed 10 x (-d))
-    end.
-
-  Definition floating_one := Z_to_float 1.
 
   Fixpoint nat_power_of_float (x: float) (n: nat) : float :=
     match n with
-    | O => floating_one
+    | O => 1.0
     | S p => (mul x (nat_power_of_float x p))
     end.
   
@@ -83,160 +62,6 @@ Module Details.
   
 Definition precision_of_float := 53%Z.
 Definition log10of2scaled3 := 301.
-
-Record FloatParts : Set :=
-  {
-    mantissaSign: bool;
-    intPart: string;
-    fracPart: string;
-    expPart: string
-  }.
-
-Fixpoint strToUintHelper (s: string) : option Decimal.uint :=
-  match s with
-  | EmptyString => Some Decimal.Nil
-  | String x x0 =>
-    lower <- strToUintHelper x0;
-      match x with
-      | "0"%char => Some (Decimal.D0 lower)
-      | "1"%char => Some (Decimal.D1 lower)
-      | "2"%char => Some (Decimal.D2 lower)
-      | "3"%char => Some (Decimal.D3 lower)
-      | "4"%char => Some (Decimal.D4 lower)
-      | "5"%char => Some (Decimal.D5 lower)
-      | "6"%char => Some (Decimal.D6 lower)
-      | "7"%char => Some (Decimal.D7 lower)
-      | "8"%char => Some (Decimal.D8 lower)
-      | "9"%char => Some (Decimal.D9 lower)
-      | _ => None
-      end
-    end.
-
-
-Definition strToUint (s: string) : option Decimal.uint :=
-  x <- strToUintHelper s;
-  Some (Decimal.unorm x).
-
-(*
-Compute strToUint "001234".
-Compute strToUint "".
-Compute strToUint "0".
-Compute strToUint "-3".
-*)
-
-Definition strToIntHelper (s: string) : option Decimal.int :=
-  match s with
-  | EmptyString => Some (Decimal.Pos Decimal.zero)
-  | String x x0 =>
-    let (sign, digits) := 
-        match x with
-        | "+"%char => (false, x0)
-        | "-"%char => (true, x0)
-        | _ => (false, s)
-        end in
-    uintVal <- strToUint digits;
-      Some (if sign then Decimal.Neg uintVal else Decimal.Pos uintVal)
-  end.
-
-Definition strToInt (s: string) : option Decimal.int :=
-  x <- strToIntHelper s;
-  Some (Decimal.norm x).
-
-(*
-Compute strToInt "001234".
-Compute strToInt "-001234".
-Compute strToInt "+001234".
-Compute strToInt "".
-Compute strToInt "+".
-Compute strToInt "-".
-Compute strToInt "0".
-Compute strToInt "-0".
-Compute strToInt "-3".
-*)
-
-Definition strToZ (s: string) : option Z :=
-  x <- strToInt s;
-    Some (Z.of_int x).
-
-(*
-Compute strToZ "001234".
-Compute strToZ "-001234".
-Compute strToZ "+001234".
-Compute strToZ "".
-Compute strToZ "+".
-Compute strToZ "-".
-Compute strToZ "0".
-Compute strToZ "-0".
-Compute strToZ "-3".
-
-Compute String.index 0 "E" "123456E". 
-*)
-
-
-Definition splitAtExponent (s: string) : (string * string) :=
-  let maybeEpos :=
-  match String.index 0 "E" s with
-  | Some epos => Some epos
-  | None => match String.index 0 "e" s with
-           | Some epos => Some epos
-           | None => None
-           end
-  end in
-  match maybeEpos with
-  | Some epos => (substring 0 epos s, substring (S epos) (String.length s - epos - 1) s)
-  | None => (s, EmptyString)
-  end.
-
-(*
-Compute splitAtExponent "123E456".
-Compute splitAtExponent "123E-456".
-Compute splitAtExponent "123456".
-*)
-
-Definition splitAtPoint (s: string) : (string * string) :=
-  match String.index 0 "." s with
-  | Some dpos => (substring 0 dpos s, substring (S dpos) (String.length s - dpos - 1) s)
-  | None => (s, EmptyString)
-  end.
-
-(*
-Compute splitAtPoint "123.456".
-Compute splitAtPoint "123.-456".
-Compute splitAtPoint "123456".
-*)
-
-Definition decomposeFloatString  (s: string): (string * string * string) :=
-  let (frac, exp) := splitAtExponent s in
-  let (intPart, fracPart) := splitAtPoint frac in
-  (intPart, fracPart, exp).
-
-(* Compute decomposeFloatString "-123.456e-12". *)
-
-Definition strToFloatHelper (s: string) : option (Z * Z) :=
-  let '(intPart, fracPart, exp) := decomposeFloatString s in
-  let mantstring := intPart ++ fracPart in
-  zmant <- (strToZ mantstring);
-    zexp <- (strToZ exp);
-    (let adjustedZexp := zexp - Z.of_nat (String.length fracPart) in
-     ret (zmant, adjustedZexp)).
-
-(* Compute strToFloatHelper "-123.456e-12". *)
-
-Definition my_nanpl := IEEE754.Bits.default_nan_pl64.
-Definition my_nan : float := proj1_sig my_nanpl.
-
-Definition strToFloat (s: string) : float :=
-  match strToFloatHelper s with
-  | Some (zmant, adjustedZexp) =>
-    match zmant with
-    | Z0 => Float.zero
-    | Zpos x => from_parsed 10 x adjustedZexp
-    | Zneg x => neg (from_parsed 10 x adjustedZexp)
-    end
-  | None => my_nan
-  end.
-
-(* Compute strToFloat "-123.456e-12". *)
 
 (* Compute approximate scaling exponent of 10, f, needed to
    get a number with given binary exponent, e, in the range
@@ -315,10 +140,64 @@ Definition Z_to_string_base16 (min_digits: nat) (num : Z) : string :=
     else
       Z_to_string_base16_aux min_digits 100 num.
 
+Definition f10 : float := 10.0.
+
+Fixpoint pos_power_of_float_aux  (exp: positive) (base accum: float) : float :=
+  match exp with
+  | xI x => pos_power_of_float_aux x (base * base) (accum * base)
+  | xO x => pos_power_of_float_aux x (base * base) accum
+  | xH => accum * base
+  end.
+
+Definition pos_power_of_float (base: float) (exp: positive) :=
+  pos_power_of_float_aux exp base 1.0.
+
+(* Compute pos_power_of_float 10.0 5. *)
+
+Definition Z_power_of_float (base: float) (exp: Z) : float :=
+  match exp with
+  | Z0 => 1.0
+  | Zpos x => pos_power_of_float base x
+  | Zneg x => 1.0 / pos_power_of_float base x
+  end.
+
+(*
+Compute Z_power_of_float 10.0 0.
+Compute Z_power_of_float 10.0 1.
+Compute Z_power_of_float 10.0 2.
+Compute Z_power_of_float 10.0 3.
+Compute Z_power_of_float 10.0 (-1).
+Compute Z_power_of_float 10.0 (-2).
+Compute Z_power_of_float 10.0 (-3).
+*)
+
+Definition pow10 (e: Z) := Z_power_of_float 10.0 e.
+
+Definition cond_Zopp (sign: bool) (z: Z) :=
+  if sign then -z else z.
+
+(*
+Compute cond_Zopp true 3.
+Compute cond_Zopp false 3.
+*)
+
+Definition ZofB (f: float): option Z :=
+  let sf := Prim2SF f in
+  match sf with
+  | S754_zero s => Some 0
+  | S754_infinity s => None
+  | S754_nan => None
+  | S754_finite s m (Zpos e) => Some (cond_Zopp s (Zpos m) * Z.pow_pos 2 e)%Z
+  | S754_finite s m 0 => Some (cond_Zopp s (Zpos m))
+  | S754_finite s m (Zneg e) => Some (cond_Zopp s (Zpos m / Z.pow_pos 2 e))%Z
+  end.
+
+(* Compute ZofB 1234.5. *)
+
 (* Convert float to Z scaled by 10**fdigs. *)
 Definition scaled_float_to_Z (x : float) (fdigs: Z) :=
-  match to_long (mul x (from_parsed 10 1 fdigs)) with
-  | Some ii => Int64.signed ii
+  match ZofB (x * (pow10 fdigs)) with
+  | Some ii => ii
   | None    => 0%Z
   end.
 
@@ -337,8 +216,9 @@ Definition insert_decimal(s: string) (fdigs: nat) :=
  *)
 
 Definition float_to_string_unsigned (x: float) (fdigs: nat) :=
-  match x with
-  | B754_finite false m e _ =>
+  let sf := Prim2SF x in
+  match sf with
+  | S754_finite false m e => 
     let digs_after_dec := pred fdigs in
     let scale := scale_exp (Z.of_nat fdigs) e in
     let scaled := scaled_float_to_Z x scale in
@@ -364,22 +244,34 @@ Definition float_to_string_unsigned (x: float) (fdigs: nat) :=
   | _ => ""
   end.
 
+(* Compute float_to_string_unsigned 12.0625%float 7. *)
+
 Definition zero_to_string_unpadded (fdigs: nat) := 
   let digs_after_dec := pred fdigs in
   let frac := repeat_string digs_after_dec "0" in
   "0." ++ frac ++ "e+00".
 
 Definition float_to_string_unpadded (x: float) (fdigs: nat) :=
-  match x with
-  | B754_zero false => "" ++ zero_to_string_unpadded fdigs
-  | B754_zero true => "-" ++ zero_to_string_unpadded fdigs
-  | B754_infinity false => "inf"
-  | B754_infinity true => "-inf"
-  | B754_nan false pl _ => "nan" ++ (Z_to_string_base16 14 (Zpos pl))
-  | B754_nan true pl _ => "-nan" ++ (Z_to_string_base16 14 (Zpos pl))
-  | B754_finite false m e _ => float_to_string_unsigned x fdigs
-  | B754_finite true m e _ => "-" ++ float_to_string_unsigned (abs x) fdigs
+  let sf := Prim2SF x in
+  match sf with
+  | S754_zero false => "" ++ zero_to_string_unpadded fdigs
+  | S754_zero true => "-" ++ zero_to_string_unpadded fdigs
+  | S754_infinity false => "inf"
+  | S754_infinity true => "-inf"
+  | S754_nan => "nan"
+  | S754_finite false m e => float_to_string_unsigned x fdigs
+  | S754_finite true m e => "-" ++ float_to_string_unsigned (abs x) fdigs
   end.
+
+(*
+Compute float_to_string_unpadded 12.0625%float 7.
+Compute float_to_string_unpadded (-12.0625%float) 7.
+Compute float_to_string_unpadded (0.0%float) 7.
+Compute float_to_string_unpadded (-0.0%float) 7.
+Compute float_to_string_unpadded infinity 7.
+Compute float_to_string_unpadded (-infinity) 7.
+Compute float_to_string_unpadded nan 7.
+ *)
 
 Definition pad_to_width (width: nat) (s: string) :=
   let ls := length s in
@@ -390,6 +282,14 @@ Definition pad_to_width (width: nat) (s: string) :=
 Definition float_to_string (width fdigs: nat) (x: float)  :=
   pad_to_width width (float_to_string_unpadded x fdigs).
 
+(* Compute float_to_string 14 7 12.0625%float. *)
+(* Compute float_to_string 14 7 (-12.0625%float). *)
+(* Compute float_to_string 14 7 (0.0%float). *)
+(* Compute float_to_string 14 7 (-0.0%float). *)
+(* Compute float_to_string 14 7 infinity. *)
+(* Compute float_to_string 14 7 (-infinity). *)
+(* Compute float_to_string 14 7 nan. *)
+
 Fixpoint float_list_to_string (width fdigs: nat) (add_new_line: bool) (al : list float) : string :=
   match al with
   | nil => if add_new_line then nl else ""
@@ -398,49 +298,19 @@ Fixpoint float_list_to_string (width fdigs: nat) (add_new_line: bool) (al : list
 
 End Details.
 
-Module DScopeNotations.
-
-(*+ Float scope notations *)
-(* D for double float *)
-Bind Scope D_scope with float.
-Delimit Scope D_scope with D.
-
-Infix "+" := Float.add : D_scope.
-Notation "- x" := (Float.neg x) : D_scope.
-Infix "-" := Float.sub : D_scope.
-Infix "*" := Float.mul : D_scope.
-Infix "/" := Float.div : D_scope.
-Infix "?=" := Float.compare (at level 70, no associativity) : D_scope.
-
-Infix "=?" := (Float.cmp Ceq) (at level 70, no associativity) : D_scope.
-Infix "<=?" := (Float.cmp Cle) (at level 70, no associativity) : D_scope.
-Infix "<?" := (Float.cmp Clt) (at level 70, no associativity) : D_scope.
-Infix ">=?" := (Float.cmp Cge) (at level 70, no associativity) : D_scope.
-Infix ">?" := (Float.cmp Cgt) (at level 70, no associativity) : D_scope.
-Notation "0" := Float.zero : D_scope.
-Notation "float_string #D" := (Details.strToFloat float_string) (at level 10) : D_scope.
-End DScopeNotations.
-
-Import DScopeNotations.
-
 (* Export items from the details module that the user will want. *)
 Definition Z_to_string_base10 := Details.Z_to_string_base10.
 Definition pad_to_width := Details.pad_to_width.
 Definition float_to_string := Details.float_to_string.
 Definition float_list_to_string := Details.float_list_to_string.
-Definition strToFloat := FloatIO.Details.strToFloat.
 Definition ZofFloat (f: float) :=
-  match IEEE754_extra.ZofB 53 1024 f with
+  match Details.ZofB f with
   | Some z => z
   | None => 0%Z
   end.
 
-
 Definition round (f: float) : float :=
-  let z := ZofFloat (f + "0.5"#D)%D in
+  let z := ZofFloat (f + 0.5) in
   Z_to_float z.
-Search b64_sqrt.
-Definition sqrt (arg: float) : float :=
-  IEEE754.Bits.b64_sqrt mode_NE arg.
 
 End FloatIO.
