@@ -1,10 +1,8 @@
 Require Export Task.driver_requires.
 Import ListNotations.
 Import FloatIO.
-Import DScopeNotations.
-Open Scope D_scope.
+Open Scope float.
 
-  
 (* Inductive type used to name state variables. *)
 Inductive stateVar : Set :=
 (* Driver common *)
@@ -222,67 +220,67 @@ Definition svStrList :=
 (* This has same keys as driver defaults, but has model over-rides *)
 Definition model_driver_defaults_values :=
   [
-            (SvT,        "0.0"#D);
-            (SvT_STOP,   "10.0"#D);
-            (SvDT,       "0.005"#D);
-            (SvDT_MAX,   "0.005"#D);
-            (SvDT_MIN,   "0.001"#D);
-            (SvDT_PRINT, "0.005"#D)
+            (SvT,        0.0);
+            (SvT_STOP,   10.0);
+            (SvDT,       0.005);
+            (SvDT_MAX,   0.005);
+            (SvDT_MIN,   0.001);
+            (SvDT_PRINT, 0.005)
   ].
 
-Definition rd_to_dg : float := "180.0"#D/pi.
+Definition rd_to_dg : float := 180.0/pi.
 
 Definition actuator_default_data : list (stateVar * float) :=
   [
-            (SvFIN_1_CMD, "0.0"#D);
-            (SvFIN_2_CMD, "0.0"#D);
-            (SvFIN_3_CMD, "0.0"#D);
-            (SvFIN_4_CMD, "0.0"#D);
-            (SvFIN_LIMIT, "20.0"#D / rd_to_dg)
+            (SvFIN_1_CMD, 0.0);
+            (SvFIN_2_CMD, 0.0);
+            (SvFIN_3_CMD, 0.0);
+            (SvFIN_4_CMD, 0.0);
+            (SvFIN_LIMIT, 20.0 / rd_to_dg)
   ].
 
 Definition aero_default_data : list (stateVar * float) :=
   [
-            (SvAIR_DENSITY,        "1.0"#D);
-            (SvCX_BASE,            "0.3"#D);
-            (SvCX_PER_ALPHA_TOTAL, "-0.5"#D);
-            (SvCY_PER_BETA,        "-50.0"#D);
-            (SvCZ_PER_ALPHA,       "-50.0"#D);
-            (SvCMY_PER_ALPHA,      "-50.0"#D);
-            (SvCMZ_PER_BETA,       "50.0"#D);
-            (SvCMX_PER_DELP,       "10.0"#D);
-            (SvCMY_PER_DELQ,       "40.0"#D);
-            (SvCMZ_PER_DELR,       "40.0"#D);
-            (SvCMP,                "-20.0"#D);
-            (SvCMQ,                "-200.0"#D);
-            (SvCMR,                "-200.0"#D);
-            (SvREF_AREA,           "0.01"#D);
-            (SvREF_LENGTH,         "1.0"#D)
+            (SvAIR_DENSITY,        1.0);
+            (SvCX_BASE,            0.3);
+            (SvCX_PER_ALPHA_TOTAL, -0.5);
+            (SvCY_PER_BETA,        -50.0);
+            (SvCZ_PER_ALPHA,       -50.0);
+            (SvCMY_PER_ALPHA,      -50.0);
+            (SvCMZ_PER_BETA,       50.0);
+            (SvCMX_PER_DELP,       10.0);
+            (SvCMY_PER_DELQ,       40.0);
+            (SvCMZ_PER_DELR,       40.0);
+            (SvCMP,                -20.0);
+            (SvCMQ,                -200.0);
+            (SvCMR,                -200.0);
+            (SvREF_AREA,           0.01);
+            (SvREF_LENGTH,         1.0)
   ].
 
 Definition mass_default_data : list (stateVar * float) :=
   [
-            (SvIXX_B,  "0.1"#D);
-            (SvIYY_B,  "0.75"#D);
-            (SvIZZ_B,  "0.75"#D);
-            (SvMASS_B, "10.0"#D)
+            (SvIXX_B,  0.1);
+            (SvIYY_B,  0.75);
+            (SvIZZ_B,  0.75);
+            (SvMASS_B, 10.0)
   ].
 
 Definition kinematics_default_data : list (stateVar * float) :=
   [
-            (SvPSI_B_IC_DG,   "0.0"#D);
-            (SvTHETA_B_IC_DG, "0.0"#D);
-            (SvPHI_B_IC_DG,   "0.0"#D);
-            (SvP_B_IC_DG,     "0.0"#D);
-            (SvQ_B_IC_DG,     "0.0"#D);
-            (SvR_B_IC_DG,     "0.0"#D);
-            (SvXD_BI_I_IC,    "100.0"#D);
-            (SvYD_BI_I_IC,    "0.0"#D);
-            (SvZD_BI_I_IC,    "0.0"#D);
-            (SvX_BI_I_IC,     "0.0"#D);
-            (SvY_BI_I_IC,     "0.0"#D);
-            (SvZ_BI_I_IC,     "-100.0"#D);
-            (SvACC_GRAVITY,   "9.88"#D)
+            (SvPSI_B_IC_DG,   0.0);
+            (SvTHETA_B_IC_DG, 0.0);
+            (SvPHI_B_IC_DG,   0.0);
+            (SvP_B_IC_DG,     0.0);
+            (SvQ_B_IC_DG,     0.0);
+            (SvR_B_IC_DG,     0.0);
+            (SvXD_BI_I_IC,    100.0);
+            (SvYD_BI_I_IC,    0.0);
+            (SvZD_BI_I_IC,    0.0);
+            (SvX_BI_I_IC,     0.0);
+            (SvY_BI_I_IC,     0.0);
+            (SvZ_BI_I_IC,     -100.0);
+            (SvACC_GRAVITY,   9.88)
   ].
 
 Definition gyro_default_data : list (stateVar * float) :=
@@ -291,12 +289,12 @@ Definition gyro_default_data : list (stateVar * float) :=
 
 Definition target_default_data : list (stateVar * float) :=
   [
-            (SvX_TI_I_IC,  "500.0"#D);
-            (SvY_TI_I_IC,  "-250.0"#D);
-            (SvZ_TI_I_IC,  "0.0"#D);
-            (SvXD_TI_I_IC, "-25.0"#D);
-            (SvYD_TI_I_IC, "25.0"#D);
-            (SvZD_TI_I_IC, "0.0"#D)
+            (SvX_TI_I_IC,  500.0);
+            (SvY_TI_I_IC,  -250.0);
+            (SvZ_TI_I_IC,  0.0);
+            (SvXD_TI_I_IC, -25.0);
+            (SvYD_TI_I_IC, 25.0);
+            (SvZD_TI_I_IC, 0.0)
   ].
 
 Definition seeker_default_data : list (stateVar * float) :=
@@ -305,16 +303,16 @@ Definition seeker_default_data : list (stateVar * float) :=
 
 Definition flight_computer_default_data : list (stateVar * float) :=
   [
-            (SvROLL_GUIDANCE_GAIN,  "-20.0"#D);
-            (SvPITCH_GUIDANCE_GAIN, "4.0"#D);
-            (SvYAW_GUIDANCE_GAIN,   "4.0"#D);
-            (SvDEL_CMD_PER_P_CMD,   "0.01"#D);
-            (SvDEL_CMD_PER_Q_CMD,   "1.0"#D);
-            (SvDEL_CMD_PER_R_CMD,   "1.0"#D);
-            (SvPSI_B_EST_DG,        "0.0"#D);
-            (SvTHETA_B_EST_DG,      "0.0"#D);
-            (SvPHI_B_EST_DG,        "0.0"#D);
-            (SvQ_B_CMD_BIAS,        "0.0988"#D)
+            (SvROLL_GUIDANCE_GAIN,  -20.0);
+            (SvPITCH_GUIDANCE_GAIN, 4.0);
+            (SvYAW_GUIDANCE_GAIN,   4.0);
+            (SvDEL_CMD_PER_P_CMD,   0.01);
+            (SvDEL_CMD_PER_Q_CMD,   1.0);
+            (SvDEL_CMD_PER_R_CMD,   1.0);
+            (SvPSI_B_EST_DG,        0.0);
+            (SvTHETA_B_EST_DG,      0.0);
+            (SvPHI_B_EST_DG,        0.0);
+            (SvQ_B_CMD_BIAS,        0.0988)
   ].
 
 Definition model_default_values (_: unit) :=

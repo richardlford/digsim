@@ -3,12 +3,11 @@ Require Export Task.trig.
 Import ListNotations.
 Import FloatIO.
 Import DebugIO.
-Import DScopeNotations.
-Import RecordSetNotations'.
-Open Scope D_scope.
+Import RecordSetNotations.
+Open Scope float.
 Import CoqTrig.
 
-Definition z_terminate_sim_event := {| key := "z_terminate_sim_event"; time := 0%D |}.
+Definition z_terminate_sim_event := {| key := "z_terminate_sim_event"; time := 0.0 |}.
 
 Definition sq (f: float) := f * f.
 
@@ -33,7 +32,7 @@ Definition log_miss (sim: simTy) (dt_miss: float) : simTy :=
        ("r_miss", print_float r_miss);
        ("dt_miss", print_float dt_miss)] in
   let miss_entry := {| le_caption := "log_miss"; le_vars := miss_vars; le_events := [] |} in
-  sim[[log_entries ::= (fun oldlog => miss_entry :: oldlog)]].
+  sim<|log_entries ::= (fun oldlog => miss_entry :: oldlog)|>.
 
 Definition z_terminate_sim_event_func  : event_function_signature :=
   fun (this: eventTy) (sim: simTy) =>
@@ -48,10 +47,10 @@ Definition z_terminate_sim_event_func  : event_function_signature :=
     let time_to_go := -(x_tb_i * xd_tb_i + y_tb_i * yd_tb_i + z_tb_i * zd_tb_i) /
                         ((sq xd_tb_i) + (sq yd_tb_i) + (sq zd_tb_i)) in
     let result_sim :=
-        if (time_to_go <? 0%D) then
+        if (time_to_go < 0.0) then
           let sim1 := log_miss sim time_to_go in
-          let flags2 := sim1.(flags)[[end_of_run := true]] in
-          sim1[[flags := flags2]]
+          let flags2 := sim1.(flags)<|end_of_run := true|> in
+          sim1<|flags := flags2|>
         else
           sim
     in
@@ -75,12 +74,12 @@ Definition kinematics_init (sim: simTy) :=
   let q_b := svGetFloat SvQ_B_IC_DG svars / rd_to_dg in
   let r_b := svGetFloat SvR_B_IC_DG svars / rd_to_dg in
 
-  let cpsio2 := cos("0.5"#D * psi_b) in
-  let cthetao2 := cos("0.5"#D * theta_b) in
-  let cphio2 := cos("0.5"#D * phi_b) in
-  let spsio2 := sin("0.5"#D * psi_b) in
-  let sthetao2 := sin("0.5"#D * theta_b) in
-  let sphio2 := sin("0.5"#D * phi_b) in
+  let cpsio2 := cos(0.5 * psi_b) in
+  let cthetao2 := cos(0.5 * theta_b) in
+  let cphio2 := cos(0.5 * phi_b) in
+  let spsio2 := sin(0.5 * psi_b) in
+  let sthetao2 := sin(0.5 * theta_b) in
+  let sphio2 := sin(0.5 * phi_b) in
   let q0_b := cpsio2 * cthetao2 * cphio2 + spsio2 * sthetao2 * sphio2 in
   let q1_b := cpsio2 * cthetao2 * sphio2 - spsio2 * sthetao2 * cphio2 in
   let q2_b := cpsio2 * sthetao2 * cphio2 + spsio2 * cthetao2 * sphio2 in
@@ -131,12 +130,12 @@ Definition flight_computer_init (sim: simTy) :=
   (* Initial flight computer states *)
 
   (* Trig functions of half Euler angles *)
-  let cpsio2 := cos("0.5"#D * psi_b_est_dg / rd_to_dg) in
-  let cthetao2 := cos("0.5"#D * theta_b_est_dg / rd_to_dg) in
-  let cphio2 := cos("0.5"#D * phi_b_est_dg / rd_to_dg) in
-  let spsio2 := sin("0.5"#D * psi_b_est_dg / rd_to_dg) in
-  let sthetao2 := sin("0.5"#D * theta_b_est_dg / rd_to_dg) in
-  let sphio2 := sin("0.5"#D * phi_b_est_dg / rd_to_dg) in
+  let cpsio2 := cos(0.5 * psi_b_est_dg / rd_to_dg) in
+  let cthetao2 := cos(0.5 * theta_b_est_dg / rd_to_dg) in
+  let cphio2 := cos(0.5 * phi_b_est_dg / rd_to_dg) in
+  let spsio2 := sin(0.5 * psi_b_est_dg / rd_to_dg) in
+  let sthetao2 := sin(0.5 * theta_b_est_dg / rd_to_dg) in
+  let sphio2 := sin(0.5 * phi_b_est_dg / rd_to_dg) in
 
   (* Initial quaternion values *)
   let q0_b_est := cpsio2 * cthetao2 * cphio2 + spsio2 * sthetao2 * sphio2 in
@@ -163,21 +162,21 @@ Definition init_sim (sim0: simTy) :=
   let sim8 := flight_computer_init sim7 in
   let sim9 := union_vars sim8
                          [
-                           (SvROLL_GUIDANCE_GAIN, "-20.0"#D);
-                           (SvPITCH_GUIDANCE_GAIN, "4.0"#D);
-                           (SvX_TI_I, "500.0"#D);
-                           (SvY_TI_I, "-250.0"#D)
+                           (SvROLL_GUIDANCE_GAIN, -20.0);
+                           (SvPITCH_GUIDANCE_GAIN, 4.0);
+                           (SvX_TI_I, 500.0);
+                           (SvY_TI_I, -250.0)
                          ] in
-  sim9[[sim_events ::= (fun others => z_terminate_sim_event::others)]].
+  sim9<|sim_events ::= (fun others => z_terminate_sim_event::others)|>.
 
 
 Definition limit (x l u  : float) : float :=
-  if (x <? l) then l
-  else if (x >? u) then u
+  if (x < l) then l
+  else if (u < x) then u
   else  x.
 
 Definition max (x y: float) : float :=
-  if x >? y then x else y.
+  if y < x then x else y.
 
 Definition actuator (sim: simTy) : simTy :=
   let svars := sim.(vars) in 
@@ -230,13 +229,13 @@ Definition aero (sim: simTy) : simTy :=
 
   (* Evaluate ICS to BCS transformation matrix *)
   let tib11 := q0_b * q0_b + q1_b * q1_b - q2_b * q2_b - q3_b * q3_b in
-  let tib12 := "2.0"#D * (q1_b * q2_b + q0_b * q3_b) in
-  let tib13 := "2.0"#D * (q1_b * q3_b - q0_b * q2_b) in
-  let tib21 := "2.0"#D * (q1_b * q2_b - q0_b * q3_b) in
+  let tib12 := 2.0 * (q1_b * q2_b + q0_b * q3_b) in
+  let tib13 := 2.0 * (q1_b * q3_b - q0_b * q2_b) in
+  let tib21 := 2.0 * (q1_b * q2_b - q0_b * q3_b) in
   let tib22 := q0_b * q0_b + q2_b * q2_b - q1_b * q1_b - q3_b * q3_b in
-  let tib23 := "2.0"#D * (q2_b * q3_b + q0_b * q1_b) in
-  let tib31 := "2.0"#D * (q1_b * q3_b + q0_b * q2_b) in
-  let tib32 := "2.0"#D * (q2_b * q3_b - q0_b * q1_b) in
+  let tib23 := 2.0 * (q2_b * q3_b + q0_b * q1_b) in
+  let tib31 := 2.0 * (q1_b * q3_b + q0_b * q2_b) in
+  let tib32 := 2.0 * (q2_b * q3_b - q0_b * q1_b) in
   let tib33 := q0_b * q0_b + q3_b * q3_b - q1_b * q1_b - q2_b * q2_b in
 
   (* Missile velocity WRT ICS origin in BCS *)
@@ -252,15 +251,15 @@ Definition aero (sim: simTy) : simTy :=
   let alpha_total := atan2 (sqrt (yd_bi_b * yd_bi_b + zd_bi_b * zd_bi_b)) xd_bi_b in
 
   (* Dynamic pressure and multipliers for forces and moments *)
-  let qbar_b := "0.5"#D * air_density * velsq in
+  let qbar_b := 0.5 * air_density * velsq in
   let qbarsref := qbar_b * ref_area in
   let qbarsreflref := qbarsref * ref_length in
-  let lrefo2vmag := ref_length / ("2.0"#D * vmag) in
+  let lrefo2vmag := ref_length / (2.0 * vmag) in
 
   (* Equivalent fin deflections *)
-  let del_eff_p := "-0.25"#D * (fin_1_position + fin_2_position + fin_3_position + fin_4_position) in
-  let del_eff_q := "0.5"#D * (fin_3_position - fin_1_position) in
-  let del_eff_r := "0.5"#D * (fin_4_position - fin_2_position) in
+  let del_eff_p := -0.25 * (fin_1_position + fin_2_position + fin_3_position + fin_4_position) in
+  let del_eff_q := 0.5 * (fin_3_position - fin_1_position) in
+  let del_eff_r := 0.5 * (fin_4_position - fin_2_position) in
 
   (* Aerodynamics forces *)
   let faerox_bi_b := (cx_base + cx_per_alpha_total * alpha_total) * qbarsref in
@@ -328,7 +327,7 @@ Definition kinematics (sim: simTy) : simTy :=
     (* Begin math model: *)
 
     (* Evaluate Euler angles *)
-    let stheta_b := limit (-tib13) ("-1.0"#D) ("1.0"#D) in
+    let stheta_b := limit (-tib13) (-1.0) (1.0) in
     let theta_b := asin(stheta_b) in
     let psi_b := atan2 tib12 tib11 in
     let phi_b := atan2 tib23 tib33 in
@@ -351,10 +350,10 @@ Definition kinematics (sim: simTy) : simTy :=
     let q3_b := q3_b / qmag in
 
     (* Quaternion derivative *)
-    let q0d_b := "-0.5"#D * (q1_b * p_b + q2_b * q_b + q3_b * r_b) in
-    let q1d_b :=  "0.5"#D * (q0_b * p_b + q2_b * r_b - q3_b * q_b) in
-    let q2d_b :=  "0.5"#D * (q0_b * q_b + q3_b * p_b - q1_b * r_b) in
-    let q3d_b :=  "0.5"#D * (q0_b * r_b + q1_b * q_b - q2_b * p_b) in
+    let q0d_b := -0.5 * (q1_b * p_b + q2_b * q_b + q3_b * r_b) in
+    let q1d_b :=  0.5 * (q0_b * p_b + q2_b * r_b - q3_b * q_b) in
+    let q2d_b :=  0.5 * (q0_b * q_b + q3_b * p_b - q1_b * r_b) in
+    let q3d_b :=  0.5 * (q0_b * r_b + q1_b * q_b - q2_b * p_b) in
 
   union_vars sim
              [
@@ -483,13 +482,13 @@ Definition flight_computer (sim: simTy) : simTy :=
   (* Navigation section *)
   (* Evaluate the ICS to BCS transformation matrix *)
   let tib11_est := q0_b_est * q0_b_est + q1_b_est * q1_b_est - q2_b_est * q2_b_est - q3_b_est * q3_b_est in
-  let tib12_est := "2.0"#D * (q1_b_est * q2_b_est + q0_b_est * q3_b_est) in
-  let tib13_est := "2.0"#D * (q1_b_est * q3_b_est - q0_b_est * q2_b_est) in
-  let tib23_est := "2.0"#D * (q2_b_est * q3_b_est + q0_b_est * q1_b_est) in
+  let tib12_est := 2.0 * (q1_b_est * q2_b_est + q0_b_est * q3_b_est) in
+  let tib13_est := 2.0 * (q1_b_est * q3_b_est - q0_b_est * q2_b_est) in
+  let tib23_est := 2.0 * (q2_b_est * q3_b_est + q0_b_est * q1_b_est) in
   let tib33_est := q0_b_est * q0_b_est + q3_b_est * q3_b_est - q1_b_est * q1_b_est - q2_b_est * q2_b_est in
 
   (* Evaluate Euler roll angle *)
-  let stheta_b_est := limit (-tib13_est) ("-1.0"#D) ("1.0"#D) in
+  let stheta_b_est := limit (-tib13_est) (-1.0) (1.0) in
   let psi_b_est := atan2 tib12_est tib11_est in
   let theta_b_est := asin stheta_b_est in
   let phi_b_est := atan2 tib23_est tib33_est in
@@ -502,10 +501,10 @@ Definition flight_computer (sim: simTy) : simTy :=
   let q3_b_est := q3_b_est / qmag_est in
 
   (* Quaternion derivative *)
-  let q0d_b_est := "-0.5"#D * (q1_b_est * p_g_meas + q2_b_est * q_g_meas + q3_b_est * r_g_meas) in
-  let q1d_b_est := "0.5"#D * (q0_b_est * p_g_meas + q2_b_est * r_g_meas - q3_b_est * q_g_meas) in
-  let q2d_b_est := "0.5"#D * (q0_b_est * q_g_meas + q3_b_est * p_g_meas - q1_b_est * r_g_meas) in
-  let q3d_b_est := "0.5"#D * (q0_b_est * r_g_meas + q1_b_est * q_g_meas - q2_b_est * p_g_meas) in
+  let q0d_b_est := -0.5 * (q1_b_est * p_g_meas + q2_b_est * q_g_meas + q3_b_est * r_g_meas) in
+  let q1d_b_est := 0.5 * (q0_b_est * p_g_meas + q2_b_est * r_g_meas - q3_b_est * q_g_meas) in
+  let q2d_b_est := 0.5 * (q0_b_est * q_g_meas + q3_b_est * p_g_meas - q1_b_est * r_g_meas) in
+  let q3d_b_est := 0.5 * (q0_b_est * r_g_meas + q1_b_est * q_g_meas - q2_b_est * p_g_meas) in
 
   (* Maintain zero roll angle *)
   let p_b_cmd := roll_guidance_gain * phi_b_est in
