@@ -30,7 +30,6 @@ Require Import Strings.String.
 Require Import Strings.Ascii.
 Require Import Coq.ZArith.Znat.
 Require Import Recdef.
-Require Import Task.monad.
 
 (** Pretty printing
  *)
