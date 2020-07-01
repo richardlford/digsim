@@ -2,9 +2,14 @@
 
 Require Import ZArith.
 Require Import Coq.Floats.Floats.
-Open Scope float.
 Require Export Coq.Lists.List.
 Import ListNotations.
+Require Import Strings.String.
+Require Import Task.float_text_io.
+Import FloatIO.
+Open Scope float.
+Require Import Task.debug_printers.
+Import DebugIO.
 
 (* Define constants that do not vary with state *)
 
@@ -55,7 +60,6 @@ Record State : Type :=
 
 Definition st0 := {| time := time0; x := x_ic; xd := xd_ic |}.
 
-Check list.
 (* Compute st0. *)
 
 Definition oneStep states :=
@@ -70,7 +74,22 @@ Definition oneStep states :=
     cons state1 states
   end.
 
-Compute oneStep [st0].
+(* Compute oneStep [st0]. *)
 
-Definition stfinal := Eval native_compute in rev (Z.iter 3%Z oneStep [st0]).
-Print stfinal.
+Definition z_steps :=
+  Eval native_compute in 
+  let steps := (tstop - time0) / dt in
+  ZofFloat steps.
+
+Definition stfinal := Eval native_compute in rev (Z.iter z_steps oneStep [st0]).
+
+Fixpoint formatStates (states : list State) :=
+  match states with
+  | nil => ""
+  | cons {| time := t1; x:= x1; xd := xd1 |} others =>
+    (print_float t1) ++ (print_float x1) ++ (print_float xd1) ++ nl ++
+                     (formatStates others)
+  end.
+
+Compute nl ++ "========== Start of data" ++ nl ++ (formatStates stfinal)
+++ "========== End of data" ++ nl.
