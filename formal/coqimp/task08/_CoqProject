@@ -1,0 +1,12 @@
+-R ../../../../coq-record-update/src/ RecordUpdate
+-R ../../../../CompCert/ compcert
+-R . Task
+-R ../common-sim/ Task
+
+../common-sim/debug_printers.v
+../common-sim/driver_requires.v
+../common-sim/driver_state.v
+../common-sim/trig.v
+model_data.v
+model_code.v
+

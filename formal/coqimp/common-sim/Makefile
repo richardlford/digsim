@@ -6,10 +6,10 @@ plot: build
 build: build_coq_and_extract extraction_ml/digsim_driver.byte extraction_ml/my_printers.cma
 
 extraction_ml/digsim_driver.byte: build_coq_and_extract
-	(cd extraction_ml; ocamlbuild -r -tag 'debug' -lib `pwd`/../byterun digsim_driver.byte)
+	(cd extraction_ml; export LD_LIBRARY_PATH=/home/fordrl/e/coq/kernel/byterun;ocamlbuild -r -tag 'debug' -lib /home/fordrl/e/coq/kernel/uint63.cmo -lib /home/fordrl/e/coq/kernel/float64.cmo digsim_driver.byte)
 
 extraction_ml/my_printers.cma: build_coq_and_extract
-	(cd extraction_ml; ocamlbuild -r -tag 'debug' -lib `pwd`/../byterun my_printers.cma)
+	(cd extraction_ml; export LD_LIBRARY_PATH=/home/fordrl/e/coq/kernel/byterun;ocamlbuild -r -tag 'debug' -lib /home/fordrl/e/coq/kernel/uint63.cmo -lib /home/fordrl/e/coq/kernel/float64.cmo my_printers.cma)
 
 build_coq_and_extract: CoqMakefile extraction_ml
 	make -f CoqMakefile
@@ -18,7 +18,7 @@ Symlinks = build.sh coq_trig.ml debug_printers.v digsim_driver.ml \
            driver_requires.v driver_run.v driver_state.v \
            extract_haskell.v extract_ocaml_trig.v extract_ocaml.v extr_ocaml_int64_conv.v \
            float_text_io.v monad.v my_printers.ml plot.sh trig.v \
-           float64.ml float64.mli uint63.mli uint63.ml byterun.cma
+           float64.ml float64.mli uint63.mli uint63.ml
 
 CoqMakefile: _CoqProject
 	for f in $(Symlinks); do \
